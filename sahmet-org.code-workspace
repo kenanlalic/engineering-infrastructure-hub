@@ -1,0 +1,49 @@
+{
+  "folders": [
+    {
+      "name": "\ud83d\udee0\ufe0f Setup Workspace",
+      "path": "./"
+    },
+    {
+      "name": "\ud83d\udce6 Basic Infrastructure",
+      "path": "local-dev-infrastructure/"
+    },
+    {
+      "name": "--------------------",
+      "path": "delimiter-1/"
+    },
+    {
+      "name": "\ud83d\udcbe Backend",
+      "path": "backend/"
+    },
+    {
+      "name": "💽 Cicak",
+      "path": "cicak/"
+    }
+  ],
+  "settings": {
+    "scm.repositories.visible": 15,
+    "git.openRepositoryInParentFolders": "always",
+    "files.exclude": {
+      "**/node_modules": true,
+      "**/.git": true,
+      "**/.DS_Store": true,
+      "**/__pycache__": true,
+      "**/*.pyc": true,
+      "**/.pytest_cache": true,
+      "**/delimiter-*": true
+    },
+    "python.terminal.activateEnvironment": true,
+    "python.analysis.diagnosticSeverityOverrides": {
+      "reportUnusedImport": "warning",
+      "reportMissingImports": "error"
+    }
+  },
+  "extensions": {
+    "recommendations": [
+      "ms-python.python",
+      "ms-vscode-remote.remote-containers",
+      "ms-azuretools.vscode-docker"
+    ]
+  }
+}

@@ -1,0 +1,37 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Backend: Remote Attach",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5678
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder:💾 Backend}/src",
+                    "remoteRoot": "/code"
+                }
+            ],
+            "justMyCode": false
+        },
+        {
+            "name": "Cicak: Remote Attach",
+            "type": "debugpy",
+            "request": "attach",
+            "connect": {
+                "host": "localhost",
+                "port": 5679
+            },
+            "pathMappings": [
+                {
+                    "localRoot": "${workspaceFolder:💽 Cicak}/src",
+                    "remoteRoot": "/code"
+                }
+            ],
+            "justMyCode": false
+        },
+    ]
+}

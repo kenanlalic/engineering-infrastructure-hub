@@ -1,0 +1,19 @@
+local-dev-infrastructure/
+backend/
+frontend/
+cicak/
+
+airflow/
+keycloak/
+
+*-service/
+scim-user-data-aggregator/
+performance_reviews/
+
+shared-libraries/
+stateful-service-template/
+
+### OSX ###
+.DS_Store
+.AppleDouble
+.LSOverride

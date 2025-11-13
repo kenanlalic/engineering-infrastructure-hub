@@ -1,0 +1,13 @@
+{
+    "files.exclude": {
+        "**/local-dev-infrastructure": true,
+        "**/*-service": true,
+        "**/*-libraries": true,
+        "**/*-template": true,
+        "**/*-aggregator": true,
+        "**/*_reviews": true,
+        "**/backend": true,
+        "**/cicak": true,
+        "**/frontend": true
+    }
+}
