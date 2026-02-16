@@ -1,25 +1,25 @@
 {
   "folders": [
     {
-      "name": "\ud83d\udee0\ufe0f Setup Workspace",
+      "name": "🛠️ Setup Workspace",
       "path": "./"
     },
     {
-      "name": "\ud83d\udce6 Basic Infrastructure",
-      "path": "local-dev-infrastructure/"
+      "name": "📦 Basic Infrastructure",
+      "path": "basic-infrastructure/"
+    },
+    {
+      "name": "--------------------",
+      "path": "delimiter-0/"
+    },
+    {
+      "name": "📚  Django Service Template",
+      "path": "django-service-template/"
     },
     {
       "name": "--------------------",
       "path": "delimiter-1/"
     },
-    {
-      "name": "\ud83d\udcbe Backend",
-      "path": "backend/"
-    },
-    {
-      "name": "💽 Cicak",
-      "path": "cicak/"
-    }
   ],
   "settings": {
     "scm.repositories.visible": 15,
@@ -45,5 +45,5 @@
       "ms-vscode-remote.remote-containers",
       "ms-azuretools.vscode-docker"
     ]
-  }
+  },
 }

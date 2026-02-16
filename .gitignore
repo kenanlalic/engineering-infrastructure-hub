@@ -1,17 +1,10 @@
-local-dev-infrastructure/
-backend/
-frontend/
-cicak/
-
-airflow/
-keycloak/
+basic-infrastructure/
+django-service-template/
 
 *-service/
-scim-user-data-aggregator/
-performance_reviews/
 
-shared-libraries/
-stateful-service-template/
+### pyenv ###
+.python-version
 
 ### OSX ###
 .DS_Store

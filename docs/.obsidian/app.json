@@ -1,0 +1,16 @@
+{
+  "alwaysUpdateLinks": true,
+  "newFileLocation": "folder",
+  "newFileFolderPath": "00-index",
+  "attachmentFolderPath": "assets",
+  "useMarkdownLinks": false,
+  "showUnsupportedFiles": false,
+  "caseSensitiveLink": false,
+  "strictLineBreaks": false,
+  "autoConvertHtml": true,
+  "livePreview": true,
+  "readableLineLength": true,
+  "tabSize": 2,
+  "defaultViewMode": "preview",
+  "propertiesInDocument": "visible"
+}

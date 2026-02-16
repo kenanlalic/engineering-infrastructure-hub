@@ -1,13 +1,7 @@
 {
     "files.exclude": {
-        "**/local-dev-infrastructure": true,
+        "**/basic-infrastructure": true,
+        "**/django-service-template": true,
         "**/*-service": true,
-        "**/*-libraries": true,
-        "**/*-template": true,
-        "**/*-aggregator": true,
-        "**/*_reviews": true,
-        "**/backend": true,
-        "**/cicak": true,
-        "**/frontend": true
     }
 }

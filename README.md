@@ -1,200 +1,110 @@
-# Sahmet-Org Enterprise Development Environment
+# Engineering Infrastructure Hub
 
-A comprehensive microservices development platform featuring automated authentication, service mesh architecture, and integrated development tooling for enterprise-scale applications.
+Production-ready infrastructure layer for multi-service platforms. Envoy Gateway (Kubernetes Gateway API in standalone mode), Keycloak OIDC, and PostgreSQL — running in Docker Compose with a clear scaling path to Kubernetes. Same configuration, same routing, same auth flow at every tier. New services plug in with a single compose include and two YAML files, regardless of framework or language.
 
-## Executive Summary
-This development environment implements industry-standard practices for microservices architecture with:
-- **Zero-trust security** via Keycloak OIDC authentication
-- **API Gateway pattern** using Envoy for intelligent routing
-- **Container-first development** with Docker Compose orchestration
-- **Unified debugging** across all services with VS Code integration
-
-
-## Architecture Overview
-### Core Infrastructure
-- **API Gateway**: Envoy proxy handling routing, authentication, and load balancing
-- **Identity Provider**: Keycloak OIDC for centralized authentication and authorization
-- **Service Mesh**: Container-based microservices with health monitoring
-- **Development Platform**: VS Code multi-root workspace with integrated debugging
-
-### Service Portfolio
-| Service | Port | Purpose | Status |
-|---------|------|---------|--------|
-| Backend API | 8091 | Core business logic and data management | Active |
-| Gateway | 9080 | API routing and authentication | Active |
-| Auth Service | 8095 | Identity and access management | Active |
-| Mail Service | 9999 | Development email testing | Active |
-
-
-## Prerequisites
-### Required Infrastructure
-- **Docker Desktop**: Minimum 16GB memory allocation for production-grade performance
-- **ngrok Account**: Public tunnel for development testing (free tier sufficient)
-- **VS Code**: Latest version with recommended extensions
-- **Python 3.10+**: Via pyenv for version management
-
-### Access Requirements
-- GitHub personal access token for private repository access
-- AWS credentials for cloud resource integration (optional)
-- Development environment admin access
-
-
-## Quick Start
-### 1. Environment Setup
-```bash
-# Clone the development environment
-git clone https://github.com/your-org/sahmet-org.git
-cd sahmet-org
-
-# Open VS Code workspace (critical - don't open folder directly)
-code sahmet-org.code-workspace
+```
+Internet
+  │
+  │  HTTPS (443) / HTTP (80 → 301)
+  ▼
+┌─────────────────────┐
+│   Envoy Gateway     │  TLS termination, path-based routing
+│   (Gateway API)     │  Kubernetes-native configs in standalone mode
+└──────────┬──────────┘
+           │  HTTP (internal Docker bridge)
+     ┌─────┼─────┐
+     ▼     ▼     ▼
+ Keycloak  Svc A  Svc N      PostgreSQL (shared instance, per-service DBs)
+ (OIDC)    :8000  :8000      MailDev (dev email capture)
 ```
 
-### 2. Infrastructure Bootstrap
-```bash
-# Start core services
-docker compose up -d
+### Django Service Template
 
-# Create public tunnel
-ngrok http 9080
+Ships with a Copier-generated Django service template that produces a complete, working application — not a bare scaffold. Five apps, from public-facing landing page to API layer, ready before a developer writes their first line of business logic:
 
-# Update environment with your ngrok URL
-# Edit .env file: NGROK_DOMAIN=your-hash.ngrok-free.app
-```
+| App | What ships out of the box |
+|---|---|
+| **public** | Marketing landing page — hero section, offerings, value propositions, contact. Responsive layout with CSS animations, i18n-ready. |
+| **authentication** | Login, registration, password reset, profile management, email management — all wired to Keycloak OIDC via django-allauth. |
+| **authorization** | RBAC group synchronization from Keycloak, permission model, role-based access control. |
+| **core** | Internal dashboard — HTMX live-polling system status, user profile, group display, staff admin access, health checks. |
+| **api** | DRF API layer structured around the [HackSoft Django Styleguide 2+](https://github.com/HackSoftware/Django-Styleguide) — services for business logic, selectors for queries, thin views. DDD-leaning architecture that works with Django rather than against it. |
 
-### 3. Verification
-Navigate to your ngrok URL to verify:
-- `https://your-hash.ngrok-free.app/` - Frontend application
-- `https://your-hash.ngrok-free.app/auth/admin/` - Keycloak admin (admin/password)
-- `https://your-hash.ngrok-free.app/api/` - Backend API (protected)
+The entire frontend layer — public site, auth pages, internal dashboard — is built with django-htmx, vanilla JS, and CSS. No Node toolchain, no bundler, no `node_modules` security surface, and still capable of reactive UI patterns out of the box.
 
+Every piece is exchangeable. Swap Django for FastAPI, Go, or anything that speaks HTTP and OIDC.
 
-## Development Workflow
-### Service Development
-Each service supports hot-reload development with integrated debugging:
+### Developer Experience
 
-```bash
-# Start service in development mode
-cd ./backend
-docker compose up backend_dev
+The entire development environment runs in containers. Docker and VS Code are the only prerequisites — no local Python, no virtual environments, no system-level dependencies.
 
-# Attach debugger in VS Code (port 5678)
-# Set breakpoints and debug interactively
-```
+The VS Code multi-root workspace gives each service its own Git repository and history while presenting a single window with a centralized debugger launch configuration. Breakpoints, step-through, and variable inspection work inside running containers — the same image, the same OS, the same dependencies that run in production. Tests execute inside containers with parallel runners, eliminating "passes locally, fails in CI" drift. A new developer clones, opens the workspace, and hits `F5`.
 
-### Authentication Flow
-1. User requests protected resource
-2. Envoy gateway validates JWT token
-3. If no valid token, redirect to Keycloak
-4. Post-authentication, forward with JWT headers
-5. Backend validates token via middleware
+See [Workspace Config](docs/10-workspace-config/10-workspace-config.md) for the full setup, debugger configuration, and onboarding guide.
 
-### Code Quality Standards
-- **Black formatting**: Enforced via pre-commit hooks
-- **Type checking**: Pylint with Django-specific rules
-- **Testing**: Pytest with coverage requirements
-- **Security**: Automated vulnerability scanning
+### Scaling Path
 
+The architecture is designed around three tiers that share the same codebase and configuration patterns:
 
-## Security Architecture
-### Zero-Trust Implementation
-- All inter-service communication authenticated
-- JWT tokens with configurable expiration
-- OIDC-compliant identity verification
-- Encrypted data transmission via TLS
+| Tier | Runtime | What Changes | What Stays |
+|---|---|---|---|
+| **Local** | Docker Compose, Ngrok tunnel | Ephemeral volumes, default tuning, self-signed certs | Envoy Gateway API YAML, compose definitions, auth flow |
+| **VPS** | Docker Compose, single server | Persistent volumes, production tuning, Let's Encrypt TLS | Same compose files, same Envoy routes, same Keycloak realm |
+| **Kubernetes** | Managed cluster (EKS, GKE, AKS) | RDS/CloudSQL, cert-manager, Envoy Gateway operator, Helm | Same Gateway API YAML — `kubectl apply` directly, no rewrite |
 
-### Development Security
-- No plaintext secrets in repository
-- Environment-specific configuration
-- Container isolation for services
-- Network segmentation via Docker networks
-
-
-## Monitoring & Observability
-### Health Monitoring
-```bash
-# Check service health
-curl https://your-domain.ngrok-free.app/api/health/
-
-# View container logs
-docker compose logs -f backend_dev
-
-# Monitor gateway routing
-curl localhost:19000/stats
-```
-
-### Performance Metrics
-- Response time monitoring via Envoy metrics
-- Database query performance tracking
-- Container resource utilization
-- Authentication success rates
-
-
-## Production Readiness
-### Deployment Pipeline
-- Multi-stage Docker builds for optimized images
-- Environment promotion via GitOps workflow
-- Blue-green deployment capability
-- Automated rollback mechanisms
-
-### Scalability Features
-- Horizontal scaling via container orchestration
-- Database read replicas supported
-- CDN integration for static assets
-- Auto-scaling based on metrics
-
-
-## Troubleshooting
-### Common Issues
-**Authentication Failures**
-```bash
-# Verify Keycloak connectivity
-curl https://your-domain.ngrok-free.app/auth/realms/myrealm/.well-known/openid_configuration
-
-# Check JWT token validity
-docker compose logs gateway | grep OIDC
-```
-
-**Service Communication Issues**
-```bash
-# Verify service registration
-docker compose ps
-
-# Test internal networking
-docker compose exec backend ping keycloak.local
-```
-
-**Performance Issues**
-```bash
-# Monitor resource usage
-docker stats
-
-# Check database connections
-docker compose exec db psql -U postgres -c "SELECT * FROM pg_stat_activity;"
-```
-
-### Support Escalation
-1. Check service logs for errors
-2. Verify environment configuration
-3. Test connectivity between services
-4. Consult architecture team for complex issues
-
-
-## Contributing
-### Development Standards
-- Follow established coding conventions
-- Maintain test coverage above 80%
-- Update documentation for architectural changes
-- Security review required for authentication changes
-
-### Architecture Evolution
-- Propose changes via ADR (Architecture Decision Records)
-- Performance impact assessment required
-- Backward compatibility maintained
-- Migration path documented
+Each tier is a deployment target, not a rewrite. The Envoy Gateway API resources that define routing in Docker Compose are the same files applied to a Kubernetes cluster. Keycloak realm exports, database schemas, and service definitions carry forward. Moving between tiers is an operational change, not an architectural one.
 
 ---
 
-**Version**: 1.0.2
-**Last Updated**: Generated by Enterprise Wizard
-**Support**: Development Team
+## Documentation
+
+The `docs/` directory is an [Obsidian](https://obsidian.md/) vault. Open it in Obsidian for full navigation, graph view, and callout rendering. GitHub renders the markdown partially (wiki-links display as plain text, callouts render as blockquotes).
+
+```
+docs/
+├── 00-index/
+│   └── 01-infrastructure-engineering-hub.md    ← Start here
+├── 10-workspace-config/
+│   └── 10-workspace-config.md
+├── 20-base-infrastructure/
+│   ├── 20-postgresql.md
+│   ├── 21-envoy-gateway.md
+│   ├── 22-keycloak-oidc.md
+│   └── 23-maildev.md
+└── 30-django-service-template/
+    └── 30-django-service-template.md
+```
+
+**Highlights:**
+
+- [Infrastructure Engineering Hub](docs/00-index/01-infrastructure-engineering-hub.md) — Platform architecture, design philosophy, three-tier scaling path, service catalog
+- [Envoy Gateway](docs/20-base-infrastructure/21-envoy-gateway.md) — Kubernetes Gateway API resources running in Docker Compose standalone mode. Same YAML applies to both environments.
+- [Keycloak OIDC](docs/20-base-infrastructure/22-keycloak-oidc.md) — Confidential client with backchannel token exchange, RBAC group sync, realm-as-code
+- [Workspace Config](docs/10-workspace-config/10-workspace-config.md) — Full setup guide, debugger configuration, multi-root workspace reference
+
+---
+
+## Getting Started
+
+This repo is the workspace shell. Infrastructure and services are separate repositories cloned into this directory.
+
+```bash
+git clone git@github.com:yourorg/setup-workspace.git
+cd setup-workspace
+git clone git@github.com:yourorg/basic-infrastructure.git
+git clone git@github.com:yourorg/django-service-template.git
+
+cd basic-infrastructure
+cp .env.example .env
+docker compose up -d
+
+code eih.code-workspace
+```
+
+See [Workspace Config](docs/10-workspace-config/10-workspace-config.md) for prerequisites, extension setup, container-based debugging, and the full service generation workflow.
+
+---
+
+## License
+
+Licensed under [Apache 2.0](LICENSE). See LICENSE file for details.
