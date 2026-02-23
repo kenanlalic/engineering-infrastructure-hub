@@ -81,7 +81,7 @@ Delimiter lines are visual separators created by empty `delimiter-*` directories
 │                        VS Code Workspace                            │
 │                                                                     │
 │   ┌──────────────────────────────────────────────────────────────┐  │
-│   │ eih.code-workspace                                          │  │
+│   │ eih.code-workspace                                           │  │
 │   │  Folder roots → emoji-prefixed, per-repo                     │  │
 │   │  Settings → file exclusions, git, python analysis            │  │
 │   │  Extensions → recommended on first open                      │  │
@@ -162,7 +162,7 @@ Open the workspace and VS Code prompts to install recommended extensions automat
 code eih.code-workspace
 ```
 
-### 5. Start Infrastructure
+### 5. Start Infrastructure Only
 
 ```bash
 cd basic-infrastructure
@@ -235,7 +235,7 @@ include:
   - ../backend-service/compose.yaml
 ```
 
-**Envoy settings for backend-service route** — three pre-configured YAML files:
+**Envoy settings for backend-service route** — three pre-configured YAML files (for dev you just need the two files in common):
 
 ```
 basic-infrastructure/services_configs/envoy_config/

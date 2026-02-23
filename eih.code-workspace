@@ -19,7 +19,7 @@
     {
       "name": "--------------------",
       "path": "delimiter-1/"
-    },
+    }
   ],
   "settings": {
     "scm.repositories.visible": 15,
