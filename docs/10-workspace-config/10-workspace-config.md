@@ -1,22 +1,27 @@
 ---
-title: "VS Code Workspace Configuration"
-created: "2026-02-15"
-updated: "2026-02-16"
+title: VS Code Workspace Configuration
+created: 2026-02-15
+updated: 2026-02-16
 version: 1.0.0
-status: published
 type: reference
-owner: "platform-team"
-lifecycle: production
-tags: [workspace, vscode, debugger, devcontainer, onboarding]
+owner: Ktwenty Threel
+lifecycle: development
+tags:
+  - workspace
+  - vscode
+  - debugger
+  - devcontainer
+  - onboarding
 ---
+
 
 # VS Code Workspace — Multi-Root Development Environment
 
 Single VS Code instance managing all platform repositories, with centralized debugger launch configs, container-attached development, and parallelized test execution. From empty machine to hitting a breakpoint inside a running container.
 
-> 📍 **Type:** Workspace Configuration
-> 👤 **Owner:** Ktwenty Threel
-> 🎯 **Outcome:** Understand the Workspace Configuration Process
+> 📍 **Type:** Workspace Configuration<br>
+> 👤 **Owner:** Ktwenty Threel<br>
+> 🎯 **Outcome:** Understand the Workspace Configuration Process<br>
 
 ---
 

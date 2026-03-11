@@ -3,19 +3,20 @@
 created: "2026-02-11"
 updated: "2026-02-11"
 version: 1.0.0
-status: published
 type: reference
-owner: "platform-team"
+owner: Ktwenty Threel
 lifecycle: production
 tags: [service, identity, authentication, oidc]
 ---
+
+
 # Keycloak — Centralized Identity & Access Management
 
 Single source of truth for authentication, authorization, and user lifecycle management across all platform services. OIDC-based SSO with RBAC following NIST Core and Hierarchical principles (Levels 1–2), synced to Django services via django-allauth.
 
-> 📍 **Type:** Service Reference
-> 👤 **Owner:** Ktwenty Threel
-> 🎯 **Outcome:** Understand the Keycloak OIDC Setup
+> 📍 **Type:** Service Reference<br>
+> 👤 **Owner:** Ktwenty Threel<br>
+> 🎯 **Outcome:** Understand the Keycloak OIDC Setup<br>
 
 ---
 

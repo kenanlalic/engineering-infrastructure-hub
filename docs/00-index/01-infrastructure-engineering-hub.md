@@ -3,26 +3,24 @@ title: Infrastructure Engineering Hub
 created: 2025-02-10
 updated: 2026-02-13
 version: 3.0.0
-status: published
 type: moc
-owner: "platform-team"
-
+owner: Ktwenty Threel
 tags:
-- moc
-- home
-- infrastructure
-- django
-- docker
-- keycloak
-- envoy
+  - moc
+  - home
+  - infrastructure
+  - django
+  - docker
+  - keycloak
+  - envoy
 ---
 # Infrastructure Engineering Hub
 
 **Scalable open-source infrastructure for microservices — from local development through VPS production to Kubernetes with minimal friction.**
 
-> 📍 **Type:** Map of Content (MOC)
-> 👤 **Owner:** Ktwenty Threel
-> 🎯 **Outcome:** Understand the platform, the architecture, and where everything lives
+> 📍 **Type:** Map of Content (MOC)<br>
+> 👤 **Owner:** Ktwenty Threel<br>
+> 🎯 **Outcome:** Understand the platform, the architecture, and where everything lives<br>
 
 ## Table of Contents
 
@@ -46,8 +44,7 @@ The platform follows a natural progression through three layers:
 
 A multi-root workspace configuration that manages all services, infrastructure, and this documentation in a single VS Code instance. Each service gets its own debugger launch configuration. The VS Code Test Explorer runs inside a dev container with parallelized per-test debugging capabilities.
 
-- [[1.0 - Workspace Config]]
-- [[launch-json-debuggers|Debugger Setup]]
+- [[10-workspace-config|1.0 - Workspace Config]]
 
 ### 🏗️ Base Infrastructure
 
@@ -57,23 +54,21 @@ Pre-configured configs ship for Envoy Gateway (dev and prod-ready for VPS, minim
 
 In development, **Ngrok** exposes the entire local stack via a public HTTPS URL — enabling OAuth callbacks, webhook integrations, mobile testing, and client demos against your actual environment. In production on VPS, Ngrok is replaced by direct public exposure through Envoy with Let's Encrypt certificates.
 
-- [[2.0 - PostgreSQL]]
-- [[2.1 - Envoy Gateway]]
-- [[2.2 - Keycloak OIDC]]
-- [[2.3 - MailDev]]
+- [[20-postgresql|2.0 - PostgreSQL]]
+- [[21-envoy-gateway|2.1 - Envoy Gateway]]
+- [[22-keycloak-oidc|2.2 - Keycloak OIDC]]
+- [[23-maildev|2.3 - MailDev]]
 
 ### 🧩 Django Service Template
 
-New services are generated via an updatable [[template-overview|Copier template]] in a few steps. Each service ships with four apps following [HackSoft Styleguide 2+](https://github.com/HackSoftware/Django-Styleguide) best practices: API (Django REST Framework), authentication (django-allauth + Keycloak OIDC), authorization (RBAC with Keycloak as source of truth), and core (admin panel, healthchecks). An optional public app provides a django-htmx powered frontend with branding, SEO, and analytics setup. Pre-commit hooks, linting, and formatting are included.
+New services are generated via an updatable [Copier Template]([https://github.com/HackSoftware/Django-Styleguide](https://copier.readthedocs.io/en/stable/)) in a few steps. Each service ships with four apps following [HackSoft Styleguide 2+](https://github.com/HackSoftware/Django-Styleguide) best practices: API (Django REST Framework), authentication (django-allauth + Keycloak OIDC), authorization (RBAC with Keycloak as source of truth), and core (admin panel, healthchecks). An optional public app provides a django-htmx powered frontend with branding, SEO, and analytics setup. Pre-commit hooks, linting, and formatting are included.
 
 Multiple Django services can be generated from the same template and deployed on the same infrastructure under different subdomains — each service registers as a new Envoy route and Keycloak client within the existing setup.
 
-- [[3.0 - Django Service Template]]
-- [[creating-new-service|Create a New Service]]
-- [[template-customization|Template Customization]]
+- [[30-django-service-template|3.0 - Django Service Template]]
 
 > [!tip] Ready to start? 
-> See the [[workspace-setup-readme|Workspace Setup README]] for step-by-step setup.
+> See the [[10-workspace-config#Setup|Workspace Setup]] for step-by-step setup.
 
 ---
 
@@ -137,7 +132,7 @@ Instead of each service managing its own authentication, routing, and database, 
    └──────────────────────────────────────────────────────────────┘
 ```
 
-The `◄───` arrow between Django Service A and Keycloak represents the internal backchannel: Django exchanges tokens with Keycloak directly over the Docker bridge network, never routing through the public gateway. See [[service-keycloak#Confidential Client with Backchannel Separation|Backchannel Separation]] for details.
+The `◄───` arrow between Django Service A and Keycloak represents the internal backchannel: Django exchanges tokens with Keycloak directly over the Docker bridge network, never routing through the public gateway. See [[22-keycloak-oidc#Confidential Client with Backchannel Separation|Backchannel Separation]] for details.
 
 ### Component Responsibilities
 
@@ -211,7 +206,7 @@ Each container becomes a pod. Envoy Gateway configs translate directly to Kubern
 
 > Configuration and tooling for the multi-service development experience.
 
-**VS Code Workspace** — Multi-root workspace managing all services, infrastructure, and documentation. Per-service debugger launch configs and parallelized test execution via dev containers. → [[vscode-workspace-config|Configuration]] · [[launch-json-debuggers|Debuggers]] · [[settings-json-exclusions|Settings Reference]]
+**VS Code Workspace** — Multi-root workspace managing all services, infrastructure, and documentation. Per-service debugger launch configs and parallelized test execution via dev containers. → [[10-workspace-config#Overview|Configuration]] · [[10-workspace-config#Setup|Setup]] · [[10-workspace-config#Debugging|Debugging]]
 
 ---
 
@@ -219,13 +214,13 @@ Each container becomes a pod. Envoy Gateway configs translate directly to Kubern
 
 > Shared services that every Django service depends on. Run with `docker compose up`.
 
-**Envoy Gateway** — Front door for all traffic. TLS termination (Let's Encrypt on prod, Ngrok on dev), path-based and subdomain routing, HTTP→HTTPS redirect, header manipulation. Configs are file-based, prod-ready for VPS, and translate to Kubernetes Gateway API with minimal changes. → [[service-envoy-gateway|Setup & Configuration]] · [[networking-and-ports|Networking Reference]]
+**Envoy Gateway** — Front door for all traffic. TLS termination (Let's Encrypt on prod, Ngrok on dev), path-based and subdomain routing, HTTP→HTTPS redirect, header manipulation. Configs are file-based, prod-ready for VPS, and translate to Kubernetes Gateway API with minimal changes. → [[21-envoy-gateway#Overview|Setup & Configuration]] 
 
-**Keycloak** — Centralized identity provider. OIDC/SSO authentication, RBAC group management, user lifecycle. Single realm (`myrealm`), synced to Django services via django-allauth on every login. Admin console for user and session management. → [[service-keycloak|Setup & Configuration]] · [[rbac-permissions-model|RBAC Model]]
+**Keycloak** — Centralized identity provider. OIDC/SSO authentication, RBAC group management, user lifecycle. Single realm (`myrealm`), synced to Django services via django-allauth on every login. Admin console for user and session management. → [[22-keycloak-oidc#Overview|Setup & Configuration]] · [[30-django-service-template#RBAC Model|RBAC Model]]
 
-**PostgreSQL** — Shared database instance with per-service schemas. Initialized via startup scripts that create databases and schemas automatically. Each Django service gets logical isolation without operational overhead. → [[service-postgres|Setup & Configuration]] · [[database-schemas|Schema Reference]]
+**PostgreSQL** — Shared database instance with per-service schemas. Initialized via startup scripts that create databases and schemas automatically. Each Django service gets logical isolation without operational overhead. → [[20-postgresql#Overview|Setup & Configuration]]
 
-**MailDev** _(dev only)_ — Captures all outbound email from all services. Web UI for inspecting verification emails, password resets, and notifications without sending anything externally. Replaced by a real SMTP provider in production. → [[service-maildev|Setup & Configuration]]
+**MailDev** _(dev only)_ — Captures all outbound email from all services. Web UI for inspecting verification emails, password resets, and notifications without sending anything externally. Replaced by a real SMTP provider in production. → [[23-maildev#Overview|Setup & Configuration]]
 
 **Echo Server** _(dev only)_ — Mirrors incoming requests back in the response. Used for debugging Envoy Gateway routes, headers, and path matching before wiring up real services.
 
@@ -237,9 +232,9 @@ Each container becomes a pod. Envoy Gateway configs translate directly to Kubern
 
 > Updatable Copier template that generates production-ready Django services.
 
-**Django Services** — Ships with API (DRF + HackSoft Styleguide 2+), authentication (django-allauth + Keycloak OIDC), authorization (RBAC), and core (admin panel, healthchecks) apps. Optional public app with django-htmx frontend with branding, SEO, and analytics setup. Pre-commit, linting, formatting included. Multiple services deploy on the same infrastructure under different subdomains. → [[creating-new-service|Create a Service]] · [[template-overview|Template Overview]] · [[template-customization|Customization]]
+**Django Services** — Ships with API (DRF + HackSoft Styleguide 2+), authentication (django-allauth + Keycloak OIDC), authorization (RBAC), and core (admin panel, healthchecks) apps. Optional public app with django-htmx frontend with branding, SEO, and analytics setup. Pre-commit, linting, formatting included. Multiple services deploy on the same infrastructure under different subdomains. → [[30-django-service-template#Copier Workflow|Create a Service]]
 
-**App internals:** → [[app-api-hacksoft-integration|API]] · [[app-authentication-allauth-oidc|Authentication]] · [[app-authorisation-rbac|Authorization]] · [[app-core-admin-panel|Core]] · [[app-public-htmx-frontend|Public Frontend]]
+**App internals:** → [[30-django-service-template#API|API]] · [[30-django-service-template#Authentication|Authentication]] · [[30-django-service-template#Authorization|Authorization]] · [[30-django-service-template#Core|Core]] · [[30-django-service-template#Public (Optional)|Public Frontend]]
 
 ---
 

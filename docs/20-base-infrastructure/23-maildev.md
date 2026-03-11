@@ -3,20 +3,20 @@ title: "MailDev"
 created: "2026-02-15"
 updated: "2026-02-15"
 version: 1.0.0
-status: published
 type: reference
-owner: "platform-team"
+owner: Ktwenty Threel
 lifecycle: development
 tags: [service, maildev, email, smtp, dev-only]
 ---
+
 
 # MailDev — Local Email Capture & Inspection
 
 Dev-only SMTP server that captures all outbound email from all platform services. Provides a web UI for inspecting email content, formatting, and delivery without sending anything externally. Used for Django mail delivery and email formatting testing, and Keycloak user management workflow testing (verification emails, password resets, account actions).
 
-> 📍 **Type:** Service Reference
-> 👤 **Owner:** Ktwenty Threel
-> 🎯 **Outcome:** Understand the MailDev Setup
+> 📍 **Type:** Service Reference<br>
+> 👤 **Owner:** Ktwenty Threel<br>
+> 🎯 **Outcome:** Understand the MailDev Setup<br>
 
 ---
 

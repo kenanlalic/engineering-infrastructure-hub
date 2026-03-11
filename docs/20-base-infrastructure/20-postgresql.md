@@ -3,19 +3,20 @@ title: "PostgreSQL"
 created: "2026-02-15"
 updated: "2026-02-15"
 version: 1.0.0
-status: published
 type: reference
-owner: "platform-team"
+owner: Ktwenty Threel
 lifecycle: production
 tags: [service, postgresql, database, persistence]
 ---
+
+
 # PostgreSQL — Shared Database Instance
 
 Single PostgreSQL instance providing per-service logical databases for all platform services. Initialized via a startup script that creates databases dynamically from an environment variable. Each Django service and Keycloak get their own database within the same instance — logical isolation without operational overhead.
 
-> 📍 **Type:** Service Reference
-> 👤 **Owner:** Ktwenty Threel
-> 🎯 **Outcome:** Understand the PostgreSQL Setup
+> 📍 **Type:** Service Reference<br>
+> 👤 **Owner:** Ktwenty Threel<br>
+> 🎯 **Outcome:** Understand the PostgreSQL Setup<br>
 
 ---
 

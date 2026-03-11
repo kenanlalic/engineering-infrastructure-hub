@@ -3,20 +3,20 @@ title: "Envoy Gateway"
 created: "2026-02-10"
 updated: "2026-02-13"
 version: 3.0.0
-status: published
 type: reference
-owner: "platform-team"
+owner: Ktwenty Threel
 lifecycle: production
 tags: [service, envoy, gateway, tls, routing, proxy]
 ---
+
 
 # Envoy Gateway — TLS Termination & Traffic Routing
 
 Front door for all platform traffic. Handles TLS termination, path-based and subdomain routing, HTTP→HTTPS redirect, and header manipulation. Uses Kubernetes Gateway API resources in standalone file mode — the same configs work in Docker Compose and translate to Kubernetes with minimal changes.
 
-> 📍 **Type:** Service Reference
-> 👤 **Owner:** Ktwenty Threel
-> 🎯 **Outcome:** Understand the Envoy Gateway Setup
+> 📍 **Type:** Service Reference<br>
+> 👤 **Owner:** Ktwenty Threel<br>
+> 🎯 **Outcome:** Understand the Envoy Gateway Setup<br>
 
 ---
 

@@ -3,9 +3,8 @@ title: "Django Service Template"
 created: "2026-02-15"
 updated: "2026-02-21"
 version: 1.0.0
-status: published
 type: reference
-owner: "platform-team"
+owner: Ktwenty Threel
 lifecycle: production
 tags: [service, django, template, copier, hacksoft, allauth, rbac, htmx]
 ---
@@ -13,9 +12,9 @@ tags: [service, django, template, copier, hacksoft, allauth, rbac, htmx]
 
 Updatable Copier template that generates production-ready Django services. Each service ships with four apps following HackSoft Styleguide 2+ conventions: API (Django REST Framework), authentication (django-allauth + Keycloak OIDC), authorization (RBAC with Keycloak as source of truth), and core (admin panel, healthchecks, shared infrastructure). An optional public app adds a django-htmx frontend with branding, legal pages, SEO, and privacy-first analytics.
 
-> 📍 **Type:** Service Reference 
-> 👤 **Owner:** Ktwenty Threel
-> 🎯 **Outcome:** Understand the Django Service Template
+> 📍 **Type:** Service Reference<br>
+> 👤 **Owner:** Ktwenty Threel<br>
+> 🎯 **Outcome:** Understand the Django Service Template<br>
 
 ---
 
