@@ -3,20 +3,20 @@ title: "MailDev"
 created: "2026-02-15"
 updated: "2026-02-15"
 version: 1.0.0
-status: published
 type: reference
-owner: "platform-team"
+owner: Kenan Lalic
 lifecycle: development
 tags: [service, maildev, email, smtp, dev-only]
 ---
+
 
 # MailDev — Local Email Capture & Inspection
 
 Dev-only SMTP server that captures all outbound email from all platform services. Provides a web UI for inspecting email content, formatting, and delivery without sending anything externally. Used for Django mail delivery and email formatting testing, and Keycloak user management workflow testing (verification emails, password resets, account actions).
 
-> 📍 **Type:** Service Reference
-> 👤 **Owner:** Ktwenty Threel
-> 🎯 **Outcome:** Understand the MailDev Setup
+> 📍 **Type:** Service Reference<br>
+> 👤 **Owner:** Kenan Lalic<br>
+> 🎯 **Outcome:** Understand the MailDev Setup<br>
 
 ---
 
@@ -258,8 +258,3 @@ Email links contain the URL of the originating service. If the link points to `l
 
 - [MailDev GitHub Repository](https://github.com/maildev/maildev)
 - [MailDev Docker Hub](https://hub.docker.com/r/maildev/maildev)
-- [[infrastructure-engineering-hub|Infrastructure Engineering Hub]]
-- [[service-keycloak|Keycloak Configuration]]
-- [[service-keycloak#SMTP|Keycloak SMTP Configuration]]
-- [[service-envoy-gateway|Envoy Gateway Configuration]]
-- [[networking-and-ports|Networking & Ports Reference]]

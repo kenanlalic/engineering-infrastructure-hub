@@ -3,19 +3,20 @@ title: "PostgreSQL"
 created: "2026-02-15"
 updated: "2026-02-15"
 version: 1.0.0
-status: published
 type: reference
-owner: "platform-team"
+owner: Kenan Lalic
 lifecycle: production
 tags: [service, postgresql, database, persistence]
 ---
+
+
 # PostgreSQL — Shared Database Instance
 
 Single PostgreSQL instance providing per-service logical databases for all platform services. Initialized via a startup script that creates databases dynamically from an environment variable. Each Django service and Keycloak get their own database within the same instance — logical isolation without operational overhead.
 
-> 📍 **Type:** Service Reference
-> 👤 **Owner:** Ktwenty Threel
-> 🎯 **Outcome:** Understand the PostgreSQL Setup
+> 📍 **Type:** Service Reference<br>
+> 👤 **Owner:** Kenan Lalic<br>
+> 🎯 **Outcome:** Understand the PostgreSQL Setup<br>
 
 ---
 
@@ -26,7 +27,7 @@ Single PostgreSQL instance providing per-service logical databases for all platf
 - [[#Design Decisions]]
 - [[#Dependencies]]
 - [[#Configuration]]
-- [[#Dev ↔ Prod Differences]]
+- [[#Dev vs Prod Differences]]
 - [[#Kubernetes Migration Path]]
 - [[#Monitoring]]
 - [[#Runbooks]]
@@ -305,7 +306,7 @@ db:
 
 ---
 
-## Dev ↔ Prod Differences
+## Dev vs Prod Differences
 
 | Aspect | Dev | Prod |
 |---|---|---|
@@ -433,8 +434,3 @@ This procedure upgrades PostgreSQL across major versions on a running production
 - [PostgreSQL Versioning Policy](https://www.postgresql.org/support/versioning/)
 - [docker-entrypoint-initdb.d Mechanism](https://github.com/docker-library/docs/blob/master/postgres/README.md#initialization-scripts)
 - [pgautoupgrade — Automated Docker Upgrades](https://github.com/pgautoupgrade/docker-pgautoupgrade)
-- [[infrastructure-engineering-hub|Infrastructure Engineering Hub]]
-- [[service-keycloak|Keycloak Configuration]]
-- [[service-envoy-gateway|Envoy Gateway Configuration]]
-- [[database-schemas|Schema Reference]]
-- [[networking-and-ports|Networking & Ports Reference]]

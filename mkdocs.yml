@@ -1,4 +1,5 @@
 site_name: Infrastructure Engineering Hub
+site_url: https://kenanlalic.github.io/engineering-infrastructure-hub/
 docs_dir: docs
 
 theme:
@@ -6,10 +7,19 @@ theme:
 
 plugins:
   - search
+  - callouts
   - ezlinks
+  - redirects:
+      redirect_maps:
+        'index.md': '00-index/01-infrastructure-engineering-hub.md'
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
 
 nav:
-  - Hub: 00-index/01-infrastructure-engineering-hub.md
+  - Home: 00-index/01-infrastructure-engineering-hub.md
   - Workspace: 10-workspace-config/10-workspace-config.md
   - Base Infrastructure:
     - PostgreSQL: 20-base-infrastructure/20-postgresql.md

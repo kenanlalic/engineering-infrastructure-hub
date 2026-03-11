@@ -3,19 +3,20 @@
 created: "2026-02-11"
 updated: "2026-02-11"
 version: 1.0.0
-status: published
 type: reference
-owner: "platform-team"
+owner: Kenan Lalic
 lifecycle: production
 tags: [service, identity, authentication, oidc]
 ---
+
+
 # Keycloak — Centralized Identity & Access Management
 
 Single source of truth for authentication, authorization, and user lifecycle management across all platform services. OIDC-based SSO with RBAC following NIST Core and Hierarchical principles (Levels 1–2), synced to Django services via django-allauth.
 
-> 📍 **Type:** Service Reference
-> 👤 **Owner:** Ktwenty Threel
-> 🎯 **Outcome:** Understand the Keycloak OIDC Setup
+> 📍 **Type:** Service Reference<br>
+> 👤 **Owner:** Kenan Lalic<br>
+> 🎯 **Outcome:** Understand the Keycloak OIDC Setup<br>
 
 ---
 
@@ -28,7 +29,7 @@ Single source of truth for authentication, authorization, and user lifecycle man
 - [Configuration](#configuration)
 - [Realm Management](#realm-management)
 - [Realm Template Maintenance](#realm-template-maintenance)
-- [Dev ↔ Prod Differences](#dev--prod-differences)
+- [Dev vs Prod Differences](#dev--prod-differences)
 - [Monitoring](#monitoring)
 - [Runbooks](#runbooks)
 - [ADRs](#adrs)
@@ -260,7 +261,7 @@ docker compose exec keycloak /opt/keycloak/bin/kc.sh export \
 
 ---
 
-## Dev ↔ Prod Differences
+## Dev vs Prod Differences
 
 | Aspect             | Dev                                           | Prod                                                                       |
 | ------------------ | --------------------------------------------- | -------------------------------------------------------------------------- |
@@ -340,5 +341,3 @@ Verify Keycloak is reachable internally at `http://keycloak.local:8080/auth`. Ch
 - [keycloak-config-cli (adorsys)](https://github.com/adorsys/keycloak-config-cli)
 - [NIST RBAC Project](https://csrc.nist.gov/projects/role-based-access-control)
 - [django-allauth Keycloak Provider](https://docs.allauth.org/en/latest/socialaccount/providers/keycloak.html)
-- [[infrastructure-engineering-hub|Infrastructure Engineering Hub]]
-- [[service-registry|Service Registry]]

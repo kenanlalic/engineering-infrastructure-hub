@@ -3,20 +3,20 @@ title: "Envoy Gateway"
 created: "2026-02-10"
 updated: "2026-02-13"
 version: 3.0.0
-status: published
 type: reference
-owner: "platform-team"
+owner: Kenan Lalic
 lifecycle: production
 tags: [service, envoy, gateway, tls, routing, proxy]
 ---
+
 
 # Envoy Gateway — TLS Termination & Traffic Routing
 
 Front door for all platform traffic. Handles TLS termination, path-based and subdomain routing, HTTP→HTTPS redirect, and header manipulation. Uses Kubernetes Gateway API resources in standalone file mode — the same configs work in Docker Compose and translate to Kubernetes with minimal changes.
 
-> 📍 **Type:** Service Reference
-> 👤 **Owner:** Ktwenty Threel
-> 🎯 **Outcome:** Understand the Envoy Gateway Setup
+> 📍 **Type:** Service Reference<br>
+> 👤 **Owner:** Kenan Lalic<br>
+> 🎯 **Outcome:** Understand the Envoy Gateway Setup<br>
 
 ---
 
@@ -27,7 +27,7 @@ Front door for all platform traffic. Handles TLS termination, path-based and sub
 - [[#Design Decisions]]
 - [[#Dependencies]]
 - [[#Configuration]]
-- [[#Dev ↔ Prod Differences]]
+- [[#Dev vs Prod Differences]]
 - [[#Monitoring]]
 - [[#Runbooks]]
 - [[#ADRs]]
@@ -345,7 +345,7 @@ spec:
 
 ---
 
-## Dev ↔ Prod Differences
+## Dev vs Prod Differences
 
 | Aspect | Dev | Prod |
 |---|---|---|
@@ -464,6 +464,3 @@ Check that port 80 is accessible from the internet (certbot uses HTTP-01 challen
 - [Kubernetes Gateway API Specification](https://gateway-api.sigs.k8s.io/)
 - [Let's Encrypt Documentation](https://letsencrypt.org/docs/)
 - [Envoy Proxy Documentation](https://www.envoyproxy.io/docs)
-- [[infrastructure-engineering-hub|Infrastructure Engineering Hub]]
-- [[service-keycloak|Keycloak Configuration]]
-- [[networking-and-ports|Networking & Ports Reference]]

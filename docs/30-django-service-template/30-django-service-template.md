@@ -3,9 +3,8 @@ title: "Django Service Template"
 created: "2026-02-15"
 updated: "2026-02-21"
 version: 1.0.0
-status: published
 type: reference
-owner: "platform-team"
+owner: Kenan Lalic
 lifecycle: production
 tags: [service, django, template, copier, hacksoft, allauth, rbac, htmx]
 ---
@@ -13,9 +12,9 @@ tags: [service, django, template, copier, hacksoft, allauth, rbac, htmx]
 
 Updatable Copier template that generates production-ready Django services. Each service ships with four apps following HackSoft Styleguide 2+ conventions: API (Django REST Framework), authentication (django-allauth + Keycloak OIDC), authorization (RBAC with Keycloak as source of truth), and core (admin panel, healthchecks, shared infrastructure). An optional public app adds a django-htmx frontend with branding, legal pages, SEO, and privacy-first analytics.
 
-> 📍 **Type:** Service Reference 
-> 👤 **Owner:** Ktwenty Threel
-> 🎯 **Outcome:** Understand the Django Service Template
+> 📍 **Type:** Service Reference<br>
+> 👤 **Owner:** Kenan Lalic<br>
+> 🎯 **Outcome:** Understand the Django Service Template<br>
 
 ---
 
@@ -31,7 +30,7 @@ Updatable Copier template that generates production-ready Django services. Each 
 - [[#Authorization Usage]]
 - [[#HackSoft Styleguide Conventions]]
 - [[#Testing]]
-- [[#Dev ↔ Prod Differences]]
+- [[#Dev vs Prod Differences]]
 - [[#Kubernetes Migration Path]]
 - [[#Runbooks]]
 - [[#ADRs]]
@@ -911,7 +910,7 @@ Tests run inside the Docker container via VS Code Test Explorer (attached via Re
 
 ---
 
-## Dev ↔ Prod Differences
+## Dev vs Prod Differences
 
 |Aspect|Dev|Prod|
 |---|---|---|
@@ -1025,14 +1024,3 @@ The `PrivacyAnalyticsMiddleware` is only generated when `include_analytics=true`
 - [django-htmx Documentation](https://django-htmx.readthedocs.io/)
 - [NIST RBAC Model](https://csrc.nist.gov/projects/role-based-access-control)
 - [OWASP Access Control Cheat Sheet](https://owasp.org/www-community/Access_Control)
-- [[01-infrastructure-engineering-hub|Infrastructure Engineering Hub]]
-- [[10-workspace-config|Workspace Configuration]]
-- [[20-postgresql|PostgreSQL]]
-- [[21-envoy-gateway|Envoy Gateway]]
-- [[22-keycloak-oidc|Keycloak OIDC]]
-- [[23-maildev|MailDev]]
-- [[app-core-admin-panel|Core App]]
-- [[app-authentication-allauth-oidc|Authentication App]]
-- [[app-authorisation-rbac|Authorization App]]
-- [[app-api-hacksoft-integration|API App]]
-- [[app-public-htmx-frontend|Public Frontend App]]

@@ -1,22 +1,27 @@
 ---
-title: "VS Code Workspace Configuration"
-created: "2026-02-15"
-updated: "2026-02-16"
+title: VS Code Workspace Configuration
+created: 2026-02-15
+updated: 2026-02-16
 version: 1.0.0
-status: published
 type: reference
-owner: "platform-team"
-lifecycle: production
-tags: [workspace, vscode, debugger, devcontainer, onboarding]
+owner: Kenan Lalic
+lifecycle: development
+tags:
+  - workspace
+  - vscode
+  - debugger
+  - devcontainer
+  - onboarding
 ---
+
 
 # VS Code Workspace — Multi-Root Development Environment
 
 Single VS Code instance managing all platform repositories, with centralized debugger launch configs, container-attached development, and parallelized test execution. From empty machine to hitting a breakpoint inside a running container.
 
-> 📍 **Type:** Workspace Configuration
-> 👤 **Owner:** Ktwenty Threel
-> 🎯 **Outcome:** Understand the Workspace Configuration Process
+> 📍 **Type:** Workspace Configuration<br>
+> 👤 **Owner:** Kenan Lalic<br>
+> 🎯 **Outcome:** Understand the Workspace Configuration Process<br>
 
 ---
 
@@ -30,7 +35,7 @@ Single VS Code instance managing all platform repositories, with centralized deb
 - [[#Workspace File Reference]]
 - [[#Debugging]]
 - [[#Testing]]
-- [[#Ngrok & Public Access]]
+- [[#Ngrok and Public Access]]
 - [[#Runbooks]]
 - [[#ADRs]]
 - [[#References]]
@@ -192,7 +197,7 @@ Wait for all services to report healthy: `docker compose ps`.
 ngrok http 8080
 ```
 
-Copy the generated URL — you'll need it as `DOMAIN` in environment files and Keycloak redirect URIs. See [[#Ngrok & Public Access]] for details on free vs. paid accounts.
+Copy the generated URL — you'll need it as `DOMAIN` in environment files and Keycloak redirect URIs. See [[#Ngrok and Public Access]] for details on free vs. paid accounts.
 
 ### 7. Develop Inside Containers
 
@@ -222,7 +227,7 @@ nano .env
 > [!important] Naming convention
 > Always name service directories with a `-service` suffix (e.g. `backend-service`, `billing-service`). The workspace `.gitignore` and `.vscode/settings.json` use `*-service` wildcards — following this convention means zero manual changes to workspace configuration files.
 
-The generated service ships with API, authentication, authorization, and core apps. See the [[template-overview|Django Service Template]] for the full configuration checklist and port allocation.
+The generated service ships with API, authentication, authorization, and core apps. See the [[30-django-service-template|3.0 - Django Service Template]] for the full configuration checklist and port allocation.
 
 ### Step 2: Register with Infrastructure
 
@@ -406,7 +411,7 @@ The workflow: attach to container via Remote Explorer → open Test Explorer →
 
 ---
 
-## Ngrok & Public Access
+## Ngrok and Public Access
 
 Ngrok tunnels a public HTTPS URL to your local Envoy Gateway on port 8080. This enables OAuth redirect flows (Keycloak needs a public URL for OIDC callbacks), mobile testing against the local stack, and remote demos.
 
