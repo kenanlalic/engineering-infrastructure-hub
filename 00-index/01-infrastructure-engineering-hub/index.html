@@ -1,0 +1,1344 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://kenanlalic.github.io/engineering-infrastructure-hub/00-index/01-infrastructure-engineering-hub/">
+      
+      
+      
+        <link rel="next" href="../../10-workspace-config/10-workspace-config/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+    
+    
+      
+        <title>Infrastructure Engineering Hub - Infrastructure Engineering Hub</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#infrastructure-engineering-hub" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-header__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Infrastructure Engineering Hub
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Infrastructure Engineering Hub
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-nav__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Infrastructure Engineering Hub
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform at a Glance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Platform at a Glance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vs-code-workspace-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗂️ VS Code Workspace Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#base-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Base Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#django-service-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧩 Django Service Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#component-responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scaling-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scaling Path
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scaling Path">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#local-development-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ Local Development — Docker Compose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mvp-production-docker-compose-on-vps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 MVP Production — Docker Compose on VPS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-at-scale-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Production at Scale — Kubernetes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-changes-between-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Changes Between Tiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stack-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stack Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stack Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workspace-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗂️ Workspace Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#base-infrastructure_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Base Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#django-service-template_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧩 Django Service Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📋 Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-workspace-config/10-workspace-config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workspace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Base Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/20-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/21-envoy-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Envoy Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/22-keycloak-oidc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/23-maildev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MailDev
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../30-django-service-template/30-django-service-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Django Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#platform-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Platform at a Glance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Platform at a Glance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#vs-code-workspace-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗂️ VS Code Workspace Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#base-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Base Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#django-service-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧩 Django Service Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#component-responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#scaling-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scaling Path
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Scaling Path">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#local-development-docker-compose" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛠️ Local Development — Docker Compose
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mvp-production-docker-compose-on-vps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 MVP Production — Docker Compose on VPS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-at-scale-kubernetes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ⚡ Production at Scale — Kubernetes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-changes-between-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Changes Between Tiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stack-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stack Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stack Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#workspace-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🗂️ Workspace Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#base-infrastructure_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Base Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#django-service-template_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🧩 Django Service Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📋 Operations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="infrastructure-engineering-hub">Infrastructure Engineering Hub</h1>
+<p><strong>Scalable open-source infrastructure for microservices — from local development through VPS production to Kubernetes with minimal friction.</strong></p>
+<blockquote>
+<p>📍 <strong>Type:</strong> Map of Content (MOC)<br>
+👤 <strong>Owner:</strong> Ktwenty Threel<br>
+🎯 <strong>Outcome:</strong> Understand the platform, the architecture, and where everything lives<br></p>
+</blockquote>
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol>
+<li><a href="./#platform-at-a-glance" title="Platform at a Glance">Platform at a Glance</a></li>
+<li><a href="./#architecture" title="Architecture">Architecture</a></li>
+<li><a href="./#scaling-path" title="Scaling Path">Scaling Path</a></li>
+<li><a href="./#stack-reference" title="Stack Reference">Stack Reference</a></li>
+</ol>
+<hr />
+<h2 id="platform-at-a-glance">Platform at a Glance</h2>
+<p>A scalable open-source infrastructure for microservices — from local development through VPS production to Kubernetes — with minimal configuration changes between tiers. All components are open-source and interchangeable. The local development experience is first-class, and the same containers that run on your machine deploy to production without modification.</p>
+<p>The platform follows a natural progression through three layers:</p>
+<div class="admonition info">
+<p class="admonition-title">Logical flow</p>
+<p><strong>Workspace → Infrastructure → Services → Dev → Prod VPS → Prod K8s</strong> Every section in this document follows this progression.</p>
+</div>
+<h3 id="vs-code-workspace-setup">🗂️ VS Code Workspace Setup</h3>
+<p>A multi-root workspace configuration that manages all services, infrastructure, and this documentation in a single VS Code instance. Each service gets its own debugger launch configuration. The VS Code Test Explorer runs inside a dev container with parallelized per-test debugging capabilities.</p>
+<ul>
+<li><a href="../../10-workspace-config/10-workspace-config/" title="1.0 - Workspace Config">1.0 - Workspace Config</a></li>
+</ul>
+<h3 id="base-infrastructure">🏗️ Base Infrastructure</h3>
+<p>All services run behind <strong>Envoy Gateway</strong>, which handles TLS termination, path-based routing, and header manipulation. A <code>generate_certs</code> sidecar provisions internal certificates. <strong>Keycloak</strong> provides OIDC/SSO with a pre-configured realm template for development. <strong>PostgreSQL</strong> runs as a shared instance with per-service schemas, initialized via startup scripts. <strong>MailDev</strong> (dev only) captures all outbound email for inspection. An <strong>echo server</strong> (dev only) mirrors requests for gateway debugging.</p>
+<p>Pre-configured configs ship for Envoy Gateway (dev and prod-ready for VPS, minimal changes for K8s), Keycloak realm import (dev), PostgreSQL database initialization scripts, and Envoy secrets generation scripts.</p>
+<p>In development, <strong>Ngrok</strong> exposes the entire local stack via a public HTTPS URL — enabling OAuth callbacks, webhook integrations, mobile testing, and client demos against your actual environment. In production on VPS, Ngrok is replaced by direct public exposure through Envoy with Let's Encrypt certificates.</p>
+<ul>
+<li><a href="../../20-base-infrastructure/20-postgresql/" title="2.0 - PostgreSQL">2.0 - PostgreSQL</a></li>
+<li><a href="../../20-base-infrastructure/21-envoy-gateway/" title="2.1 - Envoy Gateway">2.1 - Envoy Gateway</a></li>
+<li><a href="../../20-base-infrastructure/22-keycloak-oidc/" title="2.2 - Keycloak OIDC">2.2 - Keycloak OIDC</a></li>
+<li><a href="../../20-base-infrastructure/23-maildev/" title="2.3 - MailDev">2.3 - MailDev</a></li>
+</ul>
+<h3 id="django-service-template">🧩 Django Service Template</h3>
+<p>New services are generated via an updatable <a href="../%5Bhttps%3A/github.com/HackSoftware/Django-Styleguide%5D%28https%3A/copier.readthedocs.io/en/stable">Copier Template</a>) in a few steps. Each service ships with four apps following <a href="https://github.com/HackSoftware/Django-Styleguide">HackSoft Styleguide 2+</a> best practices: API (Django REST Framework), authentication (django-allauth + Keycloak OIDC), authorization (RBAC with Keycloak as source of truth), and core (admin panel, healthchecks). An optional public app provides a django-htmx powered frontend with branding, SEO, and analytics setup. Pre-commit hooks, linting, and formatting are included.</p>
+<p>Multiple Django services can be generated from the same template and deployed on the same infrastructure under different subdomains — each service registers as a new Envoy route and Keycloak client within the existing setup.</p>
+<ul>
+<li><a href="../../30-django-service-template/30-django-service-template/" title="3.0 - Django Service Template">3.0 - Django Service Template</a></li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Ready to start?</p>
+<p>See the <a href="../../10-workspace-config/10-workspace-config/#setup" title="Workspace Setup">Workspace Setup</a> for step-by-step setup.</p>
+</div>
+<hr />
+<h2 id="architecture">Architecture</h2>
+<p>Instead of each service managing its own authentication, routing, and database, these concerns are centralized into shared infrastructure.</p>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────────────────┐
+│                              INTERNET                                    │
+└───────────────────────────────┬──────────────────────────────────────────┘
+                                │
+                                │ HTTPS (443) / HTTP (80 → 301 redirect)
+                                ▼
+                     ┌─────────────────────┐
+                     │    Ngrok Tunnel     │    (dev only — replaced by
+                     │  (Public URL →      │     direct DNS in prod)
+                     │   Local Stack)      │
+                     └──────────┬──────────┘
+                                │
+                                ▼
+                     ┌─────────────────────┐
+                     │   Envoy Gateway     │
+                     │  ─────────────────  │
+                     │  TLS Termination    │
+                     │  Path-Based Routing │
+                     │  Rate Limiting      │
+                     │  HTTP → HTTPS       │
+                     │  X-Forwarded-*      │
+                     └──────────┬──────────┘
+                                │
+           ┌────────────────────┼────────────────────┐
+           │                    │                    │
+           ▼                    ▼                    ▼
+   ┌───────────────┐    ┌───────────────┐    ┌───────────────┐
+   │  Keycloak     │    │  Django       │    │  Django       │
+   │  ──────────   │    │  Service A    │    │  Service N    │
+   │  OIDC / SSO   │◄───│  ──────────   │    │  ──────────   │
+   │  RBAC Roles   │    │  allauth      │    │  allauth      │
+   │  User Mgmt    │    │  RBAC sync    │    │  RBAC sync    │
+   │  Source of    │    │  DRF + htmx   │    │  DRF + htmx   │
+   │  Truth        │    │               │    │               │
+   └──────┬────────┘    └───────┬───────┘    └───────┬───────┘
+          │                     │                    │
+          │         ┌───────────┴────────────────────┘
+          │         │
+          ▼         ▼
+   ┌──────────────────────┐    ┌───────────────┐    ┌──────────────┐
+   │  PostgreSQL          │    │  MailDev      │    │  Echo        │
+   │  ─────────────────   │    │  ──────────   │    │  ──────────  │
+   │  Shared Instance     │    │  SMTP Capture │    │  Request     │
+   │  Per-Service Schemas │    │  Web UI       │    │  Debugging   │
+   └──────────────────────┘    │  (dev only)   │    │  (dev only)  │
+                               └───────────────┘    └──────────────┘
+
+   ┌──────────────────────────────────────────────────────────────┐
+   │  VS Code Multi-Root Workspace                                │
+   │  ─────────────────────────────                               │
+   │  Per-service debuggers · Parallelized test runner            │
+   │  File exclusions · Shared settings                           │
+   └──────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p>The <code>◄───</code> arrow between Django Service A and Keycloak represents the internal backchannel: Django exchanges tokens with Keycloak directly over the Docker bridge network, never routing through the public gateway. See <a href="../../20-base-infrastructure/22-keycloak-oidc/#confidential-client-with-backchannel-separation" title="Backchannel Separation">Backchannel Separation</a> for details.</p>
+<h3 id="component-responsibilities">Component Responsibilities</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>What It Does</th>
+<th>Swap It For</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Envoy Gateway</strong></td>
+<td>Routes traffic by path/subdomain, terminates TLS (Let's Encrypt on prod, Ngrok on dev), rate limiting, HTTP→HTTPS redirect</td>
+<td>Traefik, NGINX, Kong</td>
+</tr>
+<tr>
+<td><strong>Keycloak</strong></td>
+<td>SSO, OIDC, user management, RBAC source of truth, synced to services via django-allauth</td>
+<td>Any OIDC provider</td>
+</tr>
+<tr>
+<td><strong>PostgreSQL</strong></td>
+<td>Shared database instance, per-service schemas, initialized via startup scripts</td>
+<td>Any SQL backend</td>
+</tr>
+<tr>
+<td><strong>MailDev</strong> <em>(dev only)</em></td>
+<td>Captures all outbound email, web UI for inspection</td>
+<td>Mailhog, Mailtrap, any SMTP provider</td>
+</tr>
+<tr>
+<td><strong>Echo</strong> <em>(dev only)</em></td>
+<td>Mirrors requests back for gateway route debugging</td>
+<td>Any echo server</td>
+</tr>
+<tr>
+<td><strong>Ngrok</strong> <em>(dev only)</em></td>
+<td>Exposes local stack via public HTTPS URL for OAuth callbacks, webhooks, mobile testing</td>
+<td>Cloudflare Tunnel, localtunnel — replaced by direct DNS in prod</td>
+</tr>
+<tr>
+<td><strong>Django Services</strong></td>
+<td>Generated from updatable Copier template, each with API, auth, RBAC, admin, optional htmx frontend</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>VS Code Workspace</strong></td>
+<td>Multi-root config with per-service debuggers and parallelized test execution</td>
+<td>JetBrains (manual setup)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="scaling-path">Scaling Path</h2>
+<div class="admonition tip">
+<p class="admonition-title">Same images, different orchestration</p>
+<p>Your application code and Docker images never change between tiers. Only the orchestration layer, secrets management, and infrastructure configuration evolve.</p>
+</div>
+<hr />
+<h3 id="local-development-docker-compose">🛠️ Local Development — Docker Compose</h3>
+<p>Your laptop runs the full stack. Envoy routes, Keycloak authenticates, PostgreSQL stores, MailDev captures email, VS Code debugs. Ngrok exposes everything via a public HTTPS URL — OAuth callbacks, webhook integrations, mobile testing, client demos all work against your actual dev environment. A separate <code>compose.yaml</code> wires up dev-only services (MailDev, echo server) and relaxed configurations (permissive hostnames, plaintext secrets, hot-reload).</p>
+<hr />
+<h3 id="mvp-production-docker-compose-on-vps">🚀 MVP Production — Docker Compose on VPS</h3>
+<p>Deploy <code>compose.prod.yaml</code> to a single VPS (Hostinger, Kamatera, etc.). Dev-only services are gone. Let's Encrypt replaces Ngrok for public TLS. Keycloak locks down its hostname and issuer. Secrets come from environment files outside the repo. The same Envoy Gateway configs that ran locally now serve production traffic — no rewrite, no translation layer. This tier carries most startups through their first real scaling event.</p>
+<hr />
+<h3 id="production-at-scale-kubernetes">⚡ Production at Scale — Kubernetes</h3>
+<p>Each container becomes a pod. Envoy Gateway configs translate directly to Kubernetes Gateway API resources. PostgreSQL moves to a managed service (RDS, CloudSQL). Keycloak scales horizontally. Backchannel encryption becomes a requirement — via service mesh mTLS or Keycloak-native TLS. The application images stay identical; only the orchestration and persistence layers change.</p>
+<hr />
+<h3 id="what-changes-between-tiers">What Changes Between Tiers</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>🛠️ Local Dev</th>
+<th>🚀 VPS Prod</th>
+<th>⚡ K8s Prod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Compose file</strong></td>
+<td><code>compose.yaml</code></td>
+<td><code>compose.prod.yaml</code></td>
+<td>Helm charts / manifests</td>
+</tr>
+<tr>
+<td><strong>Public access</strong></td>
+<td>Ngrok tunnel</td>
+<td>Direct DNS + Let's Encrypt</td>
+<td>Ingress / Gateway API</td>
+</tr>
+<tr>
+<td><strong>TLS</strong></td>
+<td>Ngrok handles it</td>
+<td>Let's Encrypt at Envoy</td>
+<td>Cert-manager + Ingress</td>
+</tr>
+<tr>
+<td><strong>Envoy Gateway</strong></td>
+<td>File provider, relaxed</td>
+<td>File provider, prod-ready</td>
+<td>K8s Gateway API (native)</td>
+</tr>
+<tr>
+<td><strong>Keycloak hostname</strong></td>
+<td><code>--hostname-strict=false</code></td>
+<td><code>KC_HOSTNAME=https://${DOMAIN}/auth</code></td>
+<td>Same, or dedicated auth subdomain</td>
+</tr>
+<tr>
+<td><strong>Keycloak realm</strong></td>
+<td><code>--import-realm</code> from JSON</td>
+<td><code>--import-realm</code> (planned: config-cli)</td>
+<td><code>keycloak-config-cli</code> or Terraform</td>
+</tr>
+<tr>
+<td><strong>Backchannel</strong></td>
+<td>Plain HTTP, Docker bridge</td>
+<td>Plain HTTP, Docker bridge</td>
+<td>Encrypted (mesh mTLS or native TLS)</td>
+</tr>
+<tr>
+<td><strong>Secrets</strong></td>
+<td><code>.env</code> files, plaintext</td>
+<td><code>.env</code> files outside repo</td>
+<td>K8s Secrets / Vault</td>
+</tr>
+<tr>
+<td><strong>PostgreSQL</strong></td>
+<td>Shared container</td>
+<td>Shared container + persistent volume</td>
+<td>Managed service (RDS, CloudSQL)</td>
+</tr>
+<tr>
+<td><strong>Email</strong></td>
+<td>MailDev (captures all)</td>
+<td>Real SMTP provider</td>
+<td>Real SMTP provider</td>
+</tr>
+<tr>
+<td><strong>Echo server</strong></td>
+<td>✅ Running</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><strong>Monitoring</strong></td>
+<td>Docker logs + Admin Console</td>
+<td>Docker logs + Admin Console</td>
+<td>Prometheus + Grafana</td>
+</tr>
+<tr>
+<td><strong>Scaling</strong></td>
+<td>Single instance</td>
+<td>Single instance</td>
+<td>Horizontal pod autoscaling</td>
+</tr>
+<tr>
+<td><strong>Deploy method</strong></td>
+<td><code>docker compose up</code></td>
+<td><code>docker compose up</code></td>
+<td>CI/CD pipeline</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="stack-reference">Stack Reference</h2>
+<div class="admonition info">
+<p class="admonition-title">Technologies listed by platform layer</p>
+<p>Each layer corresponds to a separate repository. See <a href="./#platform-at-a-glance" title="Platform at a Glance">Platform at a Glance</a> for how these layers connect.</p>
+</div>
+<hr />
+<h3 id="workspace-setup">🗂️ Workspace Setup</h3>
+<blockquote>
+<p>Configuration and tooling for the multi-service development experience.</p>
+</blockquote>
+<p><strong>VS Code Workspace</strong> — Multi-root workspace managing all services, infrastructure, and documentation. Per-service debugger launch configs and parallelized test execution via dev containers. → <a href="../../10-workspace-config/10-workspace-config/#overview" title="Configuration">Configuration</a> · <a href="../../10-workspace-config/10-workspace-config/#setup" title="Setup">Setup</a> · <a href="../../10-workspace-config/10-workspace-config/#debugging" title="Debugging">Debugging</a></p>
+<hr />
+<h3 id="base-infrastructure_1">🏗️ Base Infrastructure</h3>
+<blockquote>
+<p>Shared services that every Django service depends on. Run with <code>docker compose up</code>.</p>
+</blockquote>
+<p><strong>Envoy Gateway</strong> — Front door for all traffic. TLS termination (Let's Encrypt on prod, Ngrok on dev), path-based and subdomain routing, HTTP→HTTPS redirect, header manipulation. Configs are file-based, prod-ready for VPS, and translate to Kubernetes Gateway API with minimal changes. → <a href="../../20-base-infrastructure/21-envoy-gateway/#overview" title="Setup &amp; Configuration">Setup &amp; Configuration</a> </p>
+<p><strong>Keycloak</strong> — Centralized identity provider. OIDC/SSO authentication, RBAC group management, user lifecycle. Single realm (<code>myrealm</code>), synced to Django services via django-allauth on every login. Admin console for user and session management. → <a href="../../20-base-infrastructure/22-keycloak-oidc/#overview" title="Setup &amp; Configuration">Setup &amp; Configuration</a> · <a href="../../30-django-service-template/30-django-service-template/#rbac-model" title="RBAC Model">RBAC Model</a></p>
+<p><strong>PostgreSQL</strong> — Shared database instance with per-service schemas. Initialized via startup scripts that create databases and schemas automatically. Each Django service gets logical isolation without operational overhead. → <a href="../../20-base-infrastructure/20-postgresql/#overview" title="Setup &amp; Configuration">Setup &amp; Configuration</a></p>
+<p><strong>MailDev</strong> <em>(dev only)</em> — Captures all outbound email from all services. Web UI for inspecting verification emails, password resets, and notifications without sending anything externally. Replaced by a real SMTP provider in production. → <a href="../../20-base-infrastructure/23-maildev/#overview" title="Setup &amp; Configuration">Setup &amp; Configuration</a></p>
+<p><strong>Echo Server</strong> <em>(dev only)</em> — Mirrors incoming requests back in the response. Used for debugging Envoy Gateway routes, headers, and path matching before wiring up real services.</p>
+<p><strong>Ngrok</strong> <em>(dev only)</em> — Exposes the local stack via a public HTTPS URL. Enables OAuth callbacks, webhook integrations, mobile testing, and client demos against the dev environment. Replaced by direct DNS + Let's Encrypt in production.</p>
+<hr />
+<h3 id="django-service-template_1">🧩 Django Service Template</h3>
+<blockquote>
+<p>Updatable Copier template that generates production-ready Django services.</p>
+</blockquote>
+<p><strong>Django Services</strong> — Ships with API (DRF + HackSoft Styleguide 2+), authentication (django-allauth + Keycloak OIDC), authorization (RBAC), and core (admin panel, healthchecks) apps. Optional public app with django-htmx frontend with branding, SEO, and analytics setup. Pre-commit, linting, formatting included. Multiple services deploy on the same infrastructure under different subdomains. → <a href="../../30-django-service-template/30-django-service-template/#copier-workflow" title="Create a Service">Create a Service</a></p>
+<p><strong>App internals:</strong> → <a href="../../30-django-service-template/30-django-service-template/#api" title="API">API</a> · <a href="../../30-django-service-template/30-django-service-template/#authentication" title="Authentication">Authentication</a> · <a href="../../30-django-service-template/30-django-service-template/#authorization" title="Authorization">Authorization</a> · <a href="../../30-django-service-template/30-django-service-template/#core" title="Core">Core</a> · <a href="../../30-django-service-template/30-django-service-template/#public-(optional)" title="Public Frontend">Public Frontend</a></p>
+<hr />
+<h3 id="operations">📋 Operations</h3>
+<blockquote>
+<p>Procedures, workflows, and troubleshooting across all platform components.</p>
+</blockquote>
+<p>→ <a href="../operations-index" title="Operations Index">Operations Index</a></p>
+<hr />
+<h3 id="reference">📚 Reference</h3>
+<blockquote>
+<p>Specifications, schemas, conventions, and the standards that shaped this platform.</p>
+</blockquote>
+<p>→ <a href="../reference-index" title="Reference Index">Reference Index</a></p>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

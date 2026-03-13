@@ -1,0 +1,3887 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://kenanlalic.github.io/engineering-infrastructure-hub/30-django-service-template/30-django-service-template/">
+      
+      
+        <link rel="prev" href="../../20-base-infrastructure/23-maildev/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+    
+    
+      
+        <title>Django Service Template - Infrastructure Engineering Hub</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#django-service-template-copier-generated-services" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-header__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Infrastructure Engineering Hub
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Django Service Template
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-nav__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Infrastructure Engineering Hub
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-index/01-infrastructure-engineering-hub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-workspace-config/10-workspace-config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workspace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Base Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/20-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/21-envoy-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Envoy Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/22-keycloak-oidc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/23-maildev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MailDev
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Django Template
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Django Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-generated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Gets Generated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copier-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copier Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-toggle-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature Toggle Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#project-directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-app-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal App Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#middleware-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Middleware Stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Backends
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#signal-flow-authentication-authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signal Flow: Authentication → Authorization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#url-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        URL Routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-port-numbering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debug Port Numbering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gateway-path-transformation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gateway Path Transformation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hacksoft-styleguide-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HackSoft Styleguide 2+
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copier-over-cookiecutter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copier over Cookiecutter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#django-allauth-over-manual-oidc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        django-allauth over Manual OIDC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rbac-sync-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Sync Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-login-restriction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Login Restriction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#class-based-views-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class-Based Views Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#branding-via-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Branding via YAML
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#copier-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copier Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installed_apps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        INSTALLED_APPS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apps-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Apps at a Glance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Apps at a Glance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authorization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#public-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Public (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rbac-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RBAC Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#role-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-group-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keycloak Group Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permission-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customization-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customization Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authorization-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authorization Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authorization Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#class-based-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class-Based Views
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-services-hacksoft-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In Services (HackSoft Pattern)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In Templates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorization-api-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authorization API Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hacksoft-styleguide-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HackSoft Styleguide Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HackSoft Styleguide Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selectors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Views
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exceptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naming-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dev-prod-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev ↔ Prod Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-migration-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Migration Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#service-wont-start-modulenotfounderror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service won't start — ModuleNotFoundError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-redirects-to-keycloak-but-fails-with-401" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login redirects to Keycloak but fails with 401
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-works-but-user-has-no-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login works but user has no permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-endpoint-returns-503-database-unreachable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health endpoint returns 503 — database unreachable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-returns-404-with-path-prefix-in-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service returns 404 with path prefix in URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gateway-returns-503-service-unreachable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gateway returns 503 — service unreachable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#htmx-requests-return-full-page-instead-of-partial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTMX requests return full page instead of partial
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copier-update-overwrites-my-customizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        copier update overwrites my customizations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#admin-login-page-appears-instead-of-keycloak-redirect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin login page appears instead of Keycloak redirect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emails-not-arriving-in-maildev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emails not arriving in MailDev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analytics-middleware-not-recording-page-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analytics middleware not recording page views
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-generated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Gets Generated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copier-workflow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copier Workflow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#feature-toggle-dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Feature Toggle Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#project-directory-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Directory Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#internal-app-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Internal App Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#middleware-stack" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Middleware Stack
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication-backends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Backends
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#signal-flow-authentication-authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Signal Flow: Authentication → Authorization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#url-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        URL Routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debug-port-numbering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debug Port Numbering
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gateway-path-transformation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gateway Path Transformation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#hacksoft-styleguide-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HackSoft Styleguide 2+
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copier-over-cookiecutter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copier over Cookiecutter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#django-allauth-over-manual-oidc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        django-allauth over Manual OIDC
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rbac-sync-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Sync Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#local-login-restriction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Local Login Restriction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#class-based-views-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class-Based Views Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#branding-via-yaml" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Branding via YAML
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#copier-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Copier Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#installed_apps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        INSTALLED_APPS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#apps-at-a-glance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Apps at a Glance
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Apps at a Glance">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authentication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authorization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#api" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#public-optional" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Public (Optional)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rbac-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Model
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RBAC Model">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#role-hierarchy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Role Hierarchy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-group-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keycloak Group Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#permission-format" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Permission Format
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#customization-points" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Customization Points
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#authorization-usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authorization Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Authorization Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#class-based-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class-Based Views
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-services-hacksoft-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In Services (HackSoft Pattern)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-templates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In Templates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorization-api-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authorization API Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#hacksoft-styleguide-conventions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HackSoft Styleguide Conventions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HackSoft Styleguide Conventions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#models" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Models
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#selectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Selectors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Views
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#admin" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exceptions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naming-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dev-prod-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev ↔ Prod Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-migration-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Migration Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#service-wont-start-modulenotfounderror" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service won't start — ModuleNotFoundError
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-redirects-to-keycloak-but-fails-with-401" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login redirects to Keycloak but fails with 401
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-works-but-user-has-no-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login works but user has no permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#health-endpoint-returns-503-database-unreachable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Health endpoint returns 503 — database unreachable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-returns-404-with-path-prefix-in-url" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service returns 404 with path prefix in URL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gateway-returns-503-service-unreachable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gateway returns 503 — service unreachable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#htmx-requests-return-full-page-instead-of-partial" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTMX requests return full page instead of partial
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#copier-update-overwrites-my-customizations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        copier update overwrites my customizations
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#admin-login-page-appears-instead-of-keycloak-redirect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Admin login page appears instead of Keycloak redirect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emails-not-arriving-in-maildev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emails not arriving in MailDev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#analytics-middleware-not-recording-page-views" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Analytics middleware not recording page views
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="django-service-template-copier-generated-services">Django Service Template — Copier-Generated Services</h1>
+<p>Updatable Copier template that generates production-ready Django services. Each service ships with four apps following HackSoft Styleguide 2+ conventions: API (Django REST Framework), authentication (django-allauth + Keycloak OIDC), authorization (RBAC with Keycloak as source of truth), and core (admin panel, healthchecks, shared infrastructure). An optional public app adds a django-htmx frontend with branding, legal pages, SEO, and privacy-first analytics.</p>
+<blockquote>
+<p>📍 <strong>Type:</strong> Service Reference<br>
+👤 <strong>Owner:</strong> Ktwenty Threel<br>
+🎯 <strong>Outcome:</strong> Understand the Django Service Template<br></p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="./#overview" title="Overview">Overview</a></li>
+<li><a href="./#architecture" title="Architecture">Architecture</a></li>
+<li><a href="./#design-decisions" title="Design Decisions">Design Decisions</a></li>
+<li><a href="./#dependencies" title="Dependencies">Dependencies</a></li>
+<li><a href="./#configuration" title="Configuration">Configuration</a></li>
+<li><a href="./#apps-at-a-glance" title="Apps at a Glance">Apps at a Glance</a></li>
+<li><a href="./#rbac-model" title="RBAC Model">RBAC Model</a></li>
+<li><a href="./#authorization-usage" title="Authorization Usage">Authorization Usage</a></li>
+<li><a href="./#hacksoft-styleguide-conventions" title="HackSoft Styleguide Conventions">HackSoft Styleguide Conventions</a></li>
+<li><a href="./#testing" title="Testing">Testing</a></li>
+<li><a href="./#dev-↔-prod-differences" title="Dev ↔ Prod Differences">Dev ↔ Prod Differences</a></li>
+<li><a href="./#kubernetes-migration-path" title="Kubernetes Migration Path">Kubernetes Migration Path</a></li>
+<li><a href="./#runbooks" title="Runbooks">Runbooks</a></li>
+<li><a href="./#adrs" title="ADRs">ADRs</a></li>
+<li><a href="./#references" title="References">References</a></li>
+</ul>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>The template is a <a href="https://copier.readthedocs.io/">Copier</a> project that scaffolds a complete Django service from a questionnaire. Running <code>copier copy</code> generates a working service with authentication, authorization, API, admin panel, Docker Compose integration, and pre-commit hooks — ready to start with <code>docker compose up</code>.</p>
+<h3 id="what-gets-generated">What Gets Generated</h3>
+<p>A single Copier run produces a self-contained Django project with Docker packaging, infrastructure wiring, and five application modules:</p>
+<table>
+<thead>
+<tr>
+<th>App</th>
+<th>Always Included</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>core</strong></td>
+<td>✅</td>
+<td>Admin panel, healthcheck endpoint, <code>TimeStampedModel</code>, <code>HtmxMixin</code>, context processors, shared exceptions</td>
+</tr>
+<tr>
+<td><strong>authentication</strong></td>
+<td>✅</td>
+<td>django-allauth + Keycloak OIDC, backchannel token exchange, <code>CustomSocialAccountAdapter</code>, local login restriction</td>
+</tr>
+<tr>
+<td><strong>authorization</strong></td>
+<td>✅</td>
+<td>RBAC engine — Keycloak group sync, role-permission mapping, <code>RBACPermissionBackend</code>, permission context middleware</td>
+</tr>
+<tr>
+<td><strong>api</strong></td>
+<td>✅</td>
+<td>DRF integration, error handling mixins, API URL namespace</td>
+</tr>
+<tr>
+<td><strong>public</strong></td>
+<td>Feature toggle</td>
+<td>Landing page, about page, legal pages, privacy-first analytics, sitemaps — gated by <code>include_frontend_ui</code></td>
+</tr>
+</tbody>
+</table>
+<p>The generated service registers with the platform by adding a compose include and Envoy Gateway route files. See <a href="../../10-workspace-config/10-workspace-config/#adding-a-service" title="Adding a Service">Adding a Service</a> for the full registration checklist.</p>
+<h3 id="copier-workflow">Copier Workflow</h3>
+<div class="highlight"><pre><span></span><code>copier copy --trust gh:yourorg/django-service-template backend-service
+cd backend-service
+make setup       # Install pre-commit hooks, copy .env template
+nano .env        # Set service slug, ports, client secret
+</code></pre></div>
+<p>Copier prompts for service identity (name, slug, description), branding (display name, colors), infrastructure (debug port, database port, Keycloak client ID), internationalization (default language, supported languages), and feature toggles (SEO, analytics, frontend UI). Answers are stored in <code>.copier-answers.yml</code> for reproducible updates via <code>copier update --trust</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Updatable templates</p>
+<p>When the template evolves (new features, bug fixes, convention changes), run <code>copier update --trust</code> inside an existing service. Copier merges template changes with your customizations, respecting <code>_skip_if_exists</code> rules that protect your app code, migrations, <code>.env</code>, locale files, and compose overrides from being overwritten.</p>
+</div>
+<h3 id="feature-toggle-dependencies">Feature Toggle Dependencies</h3>
+<p>Three feature toggles control optional functionality. Analytics and SEO depend on the frontend UI being enabled — Copier only prompts for them when <code>include_frontend_ui</code> is <code>true</code>:</p>
+<div class="highlight"><pre><span></span><code>include_frontend_ui ──┬── include_seo (sitemaps, robots.txt)
+                      └── include_analytics (privacy-first page view tracking)
+</code></pre></div>
+<p>When <code>include_frontend_ui</code> is <code>false</code>, the <code>apps/public</code> directory is still generated but not routed — the root URL configuration gates it with a Copier conditional. You can safely delete <code>apps/public</code> and remove <code>apps.public</code> from <code>INSTALLED_APPS</code> if you don't plan to use it.</p>
+<hr />
+<h2 id="architecture">Architecture</h2>
+<h3 id="project-directory-structure">Project Directory Structure</h3>
+<div class="highlight"><pre><span></span><code>backend-service/
+├── .copier-answers.yml          # Copier answers for reproducible updates
+├── .docker/
+│   ├── Dockerfile.dev           # Dev image (debugpy, dev dependencies)
+│   └── .zshrc_devcontainer      # Shell config for VS Code dev containers
+├── .env                         # Environment variables (git-ignored)
+├── .pre-commit-config.yaml      # Linting + formatting hooks
+├── Dockerfile                   # Production image
+├── Makefile                     # Dev shortcuts (setup, lint, test)
+├── compose.yaml                 # Docker Compose service definition
+├── compose.db.yaml              # Database compose (if separate)
+├── compose.prod.yaml            # Production overrides
+├── pyproject.toml               # Python project metadata
+├── requirements/
+│   ├── development.txt          # Dev dependencies (debugpy, pytest, etc.)
+│   └── production.txt           # Production dependencies
+└── src/
+    ├── manage.py
+    ├── pytest.ini
+    ├── conftest.py              # Shared test fixtures
+    ├── branding.yml             # UI branding config (name, colors, contact)
+    ├── config/
+    │   ├── __init__.py
+    │   ├── settings/
+    │   │   ├── __init__.py
+    │   │   ├── base.py          # Shared settings
+    │   │   ├── development.py   # Dev overrides (DEBUG, MailDev SMTP)
+    │   │   ├── production.py    # Prod overrides (security, logging)
+    │   │   └── test.py          # Test overrides
+    │   ├── urls.py              # Root URL configuration
+    │   ├── wsgi.py
+    │   └── asgi.py
+    ├── apps/
+    │   ├── __init__.py
+    │   ├── core/                # Shared infrastructure
+    │   │   ├── apps.py
+    │   │   ├── models.py        # TimeStampedModel
+    │   │   ├── mixins.py        # HtmxMixin
+    │   │   ├── middleware.py     # HealthCheckMiddleware
+    │   │   ├── exceptions.py    # ApplicationError hierarchy
+    │   │   ├── context_processors.py
+    │   │   ├── selectors.py
+    │   │   ├── services.py
+    │   │   ├── views.py
+    │   │   ├── urls.py
+    │   │   └── templatetags/
+    │   ├── authentication/      # OIDC + django-allauth
+    │   │   ├── adapters.py      # CustomSocialAccountAdapter
+    │   │   ├── middleware.py     # AdminOnlyLocal, HtmxAuthRedirect
+    │   │   ├── signals.py       # user_groups_synced (EMIT)
+    │   │   ├── selectors.py
+    │   │   ├── services/
+    │   │   │   ├── keycloak.py  # Group sync
+    │   │   │   ├── profile.py   # Profile sync
+    │   │   │   └── htmx.py      # HTMX utilities
+    │   │   ├── urls.py
+    │   │   └── views.py
+    │   ├── authorization/       # RBAC engine
+    │   │   ├── constants.py     # Roles, permissions, mappings
+    │   │   ├── backends.py      # RBACPermissionBackend
+    │   │   ├── decorators.py    # @require_permission, @require_role
+    │   │   ├── mixins.py        # PermissionRequiredMixin, RoleRequiredMixin
+    │   │   ├── middleware.py     # PermissionContextMiddleware
+    │   │   ├── signals.py       # handle_user_groups_synced (HANDLE)
+    │   │   ├── selectors.py
+    │   │   ├── services/
+    │   │   │   ├── permissions.py
+    │   │   │   └── roles.py
+    │   │   └── templatetags/
+    │   │       └── authorization_tags.py
+    │   ├── api/                 # DRF integration
+    │   │   ├── exceptions.py
+    │   │   ├── mixins.py
+    │   │   ├── urls.py
+    │   │   └── views.py
+    │   └── public/              # Optional frontend (include_frontend_ui)
+    │       ├── admin.py.jinja
+    │       ├── middleware.py.jinja
+    │       ├── models.py.jinja
+    │       ├── services.py.jinja
+    │       ├── sitemaps.py.jinja
+    │       ├── urls.py.jinja
+    │       ├── selectors.py
+    │       ├── apps.py
+    │       └── views.py
+    ├── locale/                  # Translation files (.po/.mo)
+    ├── static/
+    │   ├── css/
+    │   │   ├── custom.css
+    │   │   ├── cookie-consent.css
+    │   │   └── public/
+    │   ├── js/
+    │   │   └── cookie-consent.js
+    │   ├── images/
+    │   │   └── logo.svg
+    │   ├── favicons/
+    │   └── vendor/
+    │       ├── bootstrap/
+    │       ├── bootstrap-icons/
+    │       └── htmx/
+    ├── media/                   # User uploads (git-ignored)
+    └── templates/               # Django templates
+</code></pre></div>
+<h3 id="internal-app-architecture">Internal App Architecture</h3>
+<div class="highlight"><pre><span></span><code>┌───────────────────────────────────────────────────────────────────┐
+│                        Django Service                             │
+│                                                                   │
+│   ┌─────────────────────────────────────────────────────────────┐ │
+│   │                     config/urls.py                          │ │
+│   │   Non-localized: /admin/, /accounts/, /favicon.ico          │ │
+│   │   Localized (i18n_patterns):                                │ │
+│   │     /authentication/ → authentication.urls                  │ │
+│   │     /api/            → api.urls                             │ │
+│   │     /                → core.urls (dashboard, control panel) │ │
+│   │     /                → public.urls (landing, about, legal)  │ │
+│   └────────────────────┬────────────────────────────────────────┘ │
+│                        │                                          │
+│   ┌────────────────────┼────────────────────────────────────────┐ │
+│   │                    ▼         App Layer                      │ │
+│   │                                                             │ │
+│   │   ┌───────────┐  ┌──────────────┐  ┌────────────────────┐   │ │
+│   │   │   core    │  │   auth&#39;n     │  │   authorization    │   │ │
+│   │   │───────────│  │──────────────│  │────────────────────│   │ │
+│   │   │ Admin     │  │ allauth      │  │ RBAC engine        │   │ │
+│   │   │ Health    │  │ Keycloak     │  │ Group → Role sync  │   │ │
+│   │   │ Mixins    │  │ OIDC adapter │  │ Permission backend │   │ │
+│   │   │ Context   │◄─│ Group sync   │─▶│ is_staff/super     │   │ │
+│   │   │ Base      │  │              │  │ flag management    │   │ │
+│   │   │ models    │  │   signals ───┼──┼─▶ user_groups_     │   │ │
+│   │   │           │  │              │  │   synced handler   │   │ │
+│   │   └───────────┘  └──────────────┘  └────────────────────┘   │ │
+│   │        ▲                                                    │ │
+│   │        │ extends TimeStampedModel                           │ │
+│   │   ┌────┴──────┐         ┌──────────┐                        │ │
+│   │   │  public   │         │   api    │                        │ │
+│   │   │───────────│         │──────────│                        │ │
+│   │   │ Landing   │         │ DRF      │                        │ │
+│   │   │ About     │         │ Error    │                        │ │
+│   │   │ Legal     │         │ handling │                        │ │
+│   │   │ Sitemap   │         │ Mixins   │                        │ │
+│   │   │ Analytics │         │          │                        │ │
+│   │   └───────────┘         └──────────┘                        │ │
+│   │   (optional)                                                │ │
+│   └─────────────────────────────────────────────────────────────┘ │
+└───────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<h3 id="middleware-stack">Middleware Stack</h3>
+<p>Order is critical. Each middleware has a specific position for a reason:</p>
+<div class="highlight"><pre><span></span><code><span class="n">MIDDLEWARE</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1"># ── Before ALLOWED_HOSTS ────────────────────────────────────</span>
+    <span class="s2">&quot;apps.core.middleware.HealthCheckMiddleware&quot;</span><span class="p">,</span>
+    <span class="c1"># ── Django Security ─────────────────────────────────────────</span>
+    <span class="s2">&quot;django.middleware.security.SecurityMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.sessions.middleware.SessionMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.middleware.locale.LocaleMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.middleware.common.CommonMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.middleware.csrf.CsrfViewMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.auth.middleware.AuthenticationMiddleware&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.messages.middleware.MessageMiddleware&quot;</span><span class="p">,</span>
+    <span class="c1"># ── django-allauth ──────────────────────────────────────────</span>
+    <span class="s2">&quot;allauth.account.middleware.AccountMiddleware&quot;</span><span class="p">,</span>
+    <span class="c1"># ── django-htmx (adds request.htmx attribute) ──────────────</span>
+    <span class="s2">&quot;django_htmx.middleware.HtmxMiddleware&quot;</span><span class="p">,</span>
+    <span class="c1"># ── Authorization context (after HtmxMiddleware) ────────────</span>
+    <span class="s2">&quot;apps.authorization.middleware.PermissionContextMiddleware&quot;</span><span class="p">,</span>
+    <span class="c1"># ── Local login restriction ─────────────────────────────────</span>
+    <span class="s2">&quot;apps.authentication.middleware.AdminOnlyLocalAuthMiddleware&quot;</span><span class="p">,</span>
+    <span class="c1"># ── HTMX redirect handler (MUST BE LAST) ────────────────────</span>
+    <span class="s2">&quot;apps.authentication.middleware.HtmxAuthRedirectMiddleware&quot;</span><span class="p">,</span>
+    <span class="c1"># ── Privacy analytics (if enabled, after HTMX) ──────────────</span>
+    <span class="c1"># &quot;apps.public.middleware.PrivacyAnalyticsMiddleware&quot;,</span>
+<span class="p">]</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Middleware</th>
+<th>Position Rationale</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>HealthCheckMiddleware</code></td>
+<td>Before <code>SecurityMiddleware</code> — intercepts <code>/health/</code> before <code>ALLOWED_HOSTS</code> validation so probes work without hostname config</td>
+</tr>
+<tr>
+<td><code>AccountMiddleware</code></td>
+<td>After <code>AuthenticationMiddleware</code> — allauth requires <code>request.user</code> to exist</td>
+</tr>
+<tr>
+<td><code>HtmxMiddleware</code></td>
+<td>Before authorization and auth middleware — sets <code>request.htmx</code> used by downstream middleware</td>
+</tr>
+<tr>
+<td><code>PermissionContextMiddleware</code></td>
+<td>After <code>HtmxMiddleware</code> — attaches <code>user_roles</code>, <code>user_permissions</code>, <code>primary_role</code> to every request</td>
+</tr>
+<tr>
+<td><code>AdminOnlyLocalAuthMiddleware</code></td>
+<td>After <code>PermissionContextMiddleware</code> — needs auth context to determine redirect behavior</td>
+</tr>
+<tr>
+<td><code>HtmxAuthRedirectMiddleware</code></td>
+<td>Last — converts 302 redirects to <code>HX-Redirect</code> headers for HTMX requests (must see final response)</td>
+</tr>
+<tr>
+<td><code>PrivacyAnalyticsMiddleware</code></td>
+<td>After HTMX middleware — excludes HTMX requests from tracking</td>
+</tr>
+</tbody>
+</table>
+<h3 id="authentication-backends">Authentication Backends</h3>
+<div class="highlight"><pre><span></span><code><span class="n">AUTHENTICATION_BACKENDS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;apps.authorization.backends.RBACPermissionBackend&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;django.contrib.auth.backends.ModelBackend&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;allauth.account.auth_backends.AuthenticationBackend&quot;</span><span class="p">,</span>
+<span class="p">]</span>
+</code></pre></div>
+<p><code>RBACPermissionBackend</code> is listed first so permission checks resolve through the RBAC role hierarchy before falling through to Django's default <code>ModelBackend</code>. The allauth backend handles social account authentication.</p>
+<h3 id="signal-flow-authentication-authorization">Signal Flow: Authentication → Authorization</h3>
+<p>The authentication and authorization apps communicate via Django signals, keeping them independently deployable:</p>
+<div class="highlight"><pre><span></span><code>1. User logs in via Keycloak (django-allauth OIDC flow)
+2. CustomSocialAccountAdapter.pre_social_login() fires
+3. keycloak.keycloak_sync_groups() syncs Keycloak groups → Django groups
+4. user_groups_synced.send() emitted by authentication app
+5. authorization.signals.handle_user_groups_synced() receives signal
+6. roles.update_user_access_flags() updates is_staff / is_superuser
+7. Permission cache cleared
+8. PermissionContextMiddleware enriches all subsequent requests
+</code></pre></div>
+<p>The authentication app owns the <em>what</em> (which groups does this user belong to), the authorization app owns the <em>so what</em> (what can those groups do). This separation means either app can be replaced or updated independently.</p>
+<h3 id="url-routing">URL Routing</h3>
+<p>The root URL configuration (<code>config/urls.py</code>) separates non-localized and localized routes:</p>
+<p><strong>Non-localized</strong> (no language prefix): admin panel (with login redirect to allauth), allauth account URLs, favicon redirect, and optionally sitemap.xml.</p>
+<p><strong>Localized</strong> (<code>i18n_patterns</code>, language prefix when multilingual): authentication URLs, core URLs (dashboard, control panel), API namespace, and optionally public URLs (landing, about, legal pages). The public app inclusion is gated by the <code>include_frontend_ui</code> Copier toggle.</p>
+<div class="admonition tip">
+<p class="admonition-title">FORCE_SCRIPT_NAME</p>
+<p>When running behind Envoy Gateway with path-prefix routing (e.g., <code>/backend/</code>), Django needs <code>FORCE_SCRIPT_NAME</code> set in <code>base.py</code> to generate correct URLs. Envoy strips the prefix before forwarding, but Django must know the prefix exists for <code>reverse()</code>, static files, and redirect URIs. Uncomment and configure this setting after generation.</p>
+</div>
+<h3 id="debug-port-numbering">Debug Port Numbering</h3>
+<p>All services run on port 8000 internally (Docker service name resolves via the <code>internal</code> network — e.g., <code>backend.local:8000</code>). No external backend port mapping is needed. The only port that requires unique numbering across services is the debugpy port for VS Code remote attach:</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Debug Port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service 01</td>
+<td>5678</td>
+</tr>
+<tr>
+<td>Service 02</td>
+<td>5679</td>
+</tr>
+<tr>
+<td>Service 03</td>
+<td>5680</td>
+</tr>
+<tr>
+<td>...</td>
+<td>+1 per service</td>
+</tr>
+</tbody>
+</table>
+<p>Set <code>DEBUG_PORT</code> in each service's <code>.env</code> to the next available number. This port is mapped to the host so VS Code can attach from the centralized <code>launch.json</code>. See <a href="../../10-workspace-config/10-workspace-config/#debugging" title="Workspace Debugging">Workspace Debugging</a> for the full setup.</p>
+<h3 id="gateway-path-transformation">Gateway Path Transformation</h3>
+<p>Envoy Gateway strips the service path prefix before forwarding to Django. Django receives clean paths:</p>
+<table>
+<thead>
+<tr>
+<th>Incoming Request</th>
+<th>After Rewrite</th>
+<th>Django Receives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/{service}/</code></td>
+<td><code>/</code></td>
+<td><code>/</code></td>
+</tr>
+<tr>
+<td><code>/{service}/admin/</code></td>
+<td><code>/admin/</code></td>
+<td><code>/admin/</code></td>
+</tr>
+<tr>
+<td><code>/{service}/api/users/</code></td>
+<td><code>/api/users/</code></td>
+<td><code>/api/users/</code></td>
+</tr>
+<tr>
+<td><code>/{service}/static/css/app.css</code></td>
+<td><code>/static/css/app.css</code></td>
+<td><code>/static/css/app.css</code></td>
+</tr>
+</tbody>
+</table>
+<p>This is handled by the <code>URLRewrite</code> filter with <code>ReplacePrefixMatch</code> in the HTTPRoute YAML. See <a href="../../20-base-infrastructure/21-envoy-gateway/#route-definition" title="Envoy Route Definition">Envoy Route Definition</a> for the full configuration.</p>
+<hr />
+<h2 id="design-decisions">Design Decisions</h2>
+<h3 id="hacksoft-styleguide-2">HackSoft Styleguide 2+</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>HackSoft Styleguide</th>
+<th>Django "Fat Models"</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Selectors + Services pattern</td>
+<td>—</td>
+</tr>
+<tr>
+<td>All apps follow the <a href="https://github.com/HackSoftware/Django-Styleguide">HackSoft Django Styleguide</a>. Models are minimal (fields, Meta, <code>__str__</code>). Read operations go through selectors. Write operations and business logic go through services. Views are thin wrappers that delegate to selectors and services. This enforces a clear separation that scales from a single developer to a team — business logic lives in testable, reusable functions rather than being scattered across models, views, and serializers. See <a href="./#hacksoft-styleguide-conventions" title="HackSoft Styleguide Conventions">HackSoft Styleguide Conventions</a> for the naming and structural rules.</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="copier-over-cookiecutter">Copier over Cookiecutter</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Copier</th>
+<th>Cookiecutter</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Updatable template with <code>copier update</code></td>
+<td>One-time generation</td>
+</tr>
+<tr>
+<td>Copier was chosen for its update mechanism. When the template evolves — new conventions, bug fixes, security patches — existing services can pull changes with <code>copier update --trust</code>. Cookiecutter generates once and the generated project drifts from the template permanently. Copier's <code>_skip_if_exists</code> rules protect customized files (app code, migrations, <code>.env</code>, locale files) while updating infrastructure files (Dockerfile, compose, settings).</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="django-allauth-over-manual-oidc">django-allauth over Manual OIDC</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>django-allauth</th>
+<th>Manual OIDC (python-jose, oauthlib)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Managed provider with adapter pattern</td>
+<td>—</td>
+</tr>
+<tr>
+<td>django-allauth handles the full OIDC authorization code flow, token management, user creation, and social account linking. The <code>CustomSocialAccountAdapter</code> hooks into <code>pre_social_login()</code> to sync Keycloak groups on every login. Manual OIDC implementation would require reimplementing token validation, session management, CSRF protection, and error handling — all of which allauth provides and maintains. See <a href="../../20-base-infrastructure/22-keycloak-oidc/#authentication-flow" title="Keycloak Authentication Flow">Keycloak Authentication Flow</a> for the full sequence.</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="rbac-sync-strategy">RBAC Sync Strategy</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Sync on Login</th>
+<th>Webhook / Real-time</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Sync groups from OIDC claims on every login</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Group memberships are synced from Keycloak OIDC claims into Django groups on every login via <code>pre_social_login()</code>. This means role changes in Keycloak take effect on the user's next login — not immediately. The tradeoff is simplicity: no webhook infrastructure, no Keycloak event listeners, no background workers. For most applications, next-login propagation is acceptable. If immediate revocation is required, Keycloak's token expiry can be shortened or a webhook listener can be added later without changing the core sync architecture.</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="local-login-restriction">Local Login Restriction</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Admin-only local login</th>
+<th>Full local login</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td><code>AdminOnlyLocalAuthMiddleware</code> restricts local auth to superusers</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Regular users must authenticate through Keycloak SSO. Local Django username/password login is restricted to superusers only via middleware. This preserves emergency admin access when Keycloak is unavailable while ensuring all regular authentication flows through the centralized identity provider.</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="class-based-views-only">Class-Based Views Only</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>CBVs with Mixins</th>
+<th>Function-Based Views</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>All views are CBVs, authorization via mixins</td>
+<td>—</td>
+</tr>
+<tr>
+<td>All views use Django's class-based views exclusively. Authorization is applied via mixins (<code>PermissionRequiredMixin</code>, <code>RoleRequiredMixin</code>) rather than function decorators. CBVs provide consistent structure, composability via mixin inheritance, and better alignment with HackSoft Styleguide patterns. Decorator-based equivalents exist in the codebase for rare edge cases but are not the standard pattern.</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h3 id="branding-via-yaml">Branding via YAML</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>branding.yml</code></th>
+<th>Environment variables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>YAML file loaded at startup, exposed via context processor</td>
+<td>—</td>
+</tr>
+<tr>
+<td>UI branding (display name, colors, contact info, assets) lives in <code>branding.yml</code> rather than environment variables. Branding is structural configuration — it rarely changes between deploys and benefits from version control, comments, and nested structure. The context processor loads it once at startup and exposes it as <code>BRANDING</code> in all templates. Environment variables are reserved for infrastructure concerns (database URLs, secrets, ports).</td>
+<td></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="dependencies">Dependencies</h2>
+<table>
+<thead>
+<tr>
+<th>Dependency</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Envoy Gateway</td>
+<td>Infrastructure</td>
+<td>TLS termination, path-based routing, <code>X-Forwarded-*</code> headers</td>
+</tr>
+<tr>
+<td>Keycloak</td>
+<td>Infrastructure</td>
+<td>OIDC authentication, group management, SSO</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>Infrastructure</td>
+<td>Per-service database (created via init script)</td>
+</tr>
+<tr>
+<td>MailDev</td>
+<td>Dev tool</td>
+<td>Email capture for verification and password reset flows</td>
+</tr>
+<tr>
+<td>django-allauth</td>
+<td>Python package</td>
+<td>Social authentication with Keycloak OIDC</td>
+</tr>
+<tr>
+<td>django-htmx</td>
+<td>Python package</td>
+<td>HTMX request handling via <code>request.htmx</code></td>
+</tr>
+<tr>
+<td>Django REST Framework</td>
+<td>Python package</td>
+<td>API layer</td>
+</tr>
+</tbody>
+</table>
+<p>The service connects to infrastructure via the Docker internal network. Keycloak is reached directly at <code>http://keycloak.local:8080</code> for backchannel token exchange (never through the public gateway). PostgreSQL is reached at <code>db:5432</code>. MailDev receives SMTP at <code>maildev:1025</code>.</p>
+<p>For infrastructure setup details, see <a href="../../20-base-infrastructure/20-postgresql/" title="PostgreSQL">PostgreSQL</a>, <a href="../../20-base-infrastructure/21-envoy-gateway/" title="Envoy Gateway">Envoy Gateway</a>, <a href="../../20-base-infrastructure/22-keycloak-oidc/" title="Keycloak">Keycloak</a>, and <a href="../../20-base-infrastructure/23-maildev/" title="MailDev">MailDev</a>.</p>
+<hr />
+<h2 id="configuration">Configuration</h2>
+<h3 id="copier-variables">Copier Variables</h3>
+<p>These are prompted during <code>copier copy</code> and stored in <code>.copier-answers.yml</code>:</p>
+<p><strong>Service Identity</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>service_name</code></td>
+<td>—</td>
+<td>Human-readable name (e.g., "Inventory Service")</td>
+</tr>
+<tr>
+<td><code>service_slug</code></td>
+<td>Auto from name</td>
+<td>Python package name, compose service name, <code>.env</code> <code>PROJECT_SLUG</code></td>
+</tr>
+<tr>
+<td><code>service_description</code></td>
+<td><code>"Enterprise Django + HTMX + Envoy + Keycloak"</code></td>
+<td>Used in <code>.env</code> and <code>branding.yml</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Branding</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>project_display_name</code></td>
+<td>Same as <code>service_name</code></td>
+<td>UI display name → <code>branding.yml</code> <code>name</code></td>
+</tr>
+<tr>
+<td><code>brand_color_primary</code></td>
+<td><code>#0d6efd</code></td>
+<td>→ <code>branding.yml</code> → CSS <code>var(--brand-primary)</code></td>
+</tr>
+<tr>
+<td><code>brand_color_secondary</code></td>
+<td><code>#6c757d</code></td>
+<td>→ <code>branding.yml</code> → CSS <code>var(--brand-secondary)</code></td>
+</tr>
+<tr>
+<td><code>brand_color_accent</code></td>
+<td><code>#198754</code></td>
+<td>→ <code>branding.yml</code> → CSS <code>var(--brand-accent)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Infrastructure</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>debug_port</code></td>
+<td><code>5678</code></td>
+<td>debugpy port for VS Code remote attach (increment per service)</td>
+</tr>
+<tr>
+<td><code>db_port</code></td>
+<td>—</td>
+<td>Host-mapped port for pgAdmin/DBeaver access (dev only)</td>
+</tr>
+<tr>
+<td><code>keycloak_client_id</code></td>
+<td><code>myclient</code></td>
+<td>OIDC client ID registered in Keycloak realm</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Internationalization</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>default_language</code></td>
+<td><code>en</code></td>
+<td><code>LANGUAGE_CODE</code> in Django settings</td>
+</tr>
+<tr>
+<td><code>supported_languages</code></td>
+<td>Same as default</td>
+<td>Comma-separated codes (e.g., <code>en,de,bs</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Feature Toggles</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Depends On</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>include_debug_toolbar</code></td>
+<td><code>true</code></td>
+<td>—</td>
+<td>Django Debug Toolbar in dev</td>
+</tr>
+<tr>
+<td><code>include_frontend_ui</code></td>
+<td><code>false</code></td>
+<td>—</td>
+<td>Public app (landing, about, legal pages)</td>
+</tr>
+<tr>
+<td><code>include_seo</code></td>
+<td><code>false</code></td>
+<td><code>include_frontend_ui</code></td>
+<td>Sitemaps, <code>robots.txt</code></td>
+</tr>
+<tr>
+<td><code>include_analytics</code></td>
+<td><code>false</code></td>
+<td><code>include_frontend_ui</code></td>
+<td>Privacy-first page view tracking (GDPR compliant)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="environment-variables">Environment Variables</h3>
+<p>After generation, the service <code>.env</code> file contains runtime configuration. Some variables are defined in the parent project's <code>.env</code> and propagated via compose include (<code>DOMAIN</code>, <code>POSTGRES_USER</code>, <code>POSTGRES_PASSWORD</code>, <code>KEYCLOAK_CLIENT_SECRET</code>). Key service-level variables:</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Example</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>PROJECT_SLUG</code></td>
+<td><code>backend</code></td>
+<td>URL prefix, database name, compose project name</td>
+</tr>
+<tr>
+<td><code>DJANGO_SETTINGS_MODULE</code></td>
+<td><code>config.settings</code></td>
+<td>Settings module</td>
+</tr>
+<tr>
+<td><code>DJANGO_ENV</code></td>
+<td><code>development</code></td>
+<td>Environment identifier</td>
+</tr>
+<tr>
+<td><code>SECRET_KEY</code></td>
+<td>(generated)</td>
+<td>Django secret key</td>
+</tr>
+<tr>
+<td><code>DEBUG</code></td>
+<td><code>True</code></td>
+<td>Debug mode</td>
+</tr>
+<tr>
+<td><code>ALLOWED_HOSTS</code></td>
+<td><code>localhost,127.0.0.1,.ngrok.app</code></td>
+<td>Hostname validation</td>
+</tr>
+<tr>
+<td><code>BEHIND_PROXY</code></td>
+<td><code>True</code></td>
+<td>Enables proxy header trust (<code>X-Forwarded-*</code>)</td>
+</tr>
+<tr>
+<td><code>DATABASE_NAME</code></td>
+<td><code>${PROJECT_SLUG}_db</code></td>
+<td>Per-service database name</td>
+</tr>
+<tr>
+<td><code>DATABASE_HOST</code></td>
+<td><code>db</code></td>
+<td>PostgreSQL hostname (Docker internal)</td>
+</tr>
+<tr>
+<td><code>DATABASE_PORT</code></td>
+<td><code>5432</code></td>
+<td>PostgreSQL internal port (always 5432)</td>
+</tr>
+<tr>
+<td><code>KEYCLOAK_SERVER_URL</code></td>
+<td><code>http://keycloak.local:8080/auth</code></td>
+<td>Internal backchannel URL</td>
+</tr>
+<tr>
+<td><code>KEYCLOAK_HEALTH_URL</code></td>
+<td><code>http://keycloak.local:9000/auth</code></td>
+<td>Keycloak health endpoint</td>
+</tr>
+<tr>
+<td><code>KEYCLOAK_REALM</code></td>
+<td><code>myrealm</code></td>
+<td>OIDC realm name</td>
+</tr>
+<tr>
+<td><code>KEYCLOAK_CLIENT_ID</code></td>
+<td><code>myclient</code></td>
+<td>OIDC client identifier</td>
+</tr>
+<tr>
+<td><code>BACKEND_INTERNAL_PORT</code></td>
+<td><code>8000</code></td>
+<td>Container-internal Django port</td>
+</tr>
+<tr>
+<td><code>DEBUG_PORT</code></td>
+<td><code>5678</code></td>
+<td>debugpy listen port (unique per service)</td>
+</tr>
+<tr>
+<td><code>DB_PORT</code></td>
+<td>(varies)</td>
+<td>Host-mapped port for pgAdmin/DBeaver</td>
+</tr>
+<tr>
+<td><code>EMAIL_HOST</code></td>
+<td><code>maildev</code></td>
+<td>SMTP server (MailDev in dev)</td>
+</tr>
+<tr>
+<td><code>EMAIL_PORT</code></td>
+<td><code>1025</code></td>
+<td>SMTP port</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition info">
+<p class="admonition-title">Parent project variables</p>
+<p><code>DOMAIN</code>, <code>POSTGRES_USER</code>, <code>POSTGRES_PASSWORD</code>, and <code>KEYCLOAK_CLIENT_SECRET</code> are <strong>not</strong> defined in the service <code>.env</code>. They live in the parent project's (basic-infrastructure) <code>.env</code> and are propagated to services via Docker Compose <code>include</code>. This keeps credentials in one place.</p>
+</div>
+<div class="admonition tip">
+<p class="admonition-title">Client secret sync</p>
+<p><code>KEYCLOAK_CLIENT_SECRET</code> is propagated from the parent project's <code>.env</code> via compose include. It must match the value in the Keycloak realm template. A mismatch is the most common cause of login failures. See <a href="../../20-base-infrastructure/22-keycloak-oidc/#runbooks" title="Keycloak Runbooks">Keycloak Runbooks</a> for troubleshooting.</p>
+</div>
+<h3 id="installed_apps">INSTALLED_APPS</h3>
+<p>App order matters — authorization depends on authentication signals:</p>
+<div class="highlight"><pre><span></span><code><span class="n">INSTALLED_APPS</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="c1"># Django core...</span>
+    <span class="s2">&quot;django_htmx&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;allauth&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;allauth.account&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;allauth.socialaccount&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;allauth.socialaccount.providers.openid_connect&quot;</span><span class="p">,</span>
+    <span class="c1"># Local apps (order matters)</span>
+    <span class="s2">&quot;apps.core&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;apps.authentication&quot;</span><span class="p">,</span>   <span class="c1"># Emits signals</span>
+    <span class="s2">&quot;apps.authorization&quot;</span><span class="p">,</span>    <span class="c1"># Handles signals</span>
+    <span class="s2">&quot;apps.api&quot;</span><span class="p">,</span>
+    <span class="c1"># &quot;apps.public&quot;,         # If include_frontend_ui</span>
+<span class="p">]</span>
+</code></pre></div>
+<h3 id="health-check">Health Check</h3>
+<p>Every generated service exposes a health endpoint handled by <code>HealthCheckMiddleware</code> in the core app. The middleware intercepts <code>/health/</code> before <code>ALLOWED_HOSTS</code> validation (placed before <code>SecurityMiddleware</code> in the stack), checks actual database connectivity, and returns a JSON response:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;healthy&quot;</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;database&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;connected&quot;</span><span class="p">}</span>
+</code></pre></div>
+<p>This endpoint is used by Docker Compose health checks and Envoy Gateway routing verification. Through the gateway, it's accessible at <code>https://${DOMAIN}/${PROJECT_SLUG}/health/</code>.</p>
+<hr />
+<h2 id="apps-at-a-glance">Apps at a Glance</h2>
+<p>Each app follows the HackSoft Styleguide structure. Detailed documentation for each app is linked below — this section provides orientation.</p>
+<h3 id="core">Core</h3>
+<p>Shared infrastructure used by all other apps.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>TimeStampedModel</code></td>
+<td>Abstract base with <code>created_at</code> / <code>updated_at</code> (translated field names)</td>
+</tr>
+<tr>
+<td><code>HtmxMixin</code></td>
+<td>View mixin — swaps template to <code>htmx_template_name</code> for HTMX requests</td>
+</tr>
+<tr>
+<td><code>HealthCheckMiddleware</code></td>
+<td>Intercepts <code>/health/</code> before <code>ALLOWED_HOSTS</code>, checks DB connectivity</td>
+</tr>
+<tr>
+<td><code>ApplicationError</code></td>
+<td>Base exception class — <code>ValidationError</code>, <code>PermissionDenied</code>, <code>ServiceUnavailable</code></td>
+</tr>
+<tr>
+<td>Context processor</td>
+<td>Exposes <code>BRANDING</code>, i18n helpers, feature flags to all templates</td>
+</tr>
+<tr>
+<td>Admin panel</td>
+<td>Django admin at <code>/admin/</code> with login redirected to allauth</td>
+</tr>
+</tbody>
+</table>
+<p>→ <a href="../app-core-admin-panel" title="Core App Details">Core App Details</a></p>
+<h3 id="authentication">Authentication</h3>
+<p>OIDC authentication via django-allauth with Keycloak provider.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CustomSocialAccountAdapter</code></td>
+<td>Hooks <code>pre_social_login()</code> to sync profile and groups from OIDC claims</td>
+</tr>
+<tr>
+<td><code>AdminOnlyLocalAuthMiddleware</code></td>
+<td>Restricts local login to superusers — regular users must use Keycloak SSO</td>
+</tr>
+<tr>
+<td><code>HtmxAuthRedirectMiddleware</code></td>
+<td>Returns HTMX-compatible redirects (<code>HX-Redirect</code> header) for expired sessions</td>
+</tr>
+<tr>
+<td><code>keycloak_sync_groups</code> service</td>
+<td>Syncs Keycloak group memberships into Django groups</td>
+</tr>
+<tr>
+<td><code>user_groups_synced</code> signal</td>
+<td>Emitted after group sync — consumed by the authorization app</td>
+</tr>
+<tr>
+<td><code>user_profile_synced</code> signal</td>
+<td>Emitted after profile data updated from OIDC claims</td>
+</tr>
+<tr>
+<td><code>user_created_from_keycloak</code> signal</td>
+<td>Emitted when a new Django user is auto-created via SSO</td>
+</tr>
+</tbody>
+</table>
+<p>→ <a href="../app-authentication-allauth-oidc" title="Authentication App Details">Authentication App Details</a></p>
+<h3 id="authorization">Authorization</h3>
+<p>RBAC engine following NIST Core + Hierarchical principles (Levels 1–2). See <a href="./#rbac-model" title="RBAC Model">RBAC Model</a> and <a href="./#authorization-usage" title="Authorization Usage">Authorization Usage</a> for full details.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>constants.py</code></td>
+<td>Role definitions, permission mappings, Keycloak group-to-role configuration</td>
+</tr>
+<tr>
+<td><code>RBACPermissionBackend</code></td>
+<td>Custom auth backend resolving permissions from role mappings</td>
+</tr>
+<tr>
+<td><code>PermissionContextMiddleware</code></td>
+<td>Attaches <code>user_roles</code>, <code>user_permissions</code>, <code>primary_role</code> to every request</td>
+</tr>
+<tr>
+<td><code>handle_user_groups_synced</code></td>
+<td>Signal handler — updates <code>is_staff</code> / <code>is_superuser</code> from role definitions</td>
+</tr>
+<tr>
+<td><code>Permission</code> dataclass</td>
+<td>Type-safe permissions as <code>ResourceDomain.Action</code> (e.g., <code>content.view</code>)</td>
+</tr>
+<tr>
+<td>Mixins</td>
+<td><code>PermissionRequiredMixin</code>, <code>RoleRequiredMixin</code>, <code>AnyPermissionRequiredMixin</code>, <code>AllPermissionsRequiredMixin</code></td>
+</tr>
+<tr>
+<td>Decorators</td>
+<td><code>@require_permission</code>, <code>@require_role</code> — available for edge cases, CBV mixins are the standard pattern</td>
+</tr>
+<tr>
+<td>Template tags</td>
+<td><code>{% has_permission %}</code>, <code>{% has_any_permission %}</code>, <code>can_view</code> / <code>in_role</code> filters</td>
+</tr>
+</tbody>
+</table>
+<p>→ <a href="../app-authorisation-rbac" title="Authorization App Details">Authorization App Details</a></p>
+<h3 id="api">API</h3>
+<p>Django REST Framework integration with standardized error handling.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Error handling mixins</td>
+<td>Catches <code>ApplicationError</code> subclasses and returns structured JSON responses</td>
+</tr>
+<tr>
+<td>URL namespace</td>
+<td>All API endpoints under <code>/api/</code> prefix</td>
+</tr>
+</tbody>
+</table>
+<p>→ <a href="../app-api-hacksoft-integration" title="API App Details">API App Details</a></p>
+<h3 id="public-optional">Public (Optional)</h3>
+<p>Frontend pages gated by <code>include_frontend_ui</code>. Sub-features (<code>include_seo</code>, <code>include_analytics</code>) are conditionally generated via Copier Jinja templates.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Condition</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>LandingView</code></td>
+<td><code>include_frontend_ui</code></td>
+<td>Public landing page driven by <code>BRANDING</code> context</td>
+</tr>
+<tr>
+<td><code>AboutView</code></td>
+<td><code>include_frontend_ui</code></td>
+<td>About page with team section</td>
+</tr>
+<tr>
+<td><code>LegalPageView</code></td>
+<td><code>include_frontend_ui</code></td>
+<td>Legal page detail (terms, privacy, imprint, withdrawal)</td>
+</tr>
+<tr>
+<td><code>LegalPage</code> model</td>
+<td><code>include_frontend_ui</code></td>
+<td>Versioned legal content, managed via admin</td>
+</tr>
+<tr>
+<td><code>PageView</code> model</td>
+<td><code>include_analytics</code></td>
+<td>Anonymous page view counter (GDPR compliant — no cookies, no IPs)</td>
+</tr>
+<tr>
+<td><code>PrivacyAnalyticsMiddleware</code></td>
+<td><code>include_analytics</code></td>
+<td>Records page views, excludes static/admin/HTMX/XHR requests</td>
+</tr>
+<tr>
+<td><code>page_view_record</code> service</td>
+<td><code>include_analytics</code></td>
+<td>Atomic count increment with referrer domain extraction</td>
+</tr>
+<tr>
+<td><code>StaticViewSitemap</code></td>
+<td><code>include_seo</code></td>
+<td>XML sitemap for static public pages</td>
+</tr>
+<tr>
+<td><code>robots.txt</code> route</td>
+<td><code>include_seo</code></td>
+<td>Robots exclusion at <code>/robots.txt</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Jinja template structure:</strong> Files that vary by feature toggle use Copier's <code>.jinja</code> suffix (<code>models.py.jinja</code>, <code>admin.py.jinja</code>, <code>middleware.py.jinja</code>, <code>services.py.jinja</code>, <code>sitemaps.py.jinja</code>, <code>urls.py.jinja</code>). Files that are always identical are plain Python (<code>selectors.py</code>, <code>apps.py</code>, <code>views.py</code>). Copier strips the <code>.jinja</code> suffix during generation.</p>
+<p>→ <a href="../app-public-htmx-frontend" title="Public App Details">Public App Details</a></p>
+<hr />
+<h2 id="rbac-model">RBAC Model</h2>
+<h3 id="role-hierarchy">Role Hierarchy</h3>
+<p>Authorization follows <a href="https://csrc.nist.gov/projects/role-based-access-control">NIST RBAC</a> Core and Hierarchical principles (Levels 1–2). Senior roles inherit all permissions from junior roles in their chain:</p>
+<div class="highlight"><pre><span></span><code>                    ┌─────────────────┐
+                    │  Administrator  │  ← Full system access
+                    │    (Tier 6)     │    is_staff=True, is_superuser=True
+                    └────────┬────────┘
+                             │ inherits
+                    ┌────────▼────────┐
+                    │     Manager     │  ← User viewing, full reports
+                    │    (Tier 5)     │    is_staff=True
+                    └────────┬────────┘
+                             │ inherits
+                    ┌────────▼────────┐
+                    │     Editor      │  ← Full content lifecycle
+                    │    (Tier 4)     │    is_staff=True
+                    └────────┬────────┘
+                             │ inherits
+                    ┌────────▼────────┐
+                    │    Operator     │  ← Day-to-day operations
+                    │    (Tier 3)     │    is_staff=True
+                    └────────┬────────┘
+                             │ inherits
+          ┌──────────────────┼──────────────────┐
+          │                                     │
+┌─────────▼──────────┐               ┌──────────▼────────────┐
+│   Contributor      │               │      Reviewer         │
+│    (Tier 2)        │               │      (Tier 2)         │
+└─────────┬──────────┘               └──────────┬────────────┘
+          │ inherits                            │
+          └────────────────┬────────────────────┘
+                           │
+                  ┌────────▼────────┐
+                  │     Viewer      │  ← Read-only access
+                  │    (Tier 1)     │
+                  └─────────────────┘
+
+        SPECIAL ROLES (No Inheritance)
+        ┌───────────────────┐
+        │     Auditor       │  ← Read-only all + audit logs
+        │   (Compliance)    │    is_staff=True
+        └───────────────────┘
+</code></pre></div>
+<h3 id="keycloak-group-mapping">Keycloak Group Mapping</h3>
+<p>Groups in Keycloak map to roles in Django via <code>KEYCLOAK_GROUP_TO_ROLE</code> in <code>apps/authorization/constants.py</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Keycloak Group</th>
+<th>Django Role</th>
+<th><code>is_staff</code></th>
+<th><code>is_superuser</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>django-admins</code></td>
+<td>Administrator</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>django-managers</code></td>
+<td>Manager</td>
+<td>✅</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>django-editors</code></td>
+<td>Editor</td>
+<td>✅</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>django-operators</code></td>
+<td>Operator</td>
+<td>✅</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>django-contributors</code></td>
+<td>Contributor</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>django-reviewers</code></td>
+<td>Reviewer</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>django-viewers</code></td>
+<td>Viewer</td>
+<td>—</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>django-auditors</code></td>
+<td>Auditor</td>
+<td>✅</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="permission-format">Permission Format</h3>
+<p>Permissions follow a <code>domain.action</code> string format:</p>
+<p><strong>Domains:</strong> <code>content</code>, <code>users</code>, <code>reports</code>, <code>system</code>, <code>workflow</code>, <code>audit_log</code></p>
+<p><strong>Actions:</strong> <code>view</code>, <code>create</code>, <code>update</code>, <code>delete</code>, <code>approve</code>, <code>publish</code>, <code>export</code>, <code>audit</code>, <code>manage</code></p>
+<p><strong>Examples:</strong> <code>content.view</code>, <code>content.publish</code>, <code>users.manage</code>, <code>reports.export</code></p>
+<p>Permissions are defined as <code>Permission</code> dataclasses using typed enums (<code>PermissionAction</code>, <code>ResourceDomain</code>) for compile-time safety. The string representation (<code>domain.action</code>) is used in CBV mixins, template tags, and service checks.</p>
+<h3 id="customization-points">Customization Points</h3>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>Where</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Add/modify roles</td>
+<td><code>apps/authorization/constants.py</code> → <code>ROLES</code></td>
+<td>New permission levels needed</td>
+</tr>
+<tr>
+<td>Add Keycloak groups</td>
+<td><code>apps/authorization/constants.py</code> → <code>KEYCLOAK_GROUP_TO_ROLE</code></td>
+<td>New group mapped in Keycloak</td>
+</tr>
+<tr>
+<td>Add permissions</td>
+<td><code>apps/authorization/constants.py</code> → <code>ResourceDomain</code>, <code>PermissionAction</code></td>
+<td>New resource domains or actions</td>
+</tr>
+<tr>
+<td>Change login behavior</td>
+<td><code>apps/authentication/adapters.py</code></td>
+<td>Custom social account adapter logic</td>
+</tr>
+<tr>
+<td>Add apps</td>
+<td><code>config/settings/base.py</code> → <code>INSTALLED_APPS</code></td>
+<td>New Django apps</td>
+</tr>
+<tr>
+<td>Modify routing</td>
+<td><code>config/urls.py</code></td>
+<td>New URL patterns</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="authorization-usage">Authorization Usage</h2>
+<h3 id="class-based-views">Class-Based Views</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">apps.authorization.mixins</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">PermissionRequiredMixin</span><span class="p">,</span>
+    <span class="n">AnyPermissionRequiredMixin</span><span class="p">,</span>
+    <span class="n">AllPermissionsRequiredMixin</span><span class="p">,</span>
+    <span class="n">RoleRequiredMixin</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ArticleListView</span><span class="p">(</span><span class="n">PermissionRequiredMixin</span><span class="p">,</span> <span class="n">ListView</span><span class="p">):</span>
+    <span class="n">required_permission</span> <span class="o">=</span> <span class="s2">&quot;content.view&quot;</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">ContentAccessView</span><span class="p">(</span><span class="n">AnyPermissionRequiredMixin</span><span class="p">,</span> <span class="n">TemplateView</span><span class="p">):</span>
+    <span class="n">required_permissions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;content.view&quot;</span><span class="p">,</span> <span class="s2">&quot;content.manage&quot;</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">PublishView</span><span class="p">(</span><span class="n">AllPermissionsRequiredMixin</span><span class="p">,</span> <span class="n">TemplateView</span><span class="p">):</span>
+    <span class="n">required_permissions</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;content.update&quot;</span><span class="p">,</span> <span class="s2">&quot;content.publish&quot;</span><span class="p">]</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">EditorDashboard</span><span class="p">(</span><span class="n">RoleRequiredMixin</span><span class="p">,</span> <span class="n">TemplateView</span><span class="p">):</span>
+    <span class="n">required_role</span> <span class="o">=</span> <span class="s2">&quot;Editor&quot;</span>
+</code></pre></div>
+<h3 id="in-services-hacksoft-pattern">In Services (HackSoft Pattern)</h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">apps.authorization.services</span><span class="w"> </span><span class="kn">import</span> <span class="n">permissions</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">publish_article</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">user</span><span class="p">,</span> <span class="n">article</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Publish article with permission check.&quot;&quot;&quot;</span>
+    <span class="n">permissions</span><span class="o">.</span><span class="n">require_permission_or_raise</span><span class="p">(</span>
+        <span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="s2">&quot;content.publish&quot;</span>
+    <span class="p">)</span>
+    <span class="n">article</span><span class="o">.</span><span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;published&quot;</span>
+    <span class="n">article</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">article</span>
+</code></pre></div>
+<h3 id="in-templates">In Templates</h3>
+<div class="highlight"><pre><span></span><code>{% load authorization_tags %}
+
+{# Check single permission #}
+{% has_permission &quot;content.view&quot; as can_view %}
+{% if can_view %}
+    <span class="p">&lt;</span><span class="nt">a</span> <span class="na">href</span><span class="o">=</span><span class="s">&quot;{% url &#39;content:list&#39; %}&quot;</span><span class="p">&gt;</span>View Content<span class="p">&lt;/</span><span class="nt">a</span><span class="p">&gt;</span>
+{% endif %}
+
+{# Check multiple permissions (OR) #}
+{% has_any_permission &quot;content.edit,content.manage&quot; as can_edit %}
+
+{# Using context processor variables (from PermissionContextMiddleware) #}
+{% if &quot;content.publish&quot; in user_permissions %}
+    <span class="p">&lt;</span><span class="nt">button</span> <span class="na">hx-post</span><span class="o">=</span><span class="s">&quot;{% url &#39;publish&#39; %}&quot;</span><span class="p">&gt;</span>Publish<span class="p">&lt;/</span><span class="nt">button</span><span class="p">&gt;</span>
+{% endif %}
+
+{# Role badge #}
+{% if primary_role %}
+    <span class="p">&lt;</span><span class="nt">span</span> <span class="na">class</span><span class="o">=</span><span class="s">&quot;badge&quot;</span><span class="p">&gt;</span>{{ primary_role.name }}<span class="p">&lt;/</span><span class="nt">span</span><span class="p">&gt;</span>
+{% endif %}
+
+{# Filters #}
+{% if user|can_view:&quot;content&quot; %}...{% endif %}
+{% if user|in_role:&quot;Administrator&quot; %}...{% endif %}
+</code></pre></div>
+<h3 id="authorization-api-reference">Authorization API Reference</h3>
+<p><strong>Selectors</strong> (read-only queries):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">apps.authorization</span><span class="w"> </span><span class="kn">import</span> <span class="n">selectors</span>
+
+<span class="n">selectors</span><span class="o">.</span><span class="n">user_get_role_names</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>        <span class="c1"># [&#39;Editor&#39;, &#39;Reviewer&#39;]</span>
+<span class="n">selectors</span><span class="o">.</span><span class="n">user_get_roles</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>             <span class="c1"># [Role(...), ...]</span>
+<span class="n">selectors</span><span class="o">.</span><span class="n">user_get_permissions</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>       <span class="c1"># frozenset[Permission]</span>
+<span class="n">selectors</span><span class="o">.</span><span class="n">user_has_permission</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="s2">&quot;content.view&quot;</span><span class="p">)</span>
+<span class="n">selectors</span><span class="o">.</span><span class="n">user_has_any_permission</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">permissions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">])</span>
+<span class="n">selectors</span><span class="o">.</span><span class="n">user_has_all_permissions</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">permissions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">])</span>
+<span class="n">selectors</span><span class="o">.</span><span class="n">user_has_role</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">role_name</span><span class="o">=</span><span class="s2">&quot;Editor&quot;</span><span class="p">)</span>
+<span class="n">selectors</span><span class="o">.</span><span class="n">user_get_primary_role</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>      <span class="c1"># Role or None</span>
+</code></pre></div>
+<p><strong>Services</strong> (business logic):</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">apps.authorization.services</span><span class="w"> </span><span class="kn">import</span> <span class="n">permissions</span><span class="p">,</span> <span class="n">roles</span>
+
+<span class="n">permissions</span><span class="o">.</span><span class="n">check_permission</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="s2">&quot;content.view&quot;</span><span class="p">)</span>
+<span class="n">permissions</span><span class="o">.</span><span class="n">require_permission_or_raise</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">permission</span><span class="o">=</span><span class="s2">&quot;content.view&quot;</span><span class="p">)</span>
+<span class="n">permissions</span><span class="o">.</span><span class="n">require_any_permission_or_raise</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">permissions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">])</span>
+<span class="n">permissions</span><span class="o">.</span><span class="n">require_all_permissions_or_raise</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">,</span> <span class="n">permissions</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">])</span>
+
+<span class="n">roles</span><span class="o">.</span><span class="n">update_user_access_flags</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>       <span class="c1"># Returns bool (changed)</span>
+<span class="n">roles</span><span class="o">.</span><span class="n">get_user_role_summary</span><span class="p">(</span><span class="n">user</span><span class="o">=</span><span class="n">user</span><span class="p">)</span>          <span class="c1"># Debug summary dict</span>
+</code></pre></div>
+<hr />
+<h2 id="hacksoft-styleguide-conventions">HackSoft Styleguide Conventions</h2>
+<p>All apps follow these structural rules. The template enforces them — new code should maintain them.</p>
+<h3 id="models">Models</h3>
+<p>Models contain fields, <code>Meta</code>, and <code>__str__</code> only. No business logic beyond <code>clean()</code>. All field <code>verbose_name</code> arguments use <code>_()</code> for translation. Timestamps inherit from <code>TimeStampedModel</code> rather than duplicating fields. Use <code>UniqueConstraint</code> over the deprecated <code>unique_together</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">LegalPage</span><span class="p">(</span><span class="n">TimeStampedModel</span><span class="p">):</span>
+    <span class="n">slug</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;slug&quot;</span><span class="p">),</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">SLUG_CHOICES</span><span class="p">,</span> <span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">title</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">CharField</span><span class="p">(</span><span class="n">_</span><span class="p">(</span><span class="s2">&quot;title&quot;</span><span class="p">),</span> <span class="n">max_length</span><span class="o">=</span><span class="mi">200</span><span class="p">)</span>
+
+    <span class="k">class</span><span class="w"> </span><span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">verbose_name</span> <span class="o">=</span> <span class="n">_</span><span class="p">(</span><span class="s2">&quot;Legal Page&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">get_slug_display</span><span class="p">()</span><span class="si">}</span><span class="s2"> (v</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="si">}</span><span class="s2">)&quot;</span>
+</code></pre></div>
+<h3 id="selectors">Selectors</h3>
+<p>Read-only database operations. Every selector uses keyword-only arguments (the <code>*</code> marker). Naming follows <code>{entity}_{verb}_{qualifier}</code>. Returns querysets or model instances. No side effects.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">legal_page_get_or_404</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">slug</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LegalPage</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">get_object_or_404</span><span class="p">(</span><span class="n">LegalPage</span><span class="p">,</span> <span class="n">slug</span><span class="o">=</span><span class="n">slug</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="services">Services</h3>
+<p>Write operations and business logic. Same keyword-only argument and naming rules as selectors. Services may call selectors but never the reverse. Explicit exception handling over silent failures.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">page_view_record</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">referrer</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">host</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">referrer_domain</span> <span class="o">=</span> <span class="n">_extract_referrer_domain</span><span class="p">(</span><span class="n">referrer</span><span class="o">=</span><span class="n">referrer</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">)</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">obj</span><span class="p">,</span> <span class="n">created</span> <span class="o">=</span> <span class="n">PageView</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">get_or_create</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">created</span><span class="p">:</span>
+            <span class="n">PageView</span><span class="o">.</span><span class="n">objects</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">pk</span><span class="o">=</span><span class="n">obj</span><span class="o">.</span><span class="n">pk</span><span class="p">)</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">count</span><span class="o">=</span><span class="n">F</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">DatabaseError</span><span class="p">:</span>
+        <span class="n">logger</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;Failed to record page view for </span><span class="si">%s</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="views">Views</h3>
+<p>Thin wrappers that delegate to selectors and services. No ORM queries in views. Context assembly calls selectors; form handling calls services.</p>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">LegalPageView</span><span class="p">(</span><span class="n">HtmxMixin</span><span class="p">,</span> <span class="n">TemplateView</span><span class="p">):</span>
+    <span class="n">template_name</span> <span class="o">=</span> <span class="s2">&quot;public/pages/legal_detail.html&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_context_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">get_context_data</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">context</span><span class="p">[</span><span class="s2">&quot;page&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">legal_page_get_or_404</span><span class="p">(</span><span class="n">slug</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">kwargs</span><span class="p">[</span><span class="s2">&quot;slug&quot;</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">context</span>
+</code></pre></div>
+<h3 id="admin">Admin</h3>
+<p>Dedicated <code>admin.py</code> per app. Fieldset labels use <code>_()</code>. Business logic delegates to services or uses model-level constraints — no raw ORM queries in admin methods.</p>
+<h3 id="exceptions">Exceptions</h3>
+<p>Domain-specific exceptions in <code>exceptions.py</code>, inheriting from <code>ApplicationError</code>. Services raise these; views and API mixins catch and handle them.</p>
+<div class="highlight"><pre><span></span><code>ApplicationError
+├── ValidationError        # Business rule validation failed
+├── PermissionDenied       # Missing required permissions
+└── ServiceUnavailable     # External dependency unavailable
+</code></pre></div>
+<h3 id="naming-summary">Naming Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Pattern</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Selector</td>
+<td><code>{entity}_{verb}_{qualifier}</code></td>
+<td><code>legal_page_get_or_404</code></td>
+</tr>
+<tr>
+<td>Service</td>
+<td><code>{entity}_{verb}_{qualifier}</code></td>
+<td><code>page_view_record</code></td>
+</tr>
+<tr>
+<td>Private helper</td>
+<td><code>_{verb}_{noun}</code></td>
+<td><code>_extract_referrer_domain</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="testing">Testing</h2>
+<p>Tests are organized by architectural layer, matching the HackSoft pattern. Each test file targets a single layer:</p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>What It Tests</th>
+<th>Layer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>test_models.py</code></td>
+<td>Field constraints, <code>__str__</code>, unique constraints</td>
+<td>Models</td>
+</tr>
+<tr>
+<td><code>test_selectors.py</code></td>
+<td>Read operations, queryset behavior, edge cases</td>
+<td>Selectors</td>
+</tr>
+<tr>
+<td><code>test_services.py</code></td>
+<td>Business logic, write operations, error handling</td>
+<td>Services</td>
+</tr>
+<tr>
+<td><code>test_views.py</code></td>
+<td>HTTP responses, context, integration with middleware</td>
+<td>Views</td>
+</tr>
+<tr>
+<td><code>test_middleware.py</code></td>
+<td>Request/response transformation, header handling</td>
+<td>Middleware</td>
+</tr>
+<tr>
+<td><code>test_mixins.py</code></td>
+<td>Mixin behavior in isolation (e.g., <code>HtmxMixin</code> template switching)</td>
+<td>Mixins</td>
+</tr>
+<tr>
+<td><code>test_signals.py</code></td>
+<td>Signal emission and handler behavior across app boundaries</td>
+<td>Signals</td>
+</tr>
+<tr>
+<td><code>test_constants.py</code></td>
+<td>Configuration integrity (role definitions, permission mappings)</td>
+<td>Constants</td>
+</tr>
+</tbody>
+</table>
+<p>Tests run inside the Docker container via VS Code Test Explorer (attached via Remote Explorer) or directly with <code>pytest</code>. Shared fixtures (<code>conftest.py</code>) provide reusable <code>user</code>, <code>staff_user</code>, and <code>user_with_groups</code> fixtures.</p>
+<div class="admonition info">
+<p class="admonition-title">Cross-app signal testing</p>
+<p>Signal tests verify the authentication → authorization boundary. The authentication app emits <code>user_groups_synced</code>, the authorization app handles it. Tests use explicit <code>connect_signals()</code> / <code>disconnect_signals()</code> helpers to control handler registration during test isolation.</p>
+</div>
+<hr />
+<h2 id="dev-prod-differences">Dev ↔ Prod Differences</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Dev</th>
+<th>Prod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Settings module</td>
+<td><code>config.settings</code> (<code>DJANGO_ENV=development</code>)</td>
+<td><code>config.settings</code> (<code>DJANGO_ENV=production</code>)</td>
+</tr>
+<tr>
+<td><code>DEBUG</code></td>
+<td><code>True</code></td>
+<td><code>False</code></td>
+</tr>
+<tr>
+<td><code>ALLOWED_HOSTS</code></td>
+<td><code>localhost,127.0.0.1,.ngrok.app</code></td>
+<td>Explicit domain list</td>
+</tr>
+<tr>
+<td>Secret key</td>
+<td>Hardcoded default</td>
+<td>Generated, stored outside repo</td>
+</tr>
+<tr>
+<td>Database</td>
+<td><code>db:5432</code> (shared PostgreSQL container)</td>
+<td>Same container or managed service</td>
+</tr>
+<tr>
+<td>Email</td>
+<td>MailDev (<code>maildev:1025</code>)</td>
+<td>Real SMTP provider</td>
+</tr>
+<tr>
+<td>Static files</td>
+<td>Django <code>runserver</code> serves them</td>
+<td><code>collectstatic</code> + Envoy / whitenoise</td>
+</tr>
+<tr>
+<td>Debug toolbar</td>
+<td>Enabled (if <code>include_debug_toolbar</code>)</td>
+<td>Disabled</td>
+</tr>
+<tr>
+<td>debugpy</td>
+<td>Listening on <code>DEBUG_PORT</code></td>
+<td>Not installed</td>
+</tr>
+<tr>
+<td><code>SECURE_SSL_REDIRECT</code></td>
+<td><code>False</code></td>
+<td><code>True</code> (handled at Envoy, defense-in-depth)</td>
+</tr>
+<tr>
+<td>Keycloak backchannel</td>
+<td><code>http://keycloak.local:8080</code></td>
+<td>Same (single-host VPS)</td>
+</tr>
+<tr>
+<td>Compose file</td>
+<td><code>compose.yaml</code></td>
+<td><code>compose.prod.yaml</code></td>
+</tr>
+<tr>
+<td>Container restart</td>
+<td><code>unless-stopped</code></td>
+<td><code>unless-stopped</code></td>
+</tr>
+<tr>
+<td>Resource limits</td>
+<td>None</td>
+<td>Memory limits configured</td>
+</tr>
+<tr>
+<td>Logging</td>
+<td>Console output</td>
+<td><code>json-file</code> driver with rotation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="kubernetes-migration-path">Kubernetes Migration Path</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Docker Compose (current)</th>
+<th>Kubernetes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Deployment</td>
+<td><code>compose.yaml</code> service block</td>
+<td>Deployment + Service manifests</td>
+</tr>
+<tr>
+<td>Configuration</td>
+<td><code>.env</code> file</td>
+<td>ConfigMap + Secrets</td>
+</tr>
+<tr>
+<td>Health check</td>
+<td><code>HealthCheckMiddleware</code> at <code>/health/</code></td>
+<td>Same, wired to liveness/readiness probes</td>
+</tr>
+<tr>
+<td>Database</td>
+<td><code>db:5432</code></td>
+<td>Managed service endpoint (RDS, CloudSQL)</td>
+</tr>
+<tr>
+<td>Keycloak backchannel</td>
+<td><code>http://keycloak.local:8080</code></td>
+<td><code>http://keycloak.default.svc.cluster.local:8080</code> (encrypt via mesh mTLS)</td>
+</tr>
+<tr>
+<td>Static files</td>
+<td>Volume mount or whitenoise</td>
+<td>CDN or nginx sidecar</td>
+</tr>
+<tr>
+<td>Email</td>
+<td>MailDev (dev) / SMTP relay (prod)</td>
+<td>SMTP relay or SES</td>
+</tr>
+<tr>
+<td>Scaling</td>
+<td>Single container</td>
+<td>HPA based on CPU/request metrics</td>
+</tr>
+<tr>
+<td>Secrets</td>
+<td><code>.env</code> outside repo</td>
+<td>K8s Secrets / Vault</td>
+</tr>
+</tbody>
+</table>
+<p>The application image is identical across tiers. Only environment variables and orchestration change. See <a href="../../00-index/01-infrastructure-engineering-hub/#scaling-path" title="Scaling Path">Scaling Path</a> for the full platform migration map.</p>
+<hr />
+<h2 id="runbooks">Runbooks</h2>
+<h3 id="service-wont-start-modulenotfounderror">Service won't start — ModuleNotFoundError</h3>
+<p>Missing Python dependency. Verify <code>requirements/development.txt</code> (or <code>production.txt</code>) includes all needed packages. Rebuild the container: <code>docker compose build --no-cache &lt;service&gt;</code>. If the error references an app module, check <code>INSTALLED_APPS</code> in settings matches the generated app names.</p>
+<h3 id="login-redirects-to-keycloak-but-fails-with-401">Login redirects to Keycloak but fails with 401</h3>
+<p>Client secret mismatch between the parent project's <code>.env</code> (<code>KEYCLOAK_CLIENT_SECRET</code>, propagated via compose include) and the Keycloak realm. Verify both sides match. If the realm was reimported (<code>docker compose down -v</code>), the secret reverts to the realm template value. See <a href="../../20-base-infrastructure/22-keycloak-oidc/#client-secret-mismatch-after-reimport" title="Keycloak: Client Secret Mismatch">Keycloak: Client Secret Mismatch</a>.</p>
+<h3 id="login-works-but-user-has-no-permissions">Login works but user has no permissions</h3>
+<p>Keycloak groups are synced on login, but the authorization app's <code>KEYCLOAK_GROUP_TO_ROLE</code> mapping doesn't include the user's group. Check the mapping in <code>apps/authorization/constants.py</code>. Verify the user's Keycloak groups in the Admin Console match the expected group names. Log out and log back in to trigger a fresh sync.</p>
+<h3 id="health-endpoint-returns-503-database-unreachable">Health endpoint returns 503 — database unreachable</h3>
+<p>PostgreSQL is not running or the service can't reach it. Check <code>docker compose ps db</code> — if unhealthy, see <a href="../../20-base-infrastructure/20-postgresql/#runbooks" title="PostgreSQL Runbooks">PostgreSQL Runbooks</a>. Verify <code>DATABASE_HOST</code> in <code>.env</code> is set to <code>db</code> (not <code>localhost</code>). Confirm both containers are on the <code>internal</code> network.</p>
+<h3 id="service-returns-404-with-path-prefix-in-url">Service returns 404 with path prefix in URL</h3>
+<p>Envoy Gateway is not stripping the service path prefix. Verify the HTTPRoute has the <code>URLRewrite</code> filter with <code>ReplacePrefixMatch: /</code>. Also check that <code>FORCE_SCRIPT_NAME</code> is configured in <code>base.py</code> if Django needs to generate URLs with the prefix. See <a href="../../20-base-infrastructure/21-envoy-gateway/#route-definition" title="Envoy Route Definition">Envoy Route Definition</a>.</p>
+<h3 id="gateway-returns-503-service-unreachable">Gateway returns 503 — service unreachable</h3>
+<p>Backend hostname or port mismatch in the Envoy <code>Backend</code> YAML. Verify the hostname matches the Docker service hostname (e.g., <code>backend.local</code>) and the port is <code>8000</code> (the internal Django port). Check that the service container is on the <code>internal</code> network and is running: <code>docker compose ps</code>.</p>
+<h3 id="htmx-requests-return-full-page-instead-of-partial">HTMX requests return full page instead of partial</h3>
+<p>The view is missing <code>HtmxMixin</code>, or <code>htmx_template_name</code> is not set. Verify the view inherits <code>HtmxMixin</code> and that the HTMX partial template exists at the specified path. Check that <code>django-htmx</code> middleware is in the middleware stack (it sets <code>request.htmx</code>).</p>
+<h3 id="copier-update-overwrites-my-customizations">copier update overwrites my customizations</h3>
+<p>Check <code>_skip_if_exists</code> in <code>copier.yml</code>. App code under <code>src/apps/*</code> is protected by default (except core, api, authentication, authorization — which are template-managed). If a file should be protected, add it to the skip rules. Migrations, <code>.env</code>, locale files, and compose overrides are already protected.</p>
+<h3 id="admin-login-page-appears-instead-of-keycloak-redirect">Admin login page appears instead of Keycloak redirect</h3>
+<p>The admin login is intercepted by <code>AdminOnlyLocalAuthMiddleware</code> and redirected to Keycloak for non-superusers. If you're seeing the Django admin login form, either you're a superuser (expected behavior) or the middleware isn't in the <code>MIDDLEWARE</code> stack. The root URL config also redirects <code>/admin/login/</code> to <code>account_login</code> as a fallback.</p>
+<h3 id="emails-not-arriving-in-maildev">Emails not arriving in MailDev</h3>
+<p>Verify <code>EMAIL_HOST=maildev</code> and <code>EMAIL_PORT=1025</code> in <code>.env</code>. Check that <code>EMAIL_BACKEND</code> is set to <code>django.core.mail.backends.smtp.EmailBackend</code> (not the console backend). See <a href="../../20-base-infrastructure/23-maildev/#runbooks" title="MailDev Runbooks">MailDev Runbooks</a> for gateway routing issues.</p>
+<h3 id="analytics-middleware-not-recording-page-views">Analytics middleware not recording page views</h3>
+<p>The <code>PrivacyAnalyticsMiddleware</code> is only generated when <code>include_analytics=true</code>. If enabled, verify it's in the <code>MIDDLEWARE</code> stack. The middleware excludes admin, static, media, API, health, HTMX, and XHR requests by design. Only GET requests returning 200 are tracked.</p>
+<hr />
+<h2 id="adrs">ADRs</h2>
+<ul>
+<li><strong>ADR: HackSoft Styleguide 2+ over fat models</strong> — Selectors + Services pattern enforces separation of concerns across all apps. Business logic is testable in isolation, views stay thin, models stay minimal. Team onboarding is faster because the pattern is consistent and documented. Tradeoff: more files per feature (model + selector + service + view), but each file has a single responsibility.</li>
+<li><strong>ADR: Copier over Cookiecutter</strong> — Copier's <code>copier update</code> enables template evolution across existing services. <code>_skip_if_exists</code> protects customized files while updating infrastructure. Cookiecutter is one-shot — generated projects drift from the template permanently.</li>
+<li><strong>ADR: django-allauth over manual OIDC</strong> — Managed authentication flow with adapter hooks for customization. Handles token lifecycle, CSRF, session management, social account linking. Manual OIDC would require reimplementing all of this with ongoing maintenance burden.</li>
+<li><strong>ADR: RBAC sync on login over webhooks</strong> — Group memberships synced from OIDC claims on every login. Simpler than webhook infrastructure — no event listeners, no background workers. Role changes propagate on next login. Acceptable latency for most applications; webhook option remains available for immediate revocation requirements.</li>
+<li><strong>ADR: NIST RBAC (Core + Hierarchical) over flat groups</strong> — Proper role hierarchy with permission inheritance. Keycloak manages group assignments, Django maps groups to roles with defined permissions. Constrained RBAC (Level 3 — separation of duty) and Symmetric RBAC (Level 4 — role-permission audit) remain future options.</li>
+<li><strong>ADR: Local login restricted to superusers</strong> — Emergency admin access preserved when Keycloak is unavailable. Regular users authenticate exclusively through SSO, maintaining centralized identity management.</li>
+<li><strong>ADR: Branding in YAML over environment variables</strong> — Structural UI configuration benefits from version control, comments, and nesting. Environment variables reserved for infrastructure (secrets, URLs, ports). Context processor loads <code>branding.yml</code> once at startup.</li>
+<li><strong>ADR: Feature toggles via Copier conditionals</strong> — <code>include_frontend_ui</code>, <code>include_seo</code>, <code>include_analytics</code> control code generation at template level. Jinja conditionals in <code>.py.jinja</code> files produce clean Python output — no runtime feature flags, no dead code paths in generated services.</li>
+<li><strong>ADR: Class-based views only</strong> — All views are CBVs with authorization applied via mixins. Provides consistent structure, composability through inheritance, and alignment with HackSoft patterns. Decorator equivalents exist for rare edge cases but are not the standard. CBVs make the authorization surface visible in class definitions rather than scattered across function signatures.</li>
+<li><strong>ADR: Signal-based auth→authz communication</strong> — Authentication emits <code>user_groups_synced</code>, authorization handles it. Apps have no direct imports of each other's internals. Either can be replaced or tested independently. Django signals provide the decoupling without adding message broker complexity.</li>
+<li><strong>ADR: entity_verb_qualifier naming over verb-first</strong> — Selectors and services follow <code>legal_page_get_or_404</code> not <code>get_legal_page_or_404</code>. Entity-first naming groups related functions naturally in alphabetical listings and IDE autocomplete. Consistent across all apps.</li>
+<li><strong>ADR: Privacy-first analytics over GA4</strong> — <code>PageView</code> model stores only path, date, referrer domain, and count. No cookies, no IP addresses, no user identification. GDPR compliant under legitimate interest (Art. 6(1)(f)) without consent requirement. GA4 is available as an optional addition with cookie consent banner.</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://github.com/HackSoftware/Django-Styleguide">HackSoft Django Styleguide</a></li>
+<li><a href="https://copier.readthedocs.io/">Copier Documentation</a></li>
+<li><a href="https://docs.allauth.org/">django-allauth Documentation</a></li>
+<li><a href="https://www.django-rest-framework.org/">Django REST Framework</a></li>
+<li><a href="https://django-htmx.readthedocs.io/">django-htmx Documentation</a></li>
+<li><a href="https://csrc.nist.gov/projects/role-based-access-control">NIST RBAC Model</a></li>
+<li><a href="https://owasp.org/www-community/Access_Control">OWASP Access Control Cheat Sheet</a></li>
+<li><a href="../../00-index/01-infrastructure-engineering-hub/" title="Infrastructure Engineering Hub">Infrastructure Engineering Hub</a></li>
+<li><a href="../../10-workspace-config/10-workspace-config/" title="Workspace Configuration">Workspace Configuration</a></li>
+<li><a href="../../20-base-infrastructure/20-postgresql/" title="PostgreSQL">PostgreSQL</a></li>
+<li><a href="../../20-base-infrastructure/21-envoy-gateway/" title="Envoy Gateway">Envoy Gateway</a></li>
+<li><a href="../../20-base-infrastructure/22-keycloak-oidc/" title="Keycloak OIDC">Keycloak OIDC</a></li>
+<li><a href="../../20-base-infrastructure/23-maildev/" title="MailDev">MailDev</a></li>
+<li><a href="../app-core-admin-panel" title="Core App">Core App</a></li>
+<li><a href="../app-authentication-allauth-oidc" title="Authentication App">Authentication App</a></li>
+<li><a href="../app-authorisation-rbac" title="Authorization App">Authorization App</a></li>
+<li><a href="../app-api-hacksoft-integration" title="API App">API App</a></li>
+<li><a href="../app-public-htmx-frontend" title="Public Frontend App">Public Frontend App</a></li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

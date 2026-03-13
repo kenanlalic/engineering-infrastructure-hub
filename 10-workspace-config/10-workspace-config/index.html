@@ -1,0 +1,2215 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://kenanlalic.github.io/engineering-infrastructure-hub/10-workspace-config/10-workspace-config/">
+      
+      
+        <link rel="prev" href="../../00-index/01-infrastructure-engineering-hub/">
+      
+      
+        <link rel="next" href="../../20-base-infrastructure/20-postgresql/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+    
+    
+      
+        <title>VS Code Workspace Configuration - Infrastructure Engineering Hub</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#vs-code-workspace-multi-root-development-environment" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-header__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Infrastructure Engineering Hub
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              VS Code Workspace Configuration
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-nav__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Infrastructure Engineering Hub
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-index/01-infrastructure-engineering-hub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workspace
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workspace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#repository-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-vs-code-shows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What VS Code Shows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-clone-workspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Clone Workspace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-clone-infrastructure-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Clone Infrastructure &amp; Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-install-vs-code-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Install VS Code Extensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-open-workspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Open Workspace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-start-infrastructure-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Start Infrastructure Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-start-ngrok" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Start Ngrok
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-develop-inside-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Develop Inside Containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-a-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a Service
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Adding a Service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-generate-from-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Generate from Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-register-with-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Register with Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-register-with-workspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Register with Workspace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-start-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Start &amp; Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workspace-file-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workspace File Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workspace File Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#eihcode-workspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        eih.code-workspace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vscodesettingsjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .vscode/settings.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vscodelaunchjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .vscode/launch.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gitignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .gitignore
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ngrok-public-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ngrok &amp; Public Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-shows-unhealthy-after-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keycloak shows unhealthy after startup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ngrok-url-doesnt-reach-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ngrok URL doesn't reach services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#port-already-in-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Port already in use"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-folder-appears-twice-in-explorer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service folder appears twice in Explorer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugger-wont-attach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugger won't attach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-redirect-fails-after-keycloak-restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login redirect fails after Keycloak restart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tests-not-appearing-in-test-explorer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests not appearing in Test Explorer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clean-slate-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Slate Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Clean Slate Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#eihcode-workspace-clean-slate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        eih.code-workspace (clean slate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vscodelaunchjson-clean-slate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .vscode/launch.json (clean slate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vscodesettingsjson-clean-slate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .vscode/settings.json (clean slate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gitignore-clean-slate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .gitignore (clean slate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#onboarding-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Onboarding Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Base Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/20-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/21-envoy-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Envoy Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/22-keycloak-oidc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/23-maildev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MailDev
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../30-django-service-template/30-django-service-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Django Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#repository-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-vs-code-shows" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What VS Code Shows
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setup
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setup">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-clone-workspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Clone Workspace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-clone-infrastructure-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Clone Infrastructure &amp; Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-install-vs-code-extensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Install VS Code Extensions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#4-open-workspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        4. Open Workspace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#5-start-infrastructure-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        5. Start Infrastructure Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#6-start-ngrok" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        6. Start Ngrok
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#7-develop-inside-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        7. Develop Inside Containers
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-a-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a Service
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Adding a Service">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-generate-from-template" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Generate from Template
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-register-with-infrastructure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2: Register with Infrastructure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-register-with-workspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3: Register with Workspace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-start-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4: Start &amp; Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#quick-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Quick Checklist
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#workspace-file-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Workspace File Reference
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Workspace File Reference">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#eihcode-workspace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        eih.code-workspace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vscodesettingsjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .vscode/settings.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vscodelaunchjson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .vscode/launch.json
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gitignore" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .gitignore
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#debugging" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugging
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ngrok-public-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ngrok &amp; Public Access
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-shows-unhealthy-after-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keycloak shows unhealthy after startup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ngrok-url-doesnt-reach-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ngrok URL doesn't reach services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#port-already-in-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Port already in use"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-folder-appears-twice-in-explorer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service folder appears twice in Explorer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugger-wont-attach" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugger won't attach
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-redirect-fails-after-keycloak-restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login redirect fails after Keycloak restart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tests-not-appearing-in-test-explorer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tests not appearing in Test Explorer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#clean-slate-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Clean Slate Files
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Clean Slate Files">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#eihcode-workspace-clean-slate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        eih.code-workspace (clean slate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vscodelaunchjson-clean-slate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .vscode/launch.json (clean slate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vscodesettingsjson-clean-slate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .vscode/settings.json (clean slate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gitignore-clean-slate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        .gitignore (clean slate)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#onboarding-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Onboarding Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="vs-code-workspace-multi-root-development-environment">VS Code Workspace — Multi-Root Development Environment</h1>
+<p>Single VS Code instance managing all platform repositories, with centralized debugger launch configs, container-attached development, and parallelized test execution. From empty machine to hitting a breakpoint inside a running container.</p>
+<blockquote>
+<p>📍 <strong>Type:</strong> Workspace Configuration<br>
+👤 <strong>Owner:</strong> Ktwenty Threel<br>
+🎯 <strong>Outcome:</strong> Understand the Workspace Configuration Process<br></p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="./#overview" title="Overview">Overview</a></li>
+<li><a href="./#architecture" title="Architecture">Architecture</a></li>
+<li><a href="./#prerequisites" title="Prerequisites">Prerequisites</a></li>
+<li><a href="./#setup" title="Setup">Setup</a></li>
+<li><a href="./#adding-a-service" title="Adding a Service">Adding a Service</a></li>
+<li><a href="./#workspace-file-reference" title="Workspace File Reference">Workspace File Reference</a></li>
+<li><a href="./#debugging" title="Debugging">Debugging</a></li>
+<li><a href="./#testing" title="Testing">Testing</a></li>
+<li><a href="./#ngrok-&amp;-public-access" title="Ngrok &amp; Public Access">Ngrok &amp; Public Access</a></li>
+<li><a href="./#runbooks" title="Runbooks">Runbooks</a></li>
+<li><a href="./#adrs" title="ADRs">ADRs</a></li>
+<li><a href="./#references" title="References">References</a></li>
+</ul>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>The workspace is a single Git repository (<code>engineering-infrastructure-hub</code>) that contains the VS Code configuration, the documentation vault, and references to all other repositories. It does not contain service code — each service and the base infrastructure are their own Git repositories, cloned into this directory and git-ignored. VS Code sees them as separate workspace roots.</p>
+<h3 id="repository-layout">Repository Layout</h3>
+<div class="highlight"><pre><span></span><code>engineering-infrastructure-hub/
+├── eih.code-workspace             # Multi-root workspace definition
+├── .vscode/
+│   ├── launch.json                 # Centralized debugger configs (all services)
+│   └── settings.json               # Repo exclusions (prevents double entries)
+├── docs/                           # Obsidian documentation vault
+├── .gitignore
+├── README.md
+├── LICENSE
+├── basic-infrastructure/           # Cloned, git-ignored
+├── django-service-template/        # Cloned, git-ignored
+└── *-service/                      # Generated services, git-ignored by wildcard
+</code></pre></div>
+<h3 id="what-vs-code-shows">What VS Code Shows</h3>
+<div class="highlight"><pre><span></span><code>📁 🛠️ Setup Workspace                  ← This repo (workspace config, docs)
+📁 📦 Basic Infrastructure             ← Envoy Gateway, Keycloak, PostgreSQL, etc.
+   ──────────────────────────────
+📁 📚 Django Service Template          ← Copier template for generating services
+   ──────────────────────────────
+📁 💽 Backend Service                  ← Generated service (example)
+📁 💽 Billing Service                  ← Generated service (example)
+</code></pre></div>
+<p>Delimiter lines are visual separators created by empty <code>delimiter-*</code> directories, hidden from Explorer via <code>files.exclude</code>. Cloned repos are excluded from the Setup Workspace root so they don't appear twice.</p>
+<hr />
+<h2 id="architecture">Architecture</h2>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────────────────────────────────────────┐
+│                        VS Code Workspace                            │
+│                                                                     │
+│   ┌──────────────────────────────────────────────────────────────┐  │
+│   │ eih.code-workspace                                           │  │
+│   │  Folder roots → emoji-prefixed, per-repo                     │  │
+│   │  Settings → file exclusions, git, python analysis            │  │
+│   │  Extensions → recommended on first open                      │  │
+│   └──────────────────────────────────────────────────────────────┘  │
+│                                                                     │
+│   ┌──────────────────┐    ┌────────────────────────────────────┐    │
+│   │ .vscode/         │    │ Run &amp; Debug (Ctrl+Shift+D)         │    │
+│   │  launch.json     │───▶│  💽 Backend Service  → port 5678   │    │
+│   │  (all services)  │    │  💽 Billing Service  → port 5679   │    │
+│   │                  │    │  💽 Analytics Service → port 5680  │    │
+│   └──────────────────┘    └───────────────┬────────────────────┘    │
+│                                           │ debugpy attach          │
+│                                           ▼                         │
+│   ┌──────────────────────────────────────────────────────────────┐  │
+│   │ Docker Containers (via Remote Explorer)                      │  │
+│   │                                                              │  │
+│   │  ┌──────────┐ ┌──────────┐ ┌──────────┐ ┌──────────┐         │  │
+│   │  │ Django A │ │ Django B │ │ Keycloak │ │ Postgres │  ...    │  │
+│   │  │ debugpy  │ │ debugpy  │ │          │ │          │         │  │
+│   │  │ :5678    │ │ :5679    │ │          │ │          │         │  │
+│   │  └──────────┘ └──────────┘ └──────────┘ └──────────┘         │  │
+│   │                                                              │  │
+│   │  Test Explorer → discovers tests inside attached container   │  │
+│   └──────────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p>The key principle: you develop inside the same containers that run your application. VS Code attaches to the running container via Remote Explorer, the debugger connects to <code>debugpy</code> over a mapped port, and the Test Explorer discovers tests from inside the container. What works here works in production.</p>
+<hr />
+<h2 id="prerequisites">Prerequisites</h2>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>Version</th>
+<th>Verify</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Docker Engine</td>
+<td>24.0+</td>
+<td><code>docker --version</code></td>
+</tr>
+<tr>
+<td>Docker Compose</td>
+<td>v2.34.0+</td>
+<td><code>docker compose version</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td>3.11</td>
+<td><code>python3 --version</code></td>
+</tr>
+<tr>
+<td>VS Code</td>
+<td>Latest</td>
+<td><code>code --version</code></td>
+</tr>
+<tr>
+<td>Git</td>
+<td>2.30+</td>
+<td><code>git --version</code></td>
+</tr>
+<tr>
+<td>Ngrok</td>
+<td>Latest</td>
+<td><code>ngrok version</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="setup">Setup</h2>
+<h3 id="1-clone-workspace">1. Clone Workspace</h3>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:yourorg/engineering-infrastructure-hub.git
+<span class="nb">cd</span><span class="w"> </span>engineering-infrastructure-hub
+</code></pre></div>
+<h3 id="2-clone-infrastructure-template">2. Clone Infrastructure &amp; Template</h3>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:yourorg/basic-infrastructure.git
+git<span class="w"> </span>clone<span class="w"> </span>git@github.com:yourorg/django-service-template.git
+</code></pre></div>
+<p>These repos are listed in <code>.gitignore</code> — the workspace tracks references to them, not their contents.</p>
+<h3 id="3-install-vs-code-extensions">3. Install VS Code Extensions</h3>
+<p>Open the workspace and VS Code prompts to install recommended extensions automatically.</p>
+<table>
+<thead>
+<tr>
+<th>Extension</th>
+<th>ID</th>
+<th>Required?</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td><code>ms-python.python</code></td>
+<td>Required</td>
+<td>Language support, IntelliSense (Pylance), debugging (debugpy), linting, testing</td>
+</tr>
+<tr>
+<td>Dev Containers</td>
+<td><code>ms-vscode-remote.remote-containers</code></td>
+<td>Required</td>
+<td>Remote Explorer for attaching to running containers, in-container debugging and test execution</td>
+</tr>
+<tr>
+<td>Docker</td>
+<td><code>ms-azuretools.vscode-docker</code></td>
+<td>Required</td>
+<td>Container management, log viewing, image inspection</td>
+</tr>
+<tr>
+<td>Black Formatter</td>
+<td><code>ms-python.black-formatter</code></td>
+<td>Recommended</td>
+<td>Auto-formatting on save, matches pre-commit hooks in the service template</td>
+</tr>
+<tr>
+<td>GitLens</td>
+<td><code>eamodio.gitlens</code></td>
+<td>Optional</td>
+<td>Enhanced git blame, history, and diff — helpful in multi-repo workspaces</td>
+</tr>
+</tbody>
+</table>
+<h3 id="4-open-workspace">4. Open Workspace</h3>
+<div class="highlight"><pre><span></span><code>code<span class="w"> </span>eih.code-workspace
+</code></pre></div>
+<h3 id="5-start-infrastructure-only">5. Start Infrastructure Only</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>basic-infrastructure
+cp<span class="w"> </span>.env.example<span class="w"> </span>.env
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>This starts the base platform:</p>
+<table>
+<thead>
+<tr>
+<th>Container</th>
+<th>Purpose</th>
+<th>Startup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>eih-envoy-gateway</code></td>
+<td>TLS termination, path-based routing</td>
+<td>Immediate</td>
+</tr>
+<tr>
+<td><code>eih-envoy-certs</code></td>
+<td>Control plane certificate generation</td>
+<td>Runs once, exits</td>
+</tr>
+<tr>
+<td><code>eih-keycloak</code></td>
+<td>OIDC / SSO identity provider</td>
+<td>60–90s</td>
+</tr>
+<tr>
+<td><code>eih-postgres</code></td>
+<td>Shared database, per-service schemas</td>
+<td>Immediate</td>
+</tr>
+<tr>
+<td><code>eih-maildev</code></td>
+<td>Email capture with web UI</td>
+<td>Immediate</td>
+</tr>
+<tr>
+<td><code>eih-echo</code></td>
+<td>Request mirror for route debugging</td>
+<td>Immediate</td>
+</tr>
+</tbody>
+</table>
+<p>Wait for all services to report healthy: <code>docker compose ps</code>.</p>
+<div class="admonition note">
+<p class="admonition-title">Keycloak startup</p>
+<p>Keycloak takes 60–90 seconds. The health check has <code>start_period: 90s</code>. It will show unhealthy briefly — this is normal.</p>
+</div>
+<h3 id="6-start-ngrok">6. Start Ngrok</h3>
+<div class="highlight"><pre><span></span><code>ngrok<span class="w"> </span>http<span class="w"> </span><span class="m">8080</span>
+</code></pre></div>
+<p>Copy the generated URL — you'll need it as <code>DOMAIN</code> in environment files and Keycloak redirect URIs. See <a href="./#ngrok-&amp;-public-access" title="Ngrok &amp; Public Access">Ngrok &amp; Public Access</a> for details on free vs. paid accounts.</p>
+<h3 id="7-develop-inside-containers">7. Develop Inside Containers</h3>
+<p>Once infrastructure is running:</p>
+<ol>
+<li>Start your service (see <a href="./#adding-a-service" title="Adding a Service">Adding a Service</a>)</li>
+<li>The service container appears in <strong>Remote Explorer</strong> (left sidebar, monitor icon)</li>
+<li>Open <strong>Run &amp; Debug</strong> (Ctrl+Shift+D) → select your service from the dropdown → F5</li>
+<li>Set breakpoints, step through code, inspect variables — all inside the running container</li>
+<li><strong>Test Explorer</strong> (Ctrl+Shift+T) shows all tests with parallelized per-test execution</li>
+</ol>
+<hr />
+<h2 id="adding-a-service">Adding a Service</h2>
+<p>Generating a new service and wiring it into the platform takes a service repo, infrastructure configuration, and a workspace entry.</p>
+<h3 id="step-1-generate-from-template">Step 1: Generate from Template</h3>
+<div class="highlight"><pre><span></span><code>copier<span class="w"> </span>copy<span class="w"> </span>--trust<span class="w"> </span>gh:yourorg/django-service-template<span class="w"> </span>backend-service
+<span class="nb">cd</span><span class="w"> </span>backend-service
+make<span class="w"> </span>setup
+nano<span class="w"> </span>.env
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">Naming convention</p>
+<p>Always name service directories with a <code>-service</code> suffix (e.g. <code>backend-service</code>, <code>billing-service</code>). The workspace <code>.gitignore</code> and <code>.vscode/settings.json</code> use <code>*-service</code> wildcards — following this convention means zero manual changes to workspace configuration files.</p>
+</div>
+<p>The generated service ships with API, authentication, authorization, and core apps. See the <a href="../template-overview" title="Django Service Template">Django Service Template</a> for the full configuration checklist and port allocation.</p>
+<h3 id="step-2-register-with-infrastructure">Step 2: Register with Infrastructure</h3>
+<p>Two files in <code>basic-infrastructure/</code> need updating:</p>
+<p><strong>Add compose include</strong> — edit <code>basic-infrastructure/compose.yaml</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">include</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../backend-service/compose.yaml</span>
+</code></pre></div>
+<p><strong>Envoy settings for backend-service route</strong> — three pre-configured YAML files (for dev you just need the two files in common):</p>
+<div class="highlight"><pre><span></span><code>basic-infrastructure/services_configs/envoy_config/
+├── common/backends/backend-service.yaml
+├── common/routes/backend-service.yaml
+└── prod/routes/backend-service.yaml
+</code></pre></div>
+<p>Works with Django Service Template out of the box should you need to make changes or add services go to gateway integration section and either adjust the service name and port or copy and dajust the files.</p>
+<h3 id="step-3-register-with-workspace">Step 3: Register with Workspace</h3>
+<p>Add a folder entry to <code>eih.code-workspace</code>:</p>
+<div class="highlight"><pre><span></span><code>{
+  &quot;name&quot;: &quot;💾 Backend Service&quot;,
+  &quot;path&quot;: &quot;backend-service/&quot;
+}
+</code></pre></div>
+<p>Check the debug configuration in <code>.vscode/launch.json</code>:</p>
+<div class="highlight"><pre><span></span><code>{
+  &quot;name&quot;: &quot;Backend: Remote Attach&quot;,
+  &quot;type&quot;: &quot;debugpy&quot;,
+  &quot;request&quot;: &quot;attach&quot;,
+  &quot;connect&quot;: {
+      &quot;host&quot;: &quot;localhost&quot;,
+      &quot;port&quot;: 5678
+  },
+  &quot;pathMappings&quot;: [
+      {
+          &quot;localRoot&quot;: &quot;${workspaceFolder:💾 Backend Service}/src&quot;,
+          &quot;remoteRoot&quot;: &quot;/code&quot;
+      }
+  ],
+  &quot;justMyCode&quot;: false
+}
+</code></pre></div>
+<p>Because you named the directory with a <code>-service</code> suffix, the <code>.gitignore</code> wildcard and <code>.vscode/settings.json</code> exclusion already cover it. No other files need editing.</p>
+<h3 id="step-4-start-verify">Step 4: Start &amp; Verify</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>basic-infrastructure
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+curl<span class="w"> </span>https://<span class="si">${</span><span class="nv">DOMAIN</span><span class="si">}</span>/backend-service/health/
+</code></pre></div>
+<h3 id="quick-checklist">Quick Checklist</h3>
+<ul>
+<li>[ ] Generate service from template (name it <code>*-service</code>)</li>
+<li>[ ] Configure <code>.env</code> (slug, ports, client secret)</li>
+<li>[ ] Add <code>include</code> to <code>basic-infrastructure/compose.yaml</code></li>
+<li>[ ] Check Envoy <code>Backend</code> and <code>HTTPRoute</code> YAML files</li>
+<li>[ ] Add folder entry to <code>eih.code-workspace</code></li>
+<li>[ ] Check debug config in <code>.vscode/launch.json</code></li>
+<li>[ ] <code>docker compose up -d</code> → verify health endpoint</li>
+<li>[ ] Select service in Run &amp; Debug → F5 → hit a breakpoint</li>
+</ul>
+<hr />
+<h2 id="workspace-file-reference">Workspace File Reference</h2>
+<h3 id="eihcode-workspace"><code>eih.code-workspace</code></h3>
+<p>Defines folder roots, workspace settings, and extension recommendations.</p>
+<p><strong>Folder roots</strong> — each cloned repo appears as a separate root with emoji prefixes:</p>
+<table>
+<thead>
+<tr>
+<th>Prefix</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🛠️</td>
+<td>Workspace setup (this repo)</td>
+</tr>
+<tr>
+<td>📦</td>
+<td>Base infrastructure</td>
+</tr>
+<tr>
+<td>📚</td>
+<td>Template reference</td>
+</tr>
+<tr>
+<td>💾 or 💽</td>
+<td>Generated service</td>
+</tr>
+<tr>
+<td><code>────</code></td>
+<td>Visual delimiter (hidden <code>delimiter-*</code> dirs)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Workspace settings:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>files.exclude</code></td>
+<td>Hides <code>__pycache__</code>, <code>.git</code>, <code>.pyc</code>, <code>.pytest_cache</code>, delimiter dirs</td>
+</tr>
+<tr>
+<td><code>scm.repositories.visible: 15</code></td>
+<td>Shows all Git repos in Source Control (default too low for multi-repo)</td>
+</tr>
+<tr>
+<td><code>git.openRepositoryInParentFolders: "always"</code></td>
+<td>Auto-detects Git repos in all workspace roots</td>
+</tr>
+<tr>
+<td><code>python.analysis.diagnosticSeverityOverrides</code></td>
+<td>Unused imports = warning, missing imports = error</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Exclusion split</p>
+<p>Repo exclusions (<code>basic-infrastructure</code>, <code>*-service</code>, etc.) live in <code>.vscode/settings.json</code>, not in the workspace file. Workspace <code>files.exclude</code> applies to all roots — putting repo exclusions there would hide them everywhere, not just from the Setup Workspace root.</p>
+</div>
+<h3 id="vscodesettingsjson"><code>.vscode/settings.json</code></h3>
+<p>Prevents cloned repos from appearing as subfolders of Setup Workspace. Without this, every repo shows twice — once as its own workspace root and once as a subfolder under 🛠️ Setup Workspace.</p>
+<div class="highlight"><pre><span></span><code>{
+  &quot;files.exclude&quot;: {
+    &quot;**/basic-infrastructure&quot;: true,
+    &quot;**/django-service-template&quot;: true,
+    &quot;**/*-service&quot;: true
+  }
+}
+</code></pre></div>
+<h3 id="vscodelaunchjson"><code>.vscode/launch.json</code></h3>
+<p>All debug configurations in one central file. Every service appears in the Run &amp; Debug dropdown (Ctrl+Shift+D).</p>
+<h3 id="gitignore"><code>.gitignore</code></h3>
+<p>Every cloned repo is git-ignored. The <code>*-service/</code> wildcard automatically catches any service following the naming convention:</p>
+<div class="highlight"><pre><span></span><code>basic-infrastructure/
+django-service-template/
+*-service/
+.DS_Store
+.AppleDouble
+.LSOverride
+</code></pre></div>
+<hr />
+<h2 id="debugging">Debugging</h2>
+<p>All debug configurations live in <code>engineering-infrastructure-hub/.vscode/launch.json</code>. Each service exposes a <code>debugpy</code> port starting at 5678, incrementing per service:</p>
+<table>
+<thead>
+<tr>
+<th>Service</th>
+<th>Debug Port</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Service 01</td>
+<td>5678</td>
+</tr>
+<tr>
+<td>Service 02</td>
+<td>5679</td>
+</tr>
+<tr>
+<td>Service 03</td>
+<td>5680</td>
+</tr>
+<tr>
+<td>...</td>
+<td>+1 per service</td>
+</tr>
+</tbody>
+</table>
+<p>A configuration entry:</p>
+<div class="highlight"><pre><span></span><code>{
+  &quot;name&quot;: &quot;Backend: Remote Attach&quot;,
+  &quot;type&quot;: &quot;debugpy&quot;,
+  &quot;request&quot;: &quot;attach&quot;,
+  &quot;connect&quot;: {
+      &quot;host&quot;: &quot;localhost&quot;,
+      &quot;port&quot;: 5678
+  },
+  &quot;pathMappings&quot;: [
+      {
+          &quot;localRoot&quot;: &quot;${workspaceFolder:💾 Backend Service}/src&quot;,
+          &quot;remoteRoot&quot;: &quot;/code&quot;
+      }
+  ],
+  &quot;justMyCode&quot;: false
+}
+</code></pre></div>
+<p>The <code>workspaceFolder</code> name must match the folder name in <code>eih.code-workspace</code> exactly (including the emoji prefix). The <code>pathMapping</code> maps the container's <code>/code</code> directory to your local source so breakpoints resolve correctly. The port must match the service's <code>DEBUG_PORT</code> in its <code>.env</code>.</p>
+<hr />
+<h2 id="testing">Testing</h2>
+<p>When attached to a container via Remote Explorer, the Python extension runs inside the container and discovers tests automatically. Test Explorer (Ctrl+Shift+T) shows all tests with per-test execution and parallelized runs.</p>
+<p>The workflow: attach to container via Remote Explorer → open Test Explorer → tests appear → run individually or in bulk. Test output, coverage, and failures all display inline.</p>
+<hr />
+<h2 id="ngrok-public-access">Ngrok &amp; Public Access</h2>
+<p>Ngrok tunnels a public HTTPS URL to your local Envoy Gateway on port 8080. This enables OAuth redirect flows (Keycloak needs a public URL for OIDC callbacks), mobile testing against the local stack, and remote demos.</p>
+<p><strong>Free accounts</strong> generate a new random URL every session. This means updating <code>DOMAIN</code> in environment files and Keycloak redirect URIs each restart. <strong>Paid accounts</strong> support a stable custom domain, removing this friction.</p>
+<p>For solo development, the free tier works — just update the domain after each Ngrok restart.</p>
+<hr />
+<h2 id="runbooks">Runbooks</h2>
+<h3 id="keycloak-shows-unhealthy-after-startup">Keycloak shows unhealthy after startup</h3>
+<p>Expected during the first 60–90 seconds. Wait and re-check: <code>docker compose ps</code>. If still unhealthy after 2 minutes: <code>docker compose logs keycloak</code>.</p>
+<h3 id="ngrok-url-doesnt-reach-services">Ngrok URL doesn't reach services</h3>
+<p>Verify Envoy Gateway is running: <code>docker compose ps gateway</code>. Confirm Ngrok tunnels to port 8080. Check that the Ngrok URL matches <code>DOMAIN</code> in environment files and Keycloak hostname configuration.</p>
+<h3 id="port-already-in-use">"Port already in use"</h3>
+<p>Another process holds a required port. Find it: <code>sudo lsof -i :8080</code>. Kill it or adjust port mappings. Most common: a previous Ngrok session or stale container — <code>docker compose down --remove-orphans</code>.</p>
+<h3 id="service-folder-appears-twice-in-explorer">Service folder appears twice in Explorer</h3>
+<p>The service directory name doesn't end in <code>-service</code>, so the wildcard in <code>.vscode/settings.json</code> didn't catch it. Rename to follow the convention or add an explicit exclusion.</p>
+<h3 id="debugger-wont-attach">Debugger won't attach</h3>
+<p>Verify the service container is running and <code>debugpy</code> is listening on the expected port. Confirm the port in <code>launch.json</code> matches the service's <code>DEBUG_PORT</code>. Confirm <code>pathMapping</code> uses the correct <code>workspaceFolder</code> name (must match the emoji-prefixed name exactly). Restart the service container.</p>
+<h3 id="login-redirect-fails-after-keycloak-restart">Login redirect fails after Keycloak restart</h3>
+<p>If the realm was reimported (<code>docker compose down -v</code>), verify <code>KEYCLOAK_CLIENT_SECRET</code> matches between Keycloak and your service <code>.env</code>. See <a href="../../20-base-infrastructure/22-keycloak-oidc/" title="Keycloak OIDC">Keycloak OIDC</a>.</p>
+<h3 id="tests-not-appearing-in-test-explorer">Tests not appearing in Test Explorer</h3>
+<p>Ensure you're attached to the container via Remote Explorer, not running VS Code locally. The Python extension must be running inside the container to discover tests. Check the bottom-left corner of VS Code — it should show the container name.</p>
+<hr />
+<h2 id="clean-slate-files">Clean Slate Files</h2>
+<p>Reference copies of workspace configuration files before any services have been generated. Use to reset if needed.</p>
+<h3 id="eihcode-workspace-clean-slate"><code>eih.code-workspace</code> (clean slate)</h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;folders&quot;: [
+    { &quot;name&quot;: &quot;🛠️ Setup Workspace&quot;, &quot;path&quot;: &quot;./&quot; },
+    { &quot;name&quot;: &quot;📦 Basic Infrastructure&quot;, &quot;path&quot;: &quot;basic-infrastructure/&quot; },
+    { &quot;name&quot;: &quot;--------------------&quot;, &quot;path&quot;: &quot;delimiter-0/&quot; },
+    { &quot;name&quot;: &quot;📚 Django Service Template&quot;, &quot;path&quot;: &quot;django-service-template/&quot; },
+    { &quot;name&quot;: &quot;--------------------&quot;, &quot;path&quot;: &quot;delimiter-1/&quot; }
+  ],
+  &quot;settings&quot;: {
+    &quot;scm.repositories.visible&quot;: 15,
+    &quot;git.openRepositoryInParentFolders&quot;: &quot;always&quot;,
+    &quot;files.exclude&quot;: {
+      &quot;**/node_modules&quot;: true,
+      &quot;**/.git&quot;: true,
+      &quot;**/.DS_Store&quot;: true,
+      &quot;**/__pycache__&quot;: true,
+      &quot;**/*.pyc&quot;: true,
+      &quot;**/.pytest_cache&quot;: true,
+      &quot;**/delimiter-*&quot;: true
+    },
+    &quot;python.terminal.activateEnvironment&quot;: true,
+    &quot;python.analysis.diagnosticSeverityOverrides&quot;: {
+      &quot;reportUnusedImport&quot;: &quot;warning&quot;,
+      &quot;reportMissingImports&quot;: &quot;error&quot;
+    }
+  },
+  &quot;extensions&quot;: {
+    &quot;recommendations&quot;: [
+      &quot;ms-python.python&quot;,
+      &quot;ms-vscode-remote.remote-containers&quot;,
+      &quot;ms-azuretools.vscode-docker&quot;,
+      &quot;ms-python.black-formatter&quot;,
+      &quot;eamodio.gitlens&quot;
+    ]
+  }
+}
+</code></pre></div>
+<h3 id="vscodelaunchjson-clean-slate"><code>.vscode/launch.json</code> (clean slate)</h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;version&quot;: &quot;0.2.0&quot;,
+  &quot;configurations&quot;: []
+}
+</code></pre></div>
+<h3 id="vscodesettingsjson-clean-slate"><code>.vscode/settings.json</code> (clean slate)</h3>
+<div class="highlight"><pre><span></span><code>{
+  &quot;files.exclude&quot;: {
+    &quot;**/basic-infrastructure&quot;: true,
+    &quot;**/django-service-template&quot;: true,
+    &quot;**/*-service&quot;: true
+  }
+}
+</code></pre></div>
+<h3 id="gitignore-clean-slate"><code>.gitignore</code> (clean slate)</h3>
+<div class="highlight"><pre><span></span><code>basic-infrastructure/
+django-service-template/
+*-service/
+.DS_Store
+.AppleDouble
+.LSOverride
+</code></pre></div>
+<hr />
+<h2 id="adrs">ADRs</h2>
+<ul>
+<li><strong>ADR: Multi-root workspace over monorepo</strong> — Each service is its own Git repository, cloned into the workspace directory and git-ignored. This preserves independent version history per service while providing a unified VS Code experience. The alternative (monorepo) would simplify cloning but complicate CI/CD, code ownership, and per-service deployment.</li>
+<li><strong>ADR: Centralized <code>launch.json</code> over per-service configs</strong> — All debug configurations live in one file in the workspace root. This puts every service in the Run &amp; Debug dropdown without switching context. Per-service <code>.vscode/launch.json</code> files would fragment the debugging experience across workspace roots.</li>
+<li><strong>ADR: <code>*-service</code> naming convention</strong> — Directory suffix convention enables wildcard patterns in <code>.gitignore</code> and <code>settings.json</code>. New services require zero changes to workspace configuration files — only entries in the workspace folder list and launch config.</li>
+<li><strong>ADR: Container-attached development over local virtualenvs</strong> — Developers work inside the same containers that run the application. The Python interpreter, dependencies, and environment are identical to production. Local virtualenvs would introduce environment drift.</li>
+<li><strong>ADR: Emoji-prefixed folder names</strong> — Visual hierarchy in the Explorer sidebar. Infrastructure, template, and services are immediately distinguishable. The delimiter pattern provides grouping without nested folders.</li>
+</ul>
+<hr />
+<h2 id="onboarding-checklist">Onboarding Checklist</h2>
+<ul>
+<li>[ ] Install prerequisites (Docker, Compose, Python, VS Code, Git, Ngrok)</li>
+<li>[ ] Clone workspace: <code>git clone git@github.com:yourorg/engineering-infrastructure-hub.git</code></li>
+<li>[ ] Clone infrastructure and template into workspace directory</li>
+<li>[ ] Open <code>eih.code-workspace</code> in VS Code</li>
+<li>[ ] Install recommended extensions when prompted</li>
+<li>[ ] <code>docker compose up -d</code> in <code>basic-infrastructure/</code></li>
+<li>[ ] Start Ngrok: <code>ngrok http 8080</code></li>
+<li>[ ] Verify Keycloak admin console at <code>https://{ngrok-url}/auth/admin/</code></li>
+<li>[ ] Verify MailDev web UI loads</li>
+<li>[ ] Generate a service from the template (name it <code>*-service</code>)</li>
+<li>[ ] Add service to compose include and Envoy route</li>
+<li>[ ] Add folder entry to <code>eih.code-workspace</code> and debug config to <code>launch.json</code></li>
+<li>[ ] <code>docker compose up -d</code> → verify health endpoint through gateway</li>
+<li>[ ] Select service in Run &amp; Debug → F5 → hit a breakpoint</li>
+<li>[ ] Attach to container via Remote Explorer → run tests via Test Explorer</li>
+<li>[ ] Open <code>docs/</code> in Obsidian and browse the Engineering Hub</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="../../00-index/01-infrastructure-engineering-hub/" title="Infrastructure Engineering Hub">Infrastructure Engineering Hub</a></li>
+<li><a href="../../20-base-infrastructure/21-envoy-gateway/" title="Envoy Gateway">Envoy Gateway</a></li>
+<li><a href="../../20-base-infrastructure/22-keycloak-oidc/" title="Keycloak OIDC">Keycloak OIDC</a></li>
+<li><a href="../../20-base-infrastructure/20-postgresql/" title="PostgreSQL">PostgreSQL</a></li>
+<li><a href="../../20-base-infrastructure/23-maildev/" title="MailDev">MailDev</a></li>
+<li><a href="../../30-django-service-template/30-django-service-template/" title="Django Service Template">Django Service Template</a></li>
+<li><a href="https://code.visualstudio.com/docs/editor/multi-root-workspaces">VS Code Multi-Root Workspaces</a></li>
+<li><a href="https://code.visualstudio.com/docs/devcontainers/containers">Dev Containers</a></li>
+<li><a href="https://github.com/microsoft/debugpy">debugpy</a></li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

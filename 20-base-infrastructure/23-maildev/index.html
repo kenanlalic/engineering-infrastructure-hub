@@ -1,0 +1,1558 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://kenanlalic.github.io/engineering-infrastructure-hub/20-base-infrastructure/23-maildev/">
+      
+      
+        <link rel="prev" href="../22-keycloak-oidc/">
+      
+      
+        <link rel="next" href="../../30-django-service-template/30-django-service-template/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.5">
+    
+    
+      
+        <title>MailDev - Infrastructure Engineering Hub</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#maildev-local-email-capture-inspection" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-header__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Infrastructure Engineering Hub
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              MailDev
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-nav__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Infrastructure Engineering Hub
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-index/01-infrastructure-engineering-hub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-workspace-config/10-workspace-config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workspace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Base Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-envoy-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Envoy Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-keycloak-oidc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MailDev
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MailDev
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-captured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Gets Captured
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maildev-over-alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MailDev over Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gateway-routed-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gateway-Routed Web UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-memory-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-Memory Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-compose-service-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker Compose Service Block
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-smtp-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service SMTP Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#django-email-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Django Email Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-user-management-workflow-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keycloak User Management Workflow Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web-ui-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web UI Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prod
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emails-not-appearing-in-maildev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emails not appearing in MailDev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web-ui-not-loading-through-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web UI not loading through gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maildev-container-keeps-restarting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MailDev container keeps restarting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emails-appear-in-maildev-but-links-dont-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emails appear in MailDev but links don't work
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../30-django-service-template/30-django-service-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Django Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-captured" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Gets Captured
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#maildev-over-alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MailDev over Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#gateway-routed-web-ui" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gateway-Routed Web UI
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-memory-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In-Memory Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#docker-compose-service-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Docker Compose Service Block
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#service-smtp-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Service SMTP Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#usage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Usage
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Usage">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#django-email-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Django Email Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-user-management-workflow-testing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keycloak User Management Workflow Testing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web-ui-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web UI Features
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prod
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#emails-not-appearing-in-maildev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emails not appearing in MailDev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#web-ui-not-loading-through-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Web UI not loading through gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#maildev-container-keeps-restarting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        MailDev container keeps restarting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#emails-appear-in-maildev-but-links-dont-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Emails appear in MailDev but links don't work
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="maildev-local-email-capture-inspection">MailDev — Local Email Capture &amp; Inspection</h1>
+<p>Dev-only SMTP server that captures all outbound email from all platform services. Provides a web UI for inspecting email content, formatting, and delivery without sending anything externally. Used for Django mail delivery and email formatting testing, and Keycloak user management workflow testing (verification emails, password resets, account actions).</p>
+<blockquote>
+<p>📍 <strong>Type:</strong> Service Reference<br>
+👤 <strong>Owner:</strong> Ktwenty Threel<br>
+🎯 <strong>Outcome:</strong> Understand the MailDev Setup<br></p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="./#overview" title="Overview">Overview</a></li>
+<li><a href="./#architecture" title="Architecture">Architecture</a></li>
+<li><a href="./#design-decisions" title="Design Decisions">Design Decisions</a></li>
+<li><a href="./#dependencies" title="Dependencies">Dependencies</a></li>
+<li><a href="./#configuration" title="Configuration">Configuration</a></li>
+<li><a href="./#usage" title="Usage">Usage</a></li>
+<li><a href="./#monitoring" title="Monitoring">Monitoring</a></li>
+<li><a href="./#runbooks" title="Runbooks">Runbooks</a></li>
+<li><a href="./#adrs" title="ADRs">ADRs</a></li>
+<li><a href="./#references" title="References">References</a></li>
+</ul>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>MailDev runs as a single container (<code>maildev</code>) on the <code>internal</code> Docker network. It exposes no ports directly to the host — the web UI is accessed through Envoy Gateway, and the SMTP port is only reachable by other containers on the internal network.</p>
+<p>All platform services that send email are configured to point their SMTP settings at <code>maildev.local:1025</code> in development. Every email sent by any service — Django or Keycloak — is intercepted by MailDev and made available for inspection in the web UI. Nothing leaves the local network.</p>
+<h3 id="what-gets-captured">What Gets Captured</h3>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>Email Types</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Django services</td>
+<td>Email verification, password reset, notification emails, any custom <code>send_mail()</code> calls</td>
+</tr>
+<tr>
+<td>Keycloak</td>
+<td>Account verification, password reset, admin-initiated actions, login alerts (if configured in realm)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="access">Access</h3>
+<table>
+<thead>
+<tr>
+<th>Interface</th>
+<th>Port</th>
+<th>Access Method</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web UI</td>
+<td>1080 (container)</td>
+<td>Through Envoy Gateway — routed via dev-only <code>HTTPRoute</code></td>
+</tr>
+<tr>
+<td>SMTP</td>
+<td>1025 (container)</td>
+<td>Internal only — other containers connect to <code>maildev.local:1025</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="architecture">Architecture</h2>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────────┐
+│                        internal network                          │
+│                                                                  │
+│   ┌──────────────┐    ┌──────────────┐    ┌──────────────┐       │
+│   │  Keycloak    │    │  Django      │    │  Django      │       │
+│   │              │    │  Service A   │    │  Service N   │       │
+│   └──────┬───────┘    └──────┬───────┘    └──────┬───────┘       │
+│          │                   │                   │               │
+│          │  SMTP :1025       │  SMTP :1025       │               │
+│          │                   │                   │               │
+│          └─────────┐         │         ┌─────────┘               │
+│                    ▼         ▼         ▼                         │
+│              ┌────────────────────────────┐                      │
+│              │        MailDev             │                      │
+│              │  ───────────────────────   │                      │
+│              │  SMTP server  → :1025      │                      │
+│              │  Web UI       → :1080      │                      │
+│              │  ───────────────────────   │                      │
+│              │  Captures all email        │                      │
+│              │  In-memory storage         │                      │
+│              └────────────────────────────┘                      │
+│                    ▲                                             │
+│                    │ HTTP :1080                                  │
+│              ┌─────┴──────────────┐                              │
+│              │   Envoy Gateway    │                              │
+│              │   (dev route)      │                              │
+│              └────────────────────┘                              │
+│                                                                  │
+└──────────────────────────────────────────────────────────────────┘
+</code></pre></div>
+<p>MailDev sits exclusively on the <code>internal</code> Docker network. The web UI is served through Envoy Gateway via a dev-only route — it is not accessible when running the production compose file. SMTP traffic stays entirely within the Docker bridge network.</p>
+<p>For the full platform architecture, see <a href="../infrastructure-engineering-hub#architecture" title="Infrastructure Engineering Hub — Architecture">Infrastructure Engineering Hub — Architecture</a>.</p>
+<hr />
+<h2 id="design-decisions">Design Decisions</h2>
+<h3 id="maildev-over-alternatives">MailDev over Alternatives</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>MailDev</th>
+<th>Alternatives</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td><code>maildev/maildev:2.1.0</code></td>
+<td>Mailhog, Mailtrap, Ethereal</td>
+</tr>
+</tbody>
+</table>
+<p>MailDev was chosen for its simplicity — a single container with a built-in web UI, no configuration required. It accepts SMTP on one port and serves a web interface on another. Emails are stored in memory (lost on container restart), which is appropriate for a dev tool.</p>
+<p>Mailhog is functionally equivalent but hasn't seen active development since 2020. Mailtrap is a cloud service that requires account signup. MailDev is actively maintained, lightweight, and runs entirely locally.</p>
+<h3 id="gateway-routed-web-ui">Gateway-Routed Web UI</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Through Gateway</th>
+<th>Direct Port Exposure</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Envoy dev-only route</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>The MailDev web UI is accessed through Envoy Gateway rather than a directly exposed host port. This keeps the access pattern consistent across all services — everything goes through the gateway in development, matching how services are accessed in production. It also means the web UI benefits from the same Ngrok tunnel, making it accessible during remote demos or mobile testing.</p>
+<h3 id="in-memory-storage">In-Memory Storage</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>In-Memory</th>
+<th>Persistent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Emails lost on restart</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>MailDev stores captured emails in memory by default. This is intentional — dev email data is ephemeral and doesn't need to survive restarts. If you need to preserve specific emails for reference, screenshot or export them from the web UI before restarting the container.</p>
+<hr />
+<h2 id="dependencies">Dependencies</h2>
+<table>
+<thead>
+<tr>
+<th>Dependency</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Envoy Gateway (dev route)</td>
+<td>Internal</td>
+<td>Routes web UI traffic</td>
+</tr>
+<tr>
+<td>None upstream</td>
+<td>—</td>
+<td>MailDev has no dependencies — it starts independently</td>
+</tr>
+</tbody>
+</table>
+<p>MailDev is a dependency target for services that send email, but it's a soft dependency — services don't fail if MailDev is down, they just can't deliver email. No <code>depends_on</code> is configured for MailDev in any service.</p>
+<hr />
+<h2 id="configuration">Configuration</h2>
+<h3 id="docker-compose-service-block">Docker Compose Service Block</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">maildev</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">maildev.local</span>
+<span class="w">    </span><span class="nt">image</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">maildev/maildev:2.1.0</span>
+<span class="w">    </span><span class="nt">restart</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unless-stopped</span>
+<span class="w">    </span><span class="nt">environment</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MAILDEV_WEB_PORT=1080</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">MAILDEV_SMTP_PORT=1025</span>
+<span class="w">    </span><span class="c1"># No ports — web UI through gateway, SMTP internal only</span>
+<span class="w">    </span><span class="nt">networks</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">internal</span>
+</code></pre></div>
+<h3 id="environment-variables">Environment Variables</h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Value</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MAILDEV_WEB_PORT</code></td>
+<td><code>1080</code></td>
+<td>Port for the web inspection UI</td>
+</tr>
+<tr>
+<td><code>MAILDEV_SMTP_PORT</code></td>
+<td><code>1025</code></td>
+<td>Port for the SMTP server that captures emails</td>
+</tr>
+</tbody>
+</table>
+<p>These are the only configuration parameters. MailDev requires no authentication, database, or external dependencies.</p>
+<h3 id="service-smtp-configuration">Service SMTP Configuration</h3>
+<p>Services connecting to MailDev use these settings:</p>
+<p><strong>Django</strong> (<code>settings.py</code> or environment):</p>
+<div class="highlight"><pre><span></span><code><span class="n">EMAIL_BACKEND</span> <span class="o">=</span> <span class="s2">&quot;django.core.mail.backends.smtp.EmailBackend&quot;</span>
+<span class="n">EMAIL_HOST</span> <span class="o">=</span> <span class="s2">&quot;maildev.local&quot;</span>
+<span class="n">EMAIL_PORT</span> <span class="o">=</span> <span class="mi">1025</span>
+<span class="n">EMAIL_USE_TLS</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="n">EMAIL_USE_SSL</span> <span class="o">=</span> <span class="kc">False</span>
+</code></pre></div>
+<p><strong>Keycloak</strong> (realm settings or environment):</p>
+<p>Keycloak's SMTP configuration is set in the realm template or Admin Console under Realm Settings → Email. The host is <code>maildev.local</code>, port <code>1025</code>, with no authentication and no TLS.</p>
+<p>In production, both Django and Keycloak switch to a real SMTP provider (see <a href="../service-keycloak#smtp" title="Keycloak SMTP Configuration">Keycloak SMTP Configuration</a>).</p>
+<hr />
+<h2 id="usage">Usage</h2>
+<h3 id="django-email-testing">Django Email Testing</h3>
+<p>MailDev captures all emails sent via Django's <code>send_mail()</code>, <code>EmailMessage</code>, or any code path that uses the configured email backend. Common workflows:</p>
+<p><strong>Email verification</strong> — Register a new user via the Django frontend or API. The verification email appears in MailDev immediately. Click the verification link directly from the MailDev web UI to complete the flow.</p>
+<p><strong>Password reset</strong> — Trigger a password reset from the Django login page. Inspect the reset email in MailDev, verify the link format and expiry, then click through to test the reset flow end-to-end.</p>
+<p><strong>Email formatting</strong> — MailDev renders both HTML and plaintext email variants. Use it to verify that HTML templates render correctly, that plaintext fallbacks are readable, and that dynamic content (user names, links, dates) is populated correctly.</p>
+<h3 id="keycloak-user-management-workflow-testing">Keycloak User Management Workflow Testing</h3>
+<p>Keycloak sends emails for several user lifecycle events. MailDev captures all of them:</p>
+<p><strong>Account verification</strong> — When a new user registers (if self-registration is enabled) or when an admin creates a user with "Verify Email" required, Keycloak sends a verification email. Inspect it in MailDev and click the link to verify.</p>
+<p><strong>Password reset</strong> — When a user requests a password reset from the Keycloak login page or an admin triggers "Reset Password" from the Admin Console, the reset email is captured. Test the full flow: request reset → inspect email → click link → set new password → verify login.</p>
+<p><strong>Admin-initiated actions</strong> — The Keycloak Admin Console allows sending "Required Actions" to users (verify email, update password, update profile). Each generates an email captured by MailDev.</p>
+<h3 id="web-ui-features">Web UI Features</h3>
+<p>The MailDev web UI provides real-time email inspection with auto-refresh — new emails appear without page reload. Each email shows the sender, recipient, subject, timestamp, and both HTML and source views. The UI supports searching by recipient, subject, or body text.</p>
+<hr />
+<h2 id="monitoring">Monitoring</h2>
+<h3 id="dev">Dev</h3>
+<p>MailDev is a dev-only tool with minimal monitoring needs. <code>docker compose logs -f maildev</code> shows SMTP connection events and any errors. The web UI itself serves as the primary monitoring interface — if you can see emails arriving, MailDev is working.</p>
+<h3 id="prod">Prod</h3>
+<p>MailDev does not exist in production. The <code>compose.prod.yaml</code> does not include the MailDev service. Production email is handled by an external SMTP provider configured in each service's environment.</p>
+<hr />
+<h2 id="runbooks">Runbooks</h2>
+<h3 id="emails-not-appearing-in-maildev">Emails not appearing in MailDev</h3>
+<p>Verify the sending service's SMTP configuration points to <code>maildev.local:1025</code>. Check that both the sending service and MailDev are on the <code>internal</code> network. Inspect MailDev logs for connection events: <code>docker compose logs maildev | grep -i smtp</code>. If the service uses <code>EMAIL_HOST = "localhost"</code> instead of <code>maildev.local</code>, it's trying to send to itself rather than the MailDev container.</p>
+<h3 id="web-ui-not-loading-through-gateway">Web UI not loading through gateway</h3>
+<p>Check that the dev-only MailDev route exists in the Envoy Gateway dev routes directory. Verify the gateway is running: <code>docker compose ps gateway</code>. Check gateway logs for routing errors: <code>docker compose logs gateway | grep maildev</code>. If the route was recently added, restart the gateway to pick up the new config.</p>
+<h3 id="maildev-container-keeps-restarting">MailDev container keeps restarting</h3>
+<p>Check logs: <code>docker compose logs maildev</code>. The most common cause is a port conflict — if another process is bound to 1025 or 1080 inside the container (unlikely with the official image). If the container is OOM-killed, the in-memory email store may have grown too large from extended test runs. Restart clears all stored emails.</p>
+<h3 id="emails-appear-in-maildev-but-links-dont-work">Emails appear in MailDev but links don't work</h3>
+<p>Email links contain the URL of the originating service. If the link points to <code>localhost</code> or an internal hostname, it won't resolve in your browser. For Django, verify <code>SITE_URL</code> or <code>DEFAULT_FROM_EMAIL</code> domain settings. For Keycloak, verify <code>KC_HOSTNAME</code> includes the Ngrok/public domain so that links in Keycloak emails use the correct base URL.</p>
+<hr />
+<h2 id="adrs">ADRs</h2>
+<ul>
+<li><strong>ADR: MailDev over Mailhog/cloud alternatives</strong> — MailDev is actively maintained, runs entirely locally, requires zero configuration, and provides a web UI for email inspection. Mailhog is unmaintained since 2020. Cloud services (Mailtrap) require account signup and network access. MailDev's in-memory storage is appropriate for ephemeral dev email.</li>
+<li><strong>ADR: Gateway-routed web UI</strong> — Web UI accessed through Envoy Gateway rather than direct port exposure. Keeps access pattern consistent with all other services. Enables remote access via Ngrok tunnel for demos and mobile testing.</li>
+<li><strong>ADR: No persistent email storage</strong> — Emails stored in memory, lost on container restart. Dev email is ephemeral by nature. No volume mount needed, no cleanup required.</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://github.com/maildev/maildev">MailDev GitHub Repository</a></li>
+<li><a href="https://hub.docker.com/r/maildev/maildev">MailDev Docker Hub</a></li>
+<li><a href="../infrastructure-engineering-hub" title="Infrastructure Engineering Hub">Infrastructure Engineering Hub</a></li>
+<li><a href="../service-keycloak" title="Keycloak Configuration">Keycloak Configuration</a></li>
+<li><a href="../service-keycloak#smtp" title="Keycloak SMTP Configuration">Keycloak SMTP Configuration</a></li>
+<li><a href="../service-envoy-gateway" title="Envoy Gateway Configuration">Envoy Gateway Configuration</a></li>
+<li><a href="../networking-and-ports" title="Networking &amp; Ports Reference">Networking &amp; Ports Reference</a></li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
