@@ -40,7 +40,7 @@ The entire development environment runs in containers. Docker and VS Code are th
 
 The VS Code multi-root workspace gives each service its own Git repository and history while presenting a single window with a centralized debugger launch configuration. Breakpoints, step-through, and variable inspection work inside running containers — the same image, the same OS, the same dependencies that run in production. Tests execute inside containers with parallel runners, eliminating "passes locally, fails in CI" drift. A new developer clones, opens the workspace, and hits `F5`.
 
-See [Workspace Config](docs/10-workspace-config/10-workspace-config.md) for the full setup, debugger configuration, and onboarding guide.
+See [Workspace Config](https://kenanlalic.github.io/engineering-infrastructure-hub/10-workspace-config/10-workspace-config/) for the full setup, debugger configuration, and onboarding guide.
 
 ### Scaling Path
 
@@ -76,12 +76,11 @@ docs/
 ```
 
 **Highlights:**
-
-- [Infrastructure Engineering Hub](docs/00-index/01-infrastructure-engineering-hub.md) — Platform architecture, design philosophy, three-tier scaling path, service catalog
-- [Envoy Gateway](docs/20-base-infrastructure/21-envoy-gateway.md) — Kubernetes Gateway API resources running in Docker Compose standalone mode. Same YAML applies to both environments.
-- [Keycloak OIDC](docs/20-base-infrastructure/22-keycloak-oidc.md) — Confidential client with backchannel token exchange, RBAC group sync, realm-as-code
-- [Workspace Config](docs/10-workspace-config/10-workspace-config.md) — Full setup guide, debugger configuration, multi-root workspace reference
-
+- [Infrastructure Engineering Hub](https://kenanlalic.github.io/engineering-infrastructure-hub) — Platform architecture, design philosophy, three-tier scaling path, service catalog
+- [Workspace Config](https://kenanlalic.github.io/engineering-infrastructure-hub/10-workspace-config/10-workspace-config/) — Full setup guide, debugger configuration, multi-root workspace reference
+- [Envoy Gateway](https://kenanlalic.github.io/engineering-infrastructure-hub/20-base-infrastructure/21-envoy-gateway/) — Kubernetes Gateway API resources running in Docker Compose standalone mode. Same YAML applies to both environments.
+- [Keycloak OIDC](https://kenanlalic.github.io/engineering-infrastructure-hub/20-base-infrastructure/22-keycloak-oidc/) — Confidential client with backchannel token exchange, RBAC group sync, realm-as-code
+- [Django Copier Template](https://kenanlalic.github.io/engineering-infrastructure-hub/30-django-service-template/30-django-service-template/) — Updatable Copier template that generates production-ready Django services.
 ---
 
 ## Getting Started
@@ -101,7 +100,7 @@ docker compose up -d
 code eih.code-workspace
 ```
 
-See [Workspace Config](docs/10-workspace-config/10-workspace-config.md) for prerequisites, extension setup, container-based debugging, and the full service generation workflow.
+See [Workspace Config](https://kenanlalic.github.io/engineering-infrastructure-hub/10-workspace-config/10-workspace-config/) for prerequisites, extension setup, container-based debugging, and the full service generation workflow.
 
 ---
 
