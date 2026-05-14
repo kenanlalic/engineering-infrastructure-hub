@@ -1,14 +1,13 @@
 ---
-## title: "Keycloak Identity Provider"
+title: "Keycloak Identity Provider"
 created: "2026-02-11"
-updated: "2026-02-11"
-version: 1.0.0
+updated: "2026-05-14"
+version: 1.1.0
 type: reference
 owner: Kenan Lalic
 lifecycle: production
 tags: [service, identity, authentication, oidc]
 ---
-
 
 # Keycloak — Centralized Identity & Access Management
 
@@ -29,7 +28,7 @@ Single source of truth for authentication, authorization, and user lifecycle man
 - [Configuration](#configuration)
 - [Realm Management](#realm-management)
 - [Realm Template Maintenance](#realm-template-maintenance)
-- [Dev vs Prod Differences](#dev--prod-differences)
+- [Dev vs Prod Differences](#dev-vs-prod-differences)
 - [Monitoring](#monitoring)
 - [Runbooks](#runbooks)
 - [ADRs](#adrs)
@@ -47,13 +46,22 @@ The browser initiates the OIDC authorization code flow through Envoy Gateway to 
 
 Local Django login is restricted to superusers only via `AdminOnlyLocalAuthMiddleware` — regular users must authenticate through Keycloak SSO. This preserves emergency admin access when Keycloak is unavailable.
 
+> **Token validation:** django-allauth validates ID tokens using Keycloak's JWKS endpoint
+> (`/auth/realms/myrealm/protocol/openid-connect/certs`). Public keys are fetched once and
+> cached locally — no per-request introspection call. Access tokens are validated server-side
+> and never reach the browser.
+>
+> For scenarios requiring immediate token revocation (e.g., regulated FS), shorten
+> `accessTokenLifespan` in the realm settings (default: 5 minutes) and enable Keycloak's
+> Revocation Policy rather than adding per-request introspection overhead.
+
 ### Authorization Flow
 
 Authorization follows a **Role-Based Access Control (RBAC)** model based on [NIST RBAC](https://csrc.nist.gov/projects/role-based-access-control) Core and Hierarchical principles (Levels 1–2). This provides users, roles, permissions, user-role assignment, and role inheritance — but does not currently implement Constrained RBAC (separation of duty enforcement) or Symmetric RBAC (role-permission review/audit). Keycloak is the source of truth for user and group management. Group memberships are embedded into OIDC tokens via a custom group membership protocol mapper on the `myclient` client. On the Django side, `keycloak_sync_groups` syncs these Keycloak groups into Django groups and emits a `user_groups_synced` signal. The authorization app catches this signal and updates Django's `is_staff` and `is_superuser` flags based on the role definitions mapped via `KEYCLOAK_GROUP_TO_ROLE`. The `RBACPermissionBackend` resolves permissions (including role inheritance) from these group-to-role mappings, and `PermissionContextMiddleware` attaches `user_roles`, `user_permissions`, and `primary_role` to every authenticated request for use in views and templates.
 
-This decoupled approach keeps each service independently deployable — Keycloak manages *who belongs to which groups*, Django maps groups to roles and decides on *what those roles can do*.
+This decoupled approach keeps each service independently deployable — Keycloak manages *who belongs to which groups*, Django maps groups to roles and decides *what those roles can do*.
 
-A single realm (`myrealm`) holds all users, groups, and client configurations. The master realm remains at defaults and is used exclusively for Keycloak admin console access.
+A single realm (`myrealm`) holds all users, groups, and client configurations for the current environment. The master realm remains at defaults and is used exclusively for Keycloak admin console access.
 
 The service runs behind Envoy Gateway in both dev and prod. All auth flows (login, logout, token exchange) route through the gateway at the `/auth` path prefix.
 
@@ -114,9 +122,22 @@ The `◄───` arrow between Django and Keycloak represents the internal bac
 
 | | Dev | Prod |
 |---|---|---|
-| **Choice** | Single realm (`myrealm`) | Single realm (`myrealm`) |
+| **Choice** | Single realm (`myrealm`) | Single realm per environment |
 
-One realm keeps the setup simple to learn and operate during development. It provides a shared user pool across all services, straightforward token management, and a single place to configure clients and roles. This pattern scales well — additional services register as new clients within the same realm, and role assignments extend naturally without restructuring. Moving to multi-realm is a future option if hard tenant isolation becomes a requirement.
+One realm per environment is the right default for most applications. It provides a shared user pool across all services, straightforward token management, and a single place to configure clients and roles. Additional services register as new clients within the same realm — no restructuring needed.
+
+**When to use multiple realms:**
+
+| Scenario | Pattern | Trigger |
+|---|---|---|
+| Multi-environment | One realm per env (`dev`, `staging`, `prod`) | Always — environments must never share a realm |
+| Multi-tenant SaaS | One realm per tenant | Hard regulatory isolation (GDPR data residency, SOC2 tenant separation) |
+| Separate product lines | One realm per product | Distinct user pools with no SSO requirement between products |
+| White-label B2B | One realm per client org | Client requires their own branding, IdP federation, or user admin |
+
+The current single-realm template scales to all the above. Realm name and client IDs are Copier variables — generating a service for a new tenant is `copier copy` with a different `keycloak_realm` value. The infrastructure wiring (Envoy routes, PostgreSQL schemas) follows the same pattern already documented.
+
+> Multi-realm production deployments introduce operational overhead: separate admin consoles, separate token endpoints, no cross-realm SSO without identity brokering. Use only when isolation requirements justify it.
 
 ### RBAC Authorization (NIST Core + Hierarchical)
 
@@ -162,7 +183,7 @@ Three approaches exist for provisioning Keycloak realms, ranked by complexity:
 
 3. **`keycloak-config-cli` (adorsys)** — Declarative, idempotent configuration-as-code via the Admin API. Tracks diffs, supports variable substitution, runs as a sidecar. The production-grade choice when incremental updates matter. [GitHub](https://github.com/adorsys/keycloak-config-cli)
 
-We use option 1 for dev because it requires zero additional services and our realm template is version-controlled. For production, option 3 is optional path.
+We use option 1 for dev because it requires zero additional services and our realm template is version-controlled. For production, option 3 is the recommended path.
 
 ---
 
@@ -263,21 +284,21 @@ docker compose exec keycloak /opt/keycloak/bin/kc.sh export \
 
 ## Dev vs Prod Differences
 
-| Aspect             | Dev                                           | Prod                                                                       |
-| ------------------ | --------------------------------------------- | -------------------------------------------------------------------------- |
-| Realm provisioning | `--import-realm` at startup                   | `--import-realm` at startup (optional: `keycloak-config-cli` or Terraform) |
-| Client secrets     | Hardcoded / env var in `.env`    | External secret manager (Vault, k8s secrets)                               |
-| Hostname           | `--hostname-strict=false`                     | `KC_HOSTNAME=https://${DOMAIN}/auth`                                       |
-| Backchannel        | `KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true`        | `KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true` (revisit for multi-node k8s)        |
-| User passwords     | Plaintext in realm JSON                       | No users in JSON — self-registration or federated                          |
-| Image              | Stock `quay.io/keycloak/keycloak:26.0.4`      | Custom image with `--optimized` build                                      |
-| Admin credentials  | `KC_BOOTSTRAP_ADMIN_*` in `.env` | Injected from secret manager, rotated                                      |
-| Health endpoint    | Port 9000, bash TCP redirect                  | Port 9000, wired to k8s liveness/readiness probes                          |
-| SMTP               | MailDev                                       | Real SMTP provider                                                         |
-| TLS                | Let's Encrypt via ngrok                       | Let's Encrypt certs at Envoy Gateway                                       |
-| Internal transport | Plain HTTP over Docker bridge (single host)   | Plain HTTP over Docker bridge (single host, revisit for multi-node k8s)    |
+| Aspect | Dev | Prod |
+|---|---|---|
+| Realm provisioning | `--import-realm` at startup | `--import-realm` at startup (optional: `keycloak-config-cli` or Terraform) |
+| Client secrets | Hardcoded / env var in `.env` | External secret manager (Vault, k8s secrets) |
+| Hostname | `--hostname-strict=false` | `KC_HOSTNAME=https://${DOMAIN}/auth` |
+| Backchannel | `KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true` | `KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true` (revisit for multi-node k8s) |
+| User passwords | Plaintext in realm JSON | No users in JSON — self-registration or federated |
+| Image | Stock `quay.io/keycloak/keycloak:26.0.4` | Custom image with `--optimized` build |
+| Admin credentials | `KC_BOOTSTRAP_ADMIN_*` in `.env` | Injected from secret manager, rotated |
+| Health endpoint | Port 9000, bash TCP redirect | Port 9000, wired to k8s liveness/readiness probes |
+| SMTP | MailDev | Real SMTP provider |
+| TLS | Let's Encrypt via ngrok | Let's Encrypt certs at Envoy Gateway |
+| Internal transport | Plain HTTP over Docker bridge (single host) | Plain HTTP over Docker bridge (single host, revisit for multi-node k8s) |
 
-> **Optional:** prod optimization possible with `--optimized` flag for builds. The above assumes the standard production recommendation. Adjust if your prod Dockerfile differs.
+> **Production image:** the `--optimized` build flag pre-configures the Keycloak server and reduces startup time. Adjust if your prod Dockerfile differs.
 
 ---
 
@@ -297,7 +318,7 @@ docker compose exec keycloak /opt/keycloak/bin/kc.sh export \
 - **Dashboards:** Grafana dashboard (link TBD)
 - **Alerts:** Alert rules for failed logins spike, health endpoint down, DB connection pool exhaustion (configuration TBD)
 
-> **Optinonal:** prod monitoring stack improvement. The above assumes Prometheus + Grafana which is standard for Keycloak. Adjust dashboard and alert links once provisioned.
+> **Note:** the above assumes Prometheus + Grafana, which is the standard Keycloak observability stack. Adjust dashboard and alert links once provisioned.
 
 ---
 
@@ -323,13 +344,17 @@ Check the user exists in Admin Console → Users. If the realm was reimported, a
 
 Verify Keycloak is reachable internally at `http://keycloak.local:8080/auth`. Check that `KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true` is set. Confirm the client secret matches on both sides. Check Django logs for `SocialLogin` errors — a 401 from Keycloak usually means a secret mismatch, a connection refused means the internal hostname isn't resolving.
 
+### Login works but user has no permissions
+
+Keycloak groups are synced on login, but the authorization app's `KEYCLOAK_GROUP_TO_ROLE` mapping doesn't include the user's group. Check the mapping in `apps/authorization/constants.py`. Verify the user's Keycloak groups in the Admin Console match the expected group names. Log out and log back in to trigger a fresh sync.
+
 ---
 
 ## ADRs
 
-- **ADR: Single realm for all services** — Shared user pool, simplified token management, scales by adding clients within the realm
+- **ADR: Single realm per environment** — Shared user pool, simplified token management, scales by adding clients within the realm. Multi-realm is a documented upgrade path for hard isolation requirements (regulatory, multi-tenant, white-label) — not a default starting point.
 - **ADR: NIST RBAC (Core + Hierarchical) over flat group-based auth** — Keycloak as source of truth for user-role assignments, synced to services via OIDC claims, proper decoupling for microservice architecture. Constrained and Symmetric RBAC levels remain future options.
-- **ADR: Confidential client with backchannel separation** — Server-side Django app stores secret securely; dynamic backchannel allows internal/external URL separation without hostname mismatch errors
+- **ADR: Confidential client with backchannel separation** — Server-side Django app stores secret securely; dynamic backchannel allows internal/external URL separation without hostname mismatch errors. Multi-node k8s requires encrypted backchannel (service mesh mTLS or Keycloak-native TLS).
 
 ---
 
