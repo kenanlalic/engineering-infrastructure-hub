@@ -1,14 +1,13 @@
 ---
 title: "Envoy Gateway"
 created: "2026-02-10"
-updated: "2026-02-13"
-version: 3.0.0
+updated: "2026-05-14"
+version: 1.4.0
 type: reference
 owner: Kenan Lalic
 lifecycle: production
 tags: [service, envoy, gateway, tls, routing, proxy]
 ---
-
 
 # Envoy Gateway — TLS Termination & Traffic Routing
 
@@ -23,10 +22,12 @@ Front door for all platform traffic. Handles TLS termination, path-based and sub
 ## Table of Contents
 
 - [[#Overview]]
+- [[#Deployment Tiers]]
 - [[#Architecture]]
 - [[#Design Decisions]]
 - [[#Dependencies]]
 - [[#Configuration]]
+- [[#Certificate Management]]
 - [[#Dev vs Prod Differences]]
 - [[#Monitoring]]
 - [[#Runbooks]]
@@ -55,6 +56,24 @@ Routes are defined as Kubernetes Gateway API resources (`HTTPRoute`, `Gateway`, 
 | `/{service}/` | Django Service (`{service}.local:8000`) | Application routes — API, admin, frontend |
 
 Additional services are added by creating a new `HTTPRoute` YAML file in the routes directory and a corresponding `Backend` definition. Envoy Gateway picks up changes on restart.
+
+---
+
+## Deployment Tiers
+
+The same Envoy Gateway container and Gateway API YAML configs run across all three tiers. Only TLS handling, cert management, and orchestration change.
+
+| | 🛠️ Local Dev | 🚀 VPS Prod | ⚡ Kubernetes |
+|---|---|---|---|
+| **Envoy runs as** | Docker container | Docker container | Pod (via Helm operator) |
+| **Config format** | Gateway API YAML files | Same files | Same files — `kubectl apply` |
+| **TLS** | Ngrok terminates it before Envoy | Let's Encrypt, terminated at Envoy | cert-manager issues certs, Envoy terminates |
+| **Cert management** | None — Ngrok handles it | certbot on host + deploy hook | cert-manager `Certificate` resource |
+| **Control plane certs** | `generate_certs` sidecar (self-signed) | Same | Envoy Gateway operator (Helm) |
+| **Port 80/443** | Mapped from container | Bound directly on host | Ingress / LoadBalancer Service |
+| **Scaling** | Single instance | Single instance | HPA across pods |
+
+**Why the same configs work everywhere:** Envoy Gateway uses the Kubernetes Gateway API spec as its config format — even in Docker standalone mode it reads `HTTPRoute`, `Gateway`, and `Backend` YAML from the filesystem. In Kubernetes, those same files are applied via `kubectl apply`. The only things that change are `Backend` hostnames (Docker FQDN → K8s Service name) and how TLS secrets are provisioned.
 
 ---
 
@@ -120,7 +139,7 @@ Envoy Gateway was chosen for Kubernetes-native portability. It uses the Kubernet
 
 **Dev:** Ngrok provides the public HTTPS URL and terminates TLS before traffic reaches Envoy. Envoy still runs with TLS configured on the HTTPS listener, but in practice Ngrok handles the public certificate. No local cert management required.
 
-**Prod:** Let's Encrypt certificates are obtained via `certbot` on the host and mounted read-only into the Envoy container. The Gateway resource references these via a `Secret` that points to the mounted PEM files. Certificate renewal is automated via systemd timer — certbot renews, a deploy hook restarts Envoy Gateway, and the new certificates are loaded. Zero-downtime renewal.
+**Prod:** Let's Encrypt certificates are obtained via `certbot` on the host and mounted read-only into the Envoy container. The Gateway resource references these via a `Secret` that points to the mounted PEM files. Certificate renewal is fully automated via systemd timer and a certbot deploy hook — certbot renews, the hook regenerates secrets and restarts Envoy Gateway. See [[#Certificate Management]] for the full setup.
 
 ```
 Host filesystem                    Docker container
@@ -135,9 +154,6 @@ Host filesystem                    Docker container
 ```
 
 Certbot manages symlink rotation on renewal. Envoy always reads from `/live/` — no path changes needed.
-
-> [!important] Renewal workflow
-> Certbot runs twice daily via systemd timer. When certificates are within 30 days of expiry, certbot performs an ACME HTTP-01 challenge, obtains new certs, updates symlinks, and triggers a deploy hook that restarts Envoy Gateway. See [[operations-index|Operations]] for manual renewal procedures and failure recovery.
 
 ### Control Plane Certificates (`generate_certs`)
 
@@ -247,12 +263,12 @@ extensionApis:
 
 `{env}` is `dev` or `prod` — each has its own routes directory for environment-specific configuration. Common backends and routes shared across environments live in `common/`.
 
->[!important] Upstream experimental classification 
->Envoy Gateway's standalone mode (file provider + host infrastructure) is classified as **experimental** upstream — their docs say "DO NOT use it in production." This label reflects control plane maturity gaps, not data plane reliability. The Envoy Proxy binary handling traffic is the same battle-tested binary used by Docker Hub, Teleport, and Tencent Cloud in production.
+> [!important] Upstream experimental classification
+> Envoy Gateway's standalone mode (file provider + host infrastructure) is classified as **experimental** upstream — their docs say "DO NOT use it in production." This label reflects control plane maturity gaps, not data plane reliability. The Envoy Proxy binary handling traffic is the same battle-tested binary used by Docker Hub, Teleport, and Tencent Cloud in production.
 >
-What standalone mode lacks compared to the Kubernetes path: no built-in process lifecycle management (crash recovery, graceful drain), no orchestrated hot restart for zero-downtime upgrades, no E2E conformance test suite, single Envoy process (no HPA scaling), and a `v1alpha1` API surface that may change between releases. Feature parity is also catching up incrementally — Secret/ConfigMap parsing, BackendTLSPolicy, and Extension Server support were added across v1.2.7–v1.4.
+> What standalone mode lacks compared to the Kubernetes path: no built-in process lifecycle management (crash recovery, graceful drain), no orchestrated hot restart for zero-downtime upgrades, no E2E conformance test suite, single Envoy process (no HPA scaling), and a `v1alpha1` API surface that may change between releases. Feature parity is also catching up incrementally — Secret/ConfigMap parsing, BackendTLSPolicy, and Extension Server support were added across v1.2.7–v1.4.
 >
-In our Docker Compose setup, most of these gaps are mitigated: Docker handles process restart (`restart: unless-stopped`), health checks, and container lifecycle. The main accepted tradeoffs for the VPS tier are brief downtime during upgrades (`docker compose down && up`) and no horizontal scaling. Both are acceptable for a single-VPS deployment. The Envoy AI Gateway project is also actively dogfooding standalone mode, accelerating its maturation toward production graduation.
+> In our Docker Compose setup, most of these gaps are mitigated: Docker handles process restart (`restart: unless-stopped`), health checks, and container lifecycle. The main accepted tradeoffs for the VPS tier are brief downtime during upgrades (`docker compose down && up`) and no horizontal scaling. Both are acceptable for a single-VPS deployment. The Envoy AI Gateway project is also actively dogfooding standalone mode, accelerating its maturation toward production graduation.
 
 ### File Structure
 
@@ -345,12 +361,206 @@ spec:
 
 ---
 
+## Certificate Management
+
+### Overview
+
+Let's Encrypt certificates live on the host and are mounted read-only into the Envoy container. Renewal is fully automated — certbot runs twice daily via systemd timer, and a deploy hook handles the gateway reload when a cert is actually renewed.
+
+```
+certbot timer (twice daily)
+    → certbot renew
+        → cert near expiry? yes:
+            → ACME HTTP-01 challenge on port 80
+            → new cert written to /etc/letsencrypt/archive/
+            → symlinks in /live/ updated
+            → deploy hook fires
+                → gateway stop
+                → generate-secrets.sh
+                → gateway start
+                → renewal logged
+```
+
+The deploy hook only fires when certbot actually renews — not on every timer tick.
+
+---
+
+### Obtaining a Certificate (First Time)
+
+```bash
+# Stop the gateway to free port 80
+docker compose -f compose.prod.yaml stop gateway
+
+# Source env vars
+source /opt/deploy/basic-infrastructure/.env
+
+# Obtain certificate
+sudo certbot certonly \
+  --standalone \
+  --non-interactive \
+  --agree-tos \
+  --email ${CERT_EMAIL} \
+  -d ${DOMAIN} \
+  -d www.${DOMAIN}
+
+# Verify
+sudo openssl x509 -in /etc/letsencrypt/live/${DOMAIN}/fullchain.pem -noout -enddate
+
+# Regenerate secrets and start gateway
+sudo bash scripts/generate-secrets.sh
+docker compose -f compose.prod.yaml start gateway
+```
+
+---
+
+### Automated Renewal Setup
+
+**Step 1 — Create the deploy hook**
+
+Certbot automatically runs scripts in `/etc/letsencrypt/renewal-hooks/deploy/` after every successful renewal.
+
+```bash
+sudo nano /etc/letsencrypt/renewal-hooks/deploy/restart-gateway.sh
+```
+
+```bash
+#!/bin/bash
+set -euo pipefail
+
+# ==============================================================================
+# CERTBOT DEPLOY HOOK - Certificate Renewal & Gateway Reload
+# ==============================================================================
+
+ENV_FILE="/opt/deploy/basic-infrastructure/.env"
+COMPOSE_FILE="/opt/deploy/basic-infrastructure/compose.prod.yaml"
+SECRETS_SCRIPT="/opt/deploy/basic-infrastructure/scripts/generate-secrets.sh"
+LOG="/var/log/certbot-renewal.log"
+
+# Load environment variables
+if [[ ! -f "$ENV_FILE" ]]; then
+    echo "❌ Error: $ENV_FILE not found"
+    exit 1
+fi
+
+source "$ENV_FILE"
+
+# Validate required variables
+: "${CERT_PATH:?❌ Error: CERT_PATH not set in .env}"
+: "${SECRETS_OUTPUT_FILE:?❌ Error: SECRETS_OUTPUT_FILE not set in .env}"
+
+# Validate secrets script exists
+if [[ ! -f "$SECRETS_SCRIPT" ]]; then
+    echo "❌ Error: Secrets script not found: $SECRETS_SCRIPT"
+    exit 1
+fi
+
+# Validate Let's Encrypt certs
+if [[ ! -d "$CERT_PATH" ]]; then
+    echo "❌ Error: Certificate path does not exist: $CERT_PATH"
+    exit 1
+fi
+
+if [[ ! -f "${CERT_PATH}/fullchain.pem" ]] || [[ ! -f "${CERT_PATH}/privkey.pem" ]]; then
+    echo "❌ Error: Certificate files not found in $CERT_PATH"
+    exit 1
+fi
+
+# ==============================================================================
+# Reload gateway with renewed certificates
+# ==============================================================================
+
+echo "[$(date)] 🔄 Certificate renewed — reloading gateway..." >> "$LOG"
+
+cd /opt/deploy/basic-infrastructure
+
+docker compose -f "$COMPOSE_FILE" stop gateway      >> "$LOG" 2>&1
+bash "$SECRETS_SCRIPT"                              >> "$LOG" 2>&1
+docker compose -f "$COMPOSE_FILE" start gateway     >> "$LOG" 2>&1
+
+echo "[$(date)] ✅ Gateway reloaded successfully."                                                                >> "$LOG"
+echo "[$(date)] 📋 Certificate expires: $(sudo openssl x509 -in "${CERT_PATH}/fullchain.pem" -noout -enddate | cut -d= -f2)" >> "$LOG"
+echo "[$(date)] ⚠️  Secrets regenerated: $SECRETS_OUTPUT_FILE"                                                   >> "$LOG"
+```
+
+```bash
+sudo chmod +x /etc/letsencrypt/renewal-hooks/deploy/restart-gateway.sh
+```
+
+**Step 2 — Enable the systemd timer**
+
+Certbot (snap or apt) ships with a systemd timer. Verify it's active:
+
+```bash
+sudo systemctl list-timers | grep certbot
+sudo systemctl enable certbot.timer
+sudo systemctl start certbot.timer
+```
+
+If the timer doesn't exist (bare certbot install), create it:
+
+```bash
+# /etc/systemd/system/certbot-renew.timer
+[Unit]
+Description=Twice daily certbot renewal
+
+[Timer]
+OnCalendar=*-*-* 00,12:00:00
+RandomizedDelaySec=1h
+Persistent=true
+
+[Install]
+WantedBy=timers.target
+```
+
+```bash
+# /etc/systemd/system/certbot-renew.service
+[Unit]
+Description=Certbot renewal
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/certbot renew --quiet
+```
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable --now certbot-renew.timer
+```
+
+**Step 3 — Test**
+
+```bash
+# Dry run — simulates renewal without touching real certs
+sudo certbot renew --dry-run
+
+# Force a real renewal to exercise the full hook
+sudo certbot renew --force-renewal
+
+# Watch the log
+tail -f /var/log/certbot-renewal.log
+```
+
+---
+
+### Manual Renewal
+
+If automated renewal fails:
+
+```bash
+docker compose -f compose.prod.yaml stop gateway
+sudo certbot renew --force-renewal
+sudo bash scripts/generate-secrets.sh
+docker compose -f compose.prod.yaml start gateway
+```
+
+---
+
 ## Dev vs Prod Differences
 
 | Aspect | Dev | Prod |
 |---|---|---|
 | Public TLS | Ngrok handles it | Let's Encrypt at Envoy |
-| Certificate management | None (Ngrok provides certs) | Certbot + systemd timer + deploy hook |
+| Certificate management | None (Ngrok provides certs) | certbot + systemd timer + deploy hook |
 | Standalone config | `standalone-dev.yaml` | `standalone-prod.yaml` |
 | Gateway resource | Dev TLS Secret | Let's Encrypt cert Secret ref |
 | Environment routes | Echo server, dev-only routes | Prod-only routes |
@@ -409,8 +619,10 @@ Everything else — routes, header modifications, redirect rules, path matching 
 ### Prod
 
 - **Logs:** `docker compose logs -f gateway` — structured access logs
+- **Renewal log:** `tail -f /var/log/certbot-renewal.log` — deploy hook output on every renewal
+- **Certbot log:** `/var/log/letsencrypt/letsencrypt.log` — ACME challenge details and errors
 - **Metrics:** Envoy exposes Prometheus metrics on the admin port (19001): `envoy_http_downstream_rq_total`, `envoy_http_downstream_rq_xx` (status codes), `envoy_cluster_upstream_cx_connect_fail` (backend failures), `envoy_ssl_ciphers` (TLS usage)
-- **Certificate monitoring:** `make cert-info` shows expiry dates. Certbot sends email alerts on renewal failure.
+- **Certificate expiry:** `sudo openssl x509 -in /etc/letsencrypt/live/${DOMAIN}/fullchain.pem -noout -enddate`
 - **Dashboards:** Grafana dashboard (link TBD)
 - **Alerts:** Certificate expiry approaching, backend connection failures, 5xx spike (configuration TBD)
 
@@ -426,7 +638,7 @@ Gateway container is not running or port mapping is wrong. Check with `docker co
 
 ### Certificate verify failed / expired
 
-Certificates have expired or renewal failed. Check expiry with `make cert-info`. Review certbot logs at `/var/log/letsencrypt/letsencrypt.log`. If automated renewal failed: stop the gateway (`docker compose stop gateway`), renew manually (`sudo certbot renew`), restart (`docker compose start gateway`).
+Certificates have expired or renewal failed. Check expiry: `sudo openssl x509 -in /etc/letsencrypt/live/${DOMAIN}/fullchain.pem -noout -enddate`. Review certbot logs at `/var/log/letsencrypt/letsencrypt.log`. If automated renewal failed, follow [[#Manual Renewal]].
 
 ### 502 Bad Gateway
 
@@ -441,10 +653,12 @@ Keycloak doesn't detect it's behind a proxy. Verify `X-Forwarded-Proto: https`, 
 Verify the `Backend` YAML has the correct hostname and port. Verify the `HTTPRoute` YAML references the correct `Backend` name and has `parentRefs` pointing to the `eg` Gateway. Restart Envoy Gateway to pick up the new files. Check that the service container is on the `internal` Docker network.
 
 ### Debugging headers and routing with echo server
-Send a request to the echo server's dev-only route (e.g., curl -v https://${DOMAIN}/echo/) — it mirrors back the full request including all headers Envoy injected (X-Forwarded-Proto, X-Forwarded-Host, X-Forwarded-Port), the matched path, and the request method. Use this to verify header manipulation filters and path matching before wiring up a real service.
+
+Send a request to the echo server's dev-only route (e.g., `curl -v https://${DOMAIN}/echo/`) — it mirrors back the full request including all headers Envoy injected (`X-Forwarded-Proto`, `X-Forwarded-Host`, `X-Forwarded-Port`), the matched path, and the request method. Use this to verify header manipulation filters and path matching before wiring up a real service.
+
 ### Certificate renewal fails
 
-Check that port 80 is accessible from the internet (certbot uses HTTP-01 challenge). Review deploy hook logs at `/var/log/certbot-renewal.log`. Common cause: gateway is holding port 80 during renewal — the deploy hook should handle restart ordering. See [[operations-index|Operations]] for the full renewal recovery procedure.
+Check that port 80 is accessible from the internet (certbot uses HTTP-01 challenge). Check `sudo systemctl status certbot.timer`. Review deploy hook logs at `/var/log/certbot-renewal.log` and certbot logs at `/var/log/letsencrypt/letsencrypt.log`. Common cause: gateway is holding port 80 — follow [[#Manual Renewal]] to recover.
 
 ---
 
@@ -452,7 +666,8 @@ Check that port 80 is accessible from the internet (certbot uses HTTP-01 challen
 
 - **ADR: Envoy Gateway over Nginx/Traefik** — Gateway API resource format provides Kubernetes portability without config rewrites. Same YAML runs in Docker standalone and K8s.
 - **ADR: Standalone file provider mode** — Enables Gateway API resources without a Kubernetes cluster. File-based config is version-controlled and works identically in dev and prod Docker Compose. Upstream classifies standalone mode as experimental due to control plane maturity gaps (no built-in process lifecycle, no conformance test suite, incremental feature parity). Accepted for VPS tier because Docker Compose mitigates the critical gaps (restart policies, health checks), and the data plane (Envoy Proxy) is production-grade regardless of control plane mode. Revisit classification when standalone graduates upstream or when moving to Kubernetes.
-- **ADR: Let's Encrypt with host-level certbot** — Certificates managed on the host, mounted read-only into container. Simpler than in-container cert management, compatible with standard certbot renewal flow.
+- **ADR: Let's Encrypt with host-level certbot** — Certificates managed on the host, mounted read-only into container. Simpler than in-container cert management, compatible with standard certbot renewal flow. Deploy hook handles gateway reload after every renewal.
+- **ADR: Certbot deploy hook over cron** — Deploy hook fires only on actual renewal, not on every timer tick. Keeps the gateway restart tied to the cert lifecycle without polling or external coordination.
 - **ADR: HTTP 301 redirect at gateway level** — All HTTP→HTTPS redirect handled by Envoy, no application-level redirect logic needed. Single point of enforcement.
 - **ADR: `generate_certs` for control plane TLS** — Self-signed certificates secure the xDS gRPC channel between Envoy controller and proxy. Prevents malicious route injection.
 
@@ -464,3 +679,4 @@ Check that port 80 is accessible from the internet (certbot uses HTTP-01 challen
 - [Kubernetes Gateway API Specification](https://gateway-api.sigs.k8s.io/)
 - [Let's Encrypt Documentation](https://letsencrypt.org/docs/)
 - [Envoy Proxy Documentation](https://www.envoyproxy.io/docs)
+- [Certbot Documentation](https://eff-certbot.readthedocs.io/en/stable/)
