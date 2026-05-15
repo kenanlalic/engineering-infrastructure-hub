@@ -318,7 +318,11 @@ docker compose exec keycloak /opt/keycloak/bin/kc.sh export \
 - **Dashboards:** Grafana dashboard (link TBD)
 - **Alerts:** Alert rules for failed logins spike, health endpoint down, DB connection pool exhaustion (configuration TBD)
 
-> **Note:** the above assumes Prometheus + Grafana, which is the standard Keycloak observability stack. Adjust dashboard and alert links once provisioned.
+> [!NOTE]
+> Prometheus and Grafana are not yet deployed on the K8s cluster. Deployment status is tracked
+> in [K8s Default Resources — What Gets Deployed](../40-kubernetes/41-k8s-default-resources.md#what-gets-deployed).
+> Until the monitoring stack is live, use `docker compose logs -f keycloak` and the
+> Keycloak Admin Console for operational visibility
 
 ---
 

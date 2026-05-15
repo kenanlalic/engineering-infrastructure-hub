@@ -27,3 +27,6 @@ nav:
     - Keycloak: 20-base-infrastructure/22-keycloak-oidc.md
     - MailDev: 20-base-infrastructure/23-maildev.md
   - Django Template: 30-django-service-template/30-django-service-template.md
+  - Kubernetes:
+    - OCI Infrastructure: 40-kubernetes/40-oci-infrastructure.md
+    - K8s Default Resources: 40-kubernetes/41-k8s-default-resources.md
