@@ -1,0 +1,2388 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://kenanlalic.github.io/engineering-infrastructure-hub/40-kubernetes/40-oci-infrastructure/">
+      
+      
+        <link rel="prev" href="../../30-django-service-template/30-django-service-template/">
+      
+      
+        <link rel="next" href="../41-k8s-default-resources/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>OCI Infrastructure - Infrastructure Engineering Hub</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#oci-infrastructure-terraform-provisioned-kubernetes" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-header__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Infrastructure Engineering Hub
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              OCI Infrastructure
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-nav__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Infrastructure Engineering Hub
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-index/01-infrastructure-engineering-hub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-workspace-config/10-workspace-config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workspace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Base Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/20-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/21-envoy-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Envoy Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/22-keycloak-oidc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/23-maildev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MailDev
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../30-django-service-template/30-django-service-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Django Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Kubernetes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OCI Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OCI Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-provisioned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Gets Provisioned
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tooling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#all-in-one-tooling-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        All-in-One Tooling Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloudflare-dns-over-oci-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloudflare DNS over OCI DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arm64-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ARM64 Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boot-volume-at-72-gb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boot Volume at 72 GB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform-state-in-oci-object-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform State in OCI Object Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#block-storage-budget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Block Storage Budget
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#node-pool-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Pool Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credentials-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credentials Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oci-config-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCI Config File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oci-always-free-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCI Always Free Constraints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provisioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provisioning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Provisioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-generate-oci-api-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Generate OCI API Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-set-file-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Set File Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-verify-oci-cli-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Verify OCI CLI Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-generate-ssh-key-for-oke-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Generate SSH Key for OKE Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-optional-create-terraform-state-bucket" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — (Optional) Create Terraform State Bucket
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-provision-the-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Provision the Cluster
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7 — Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cluster Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-version-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Version Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolling-node-replacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rolling Node Replacement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cluster-access-outside-the-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Access Outside the Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dev-vs-prod-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev vs Prod Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-migration-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Migration Path
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kubernetes Migration Path">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cloud-provider-portability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Provider Portability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#out-of-host-capacity-on-node-pool-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Out of host capacity" on node pool creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform-destroy-fails-on-vcn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        terraform destroy fails on VCN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oci-cli-refuses-to-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCI CLI refuses to run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unexpected-block-storage-charges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unexpected block storage charges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nodes-stopped-by-oracle-idle-reclamation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nodes stopped by Oracle idle reclamation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../41-k8s-default-resources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    K8s Default Resources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-provisioned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Gets Provisioned
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#infrastructure-layout" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Infrastructure Layout
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cost" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cost
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tooling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tooling
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#all-in-one-tooling-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        All-in-One Tooling Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cloudflare-dns-over-oci-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloudflare DNS over OCI DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#arm64-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ARM64 Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#boot-volume-at-72-gb" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Boot Volume at 72 GB
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform-state-in-oci-object-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform State in OCI Object Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#block-storage-budget" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Block Storage Budget
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#node-pool-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Node Pool Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#credentials-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Credentials Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oci-config-file" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCI Config File
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oci-always-free-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCI Always Free Constraints
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform-provider" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Terraform Provider
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#provisioning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Provisioning
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Provisioning">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-generate-oci-api-keys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — Generate OCI API Keys
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-set-file-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — Set File Permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-verify-oci-cli-access" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Verify OCI CLI Access
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-generate-ssh-key-for-oke-nodes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Generate SSH Key for OKE Nodes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-optional-create-terraform-state-bucket" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — (Optional) Create Terraform State Bucket
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-6-provision-the-cluster" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 6 — Provision the Cluster
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-7-verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 7 — Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#cluster-operations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Operations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Cluster Operations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#kubernetes-version-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Version Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rolling-node-replacement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rolling Node Replacement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cluster-access-outside-the-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cluster Access Outside the Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dev-vs-prod-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev vs Prod Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-migration-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Migration Path
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Kubernetes Migration Path">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#cloud-provider-portability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cloud Provider Portability
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#out-of-host-capacity-on-node-pool-creation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        "Out of host capacity" on node pool creation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#terraform-destroy-fails-on-vcn" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        terraform destroy fails on VCN
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oci-cli-refuses-to-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCI CLI refuses to run
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#unexpected-block-storage-charges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Unexpected block storage charges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#nodes-stopped-by-oracle-idle-reclamation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nodes stopped by Oracle idle reclamation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="oci-infrastructure-terraform-provisioned-kubernetes">OCI Infrastructure — Terraform-Provisioned Kubernetes</h1>
+<p>Terraform-provisioned Kubernetes cluster on Oracle Cloud's Always Free tier. OKE control plane, ARM64 worker nodes, load balancer, object storage, and DNS — all within free allocations. Zero monthly cost.</p>
+<blockquote>
+<p>📍 <strong>Type:</strong> Service Reference<br>
+👤 <strong>Owner:</strong> Kenan Lalic<br>
+🎯 <strong>Outcome:</strong> Understand the OCI infrastructure layer and how to provision it</p>
+</blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>ARM architecture only (<code>aarch64</code>). The Always Free tier does not include x86 instances. All images and workloads must support <code>linux/arm64</code>.</p>
+</div>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="./#overview">Overview</a></li>
+<li><a href="./#architecture">Architecture</a></li>
+<li><a href="./#design-decisions">Design Decisions</a></li>
+<li><a href="./#dependencies">Dependencies</a></li>
+<li><a href="./#configuration">Configuration</a></li>
+<li><a href="./#provisioning">Provisioning</a></li>
+<li><a href="./#cluster-operations">Cluster Operations</a></li>
+<li><a href="./#dev-vs-prod-differences">Dev vs Prod Differences</a></li>
+<li><a href="./#kubernetes-migration-path">Kubernetes Migration Path</a></li>
+<li><a href="./#runbooks">Runbooks</a></li>
+<li><a href="./#adrs">ADRs</a></li>
+<li><a href="./#references">References</a></li>
+</ul>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>The OCI infrastructure layer provisions a working Kubernetes cluster and stops. Everything that runs <em>on</em> the cluster — GitOps, ingress, auth, monitoring — is the platform layer's concern and lives in the K8s default resources repository. The two layers are independent: swap the platform layer without touching Terraform.</p>
+<h3 id="what-gets-provisioned">What Gets Provisioned</h3>
+<p>A single <code>terraform apply</code> produces a complete cluster ready to receive workloads:</p>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Type</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>VCN + Subnets</strong></td>
+<td>OCI Networking</td>
+<td>Private subnet for nodes, public subnet for load balancer and control plane endpoint</td>
+</tr>
+<tr>
+<td><strong>OKE Control Plane</strong></td>
+<td>Managed K8s</td>
+<td>Free, managed by Oracle. Public endpoint enabled.</td>
+</tr>
+<tr>
+<td><strong>Node Pool</strong></td>
+<td>2 × VM.Standard.A1.Flex</td>
+<td>2 oCPU / 12 GB each — 4 oCPU / 24 GB total. Boot volume 72 GB per node.</td>
+</tr>
+<tr>
+<td><strong>Flexible Load Balancer</strong></td>
+<td>Layer 7, 10 Mbps</td>
+<td>Free — one per tenancy. Auto-provisioned by the Gateway controller.</td>
+</tr>
+<tr>
+<td><strong>Object Storage Bucket</strong></td>
+<td><code>terraform-states</code></td>
+<td>Versioned. S3-compatible backend for Terraform state.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="infrastructure-layout">Infrastructure Layout</h3>
+<div class="highlight"><pre><span></span><code>Oracle Cloud (Always Free)
+├── VCN + Subnets
+│   ├── OKE Control Plane (free, managed, public endpoint)
+│   ├── Node Pool
+│   │   ├── Worker 1 — VM.Standard.A1.Flex (2 oCPU, 12 GB, 72 GB boot)
+│   │   └── Worker 2 — VM.Standard.A1.Flex (2 oCPU, 12 GB, 72 GB boot)
+│   └── Load Balancer (Flexible, 10 Mbps, Layer 7, free)
+└── Object Storage
+    └── terraform-states bucket (versioned, S3-compatible)
+
+Cloudflare (Free)
+└── DNS management
+</code></pre></div>
+<h3 id="cost">Cost</h3>
+<p><strong>$0/month.</strong> Compute, control plane, load balancers, and object storage stay within the Always Free tier. DNS moved to Cloudflare to eliminate the last remaining OCI charge.</p>
+<h3 id="tooling">Tooling</h3>
+<p>You do not install Terraform, the OCI CLI, or kubectl on your machine. The <code>aio</code> (all-in-one) container bundles every tool needed to provision and manage the cluster. <code>compose.yaml</code> mounts your local <code>credentials/</code> directory into the container — files created in your project folder are immediately available inside.</p>
+<div class="highlight"><pre><span></span><code>./oci-infrastructure/
+├── terraform/infra/       # OKE cluster, VCN, subnets, node pool
+├── credentials/           # OCI API keys, SSH keys, kubeconfig (gitignored)
+├── docker/                # Dockerfile for the aio tooling container
+└── compose.yaml           # Development environment
+</code></pre></div>
+<hr />
+<h2 id="architecture">Architecture</h2>
+<div class="highlight"><pre><span></span><code>Oracle Cloud (Always Free)
+│
+├── VCN
+│   ├── Public Subnet ──── OCI Flexible Load Balancer (1 free, auto-provisioned)
+│   │                           ↓ HTTPS :443 / HTTP :80
+│   │                      Envoy Gateway (K8s Gateway API)
+│   │                           ↓ routes to cluster services
+│   └── Private Subnet ─── OKE Node Pool
+│                           ├── Worker 1 (ARM64, 2 oCPU, 12 GB, 72 GB boot)
+│                           └── Worker 2 (ARM64, 2 oCPU, 12 GB, 72 GB boot)
+│
+└── Object Storage ──────── terraform-states bucket (Terraform backend)
+
+Cloudflare
+└── DNS → OCI Load Balancer IP
+</code></pre></div>
+<hr />
+<h2 id="design-decisions">Design Decisions</h2>
+<h3 id="all-in-one-tooling-container">All-in-One Tooling Container</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Choice</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tooling</strong></td>
+<td><code>aio</code> container via Docker Compose</td>
+<td>Install Terraform + OCI CLI + kubectl on host</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>aio</code> container is the only host dependency beyond Docker itself. Eliminates version conflicts, keeps the host clean, and ensures reproducible tooling across team members.</p>
+<h3 id="cloudflare-dns-over-oci-dns">Cloudflare DNS over OCI DNS</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Choice</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>DNS</strong></td>
+<td>Cloudflare free tier</td>
+<td>OCI DNS (incurs cost outside Always Free)</td>
+</tr>
+</tbody>
+</table>
+<p>OCI DNS is not included in the Always Free tier. Cloudflare's free tier eliminates the last charge.</p>
+<h3 id="arm64-only">ARM64 Only</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Choice</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Compute</strong></td>
+<td>VM.Standard.A1.Flex (ARM64)</td>
+<td>x86 instances (not available on Always Free)</td>
+</tr>
+</tbody>
+</table>
+<p>The Always Free tier provides 4 oCPU and 24 GB RAM on ARM64 at no cost. x86 Always Free compute is limited to AMD micro instances (1 oCPU / 1 GB) — insufficient for Kubernetes. All platform images (Envoy Gateway, Keycloak, ArgoCD, CNPG, Django) publish ARM64 variants.</p>
+<h3 id="boot-volume-at-72-gb">Boot Volume at 72 GB</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Choice</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Boot volume</strong></td>
+<td>72 GB per node</td>
+<td>50 GB (OKE default) · 100 GB (common recommendation)</td>
+</tr>
+</tbody>
+</table>
+<p>See <a href="./#adrs">ADR: Boot volume sized at 72 GB</a> for the full reasoning. Short version: 100 GB per node exhausts the 200 GB free block storage allocation with zero headroom for PVCs. 72 GB is the deliberate balance point between node storage capacity and PVC budget.</p>
+<h3 id="terraform-state-in-oci-object-storage">Terraform State in OCI Object Storage</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Choice</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>State backend</strong></td>
+<td>OCI Object Storage (S3-compatible)</td>
+<td>Local state</td>
+</tr>
+</tbody>
+</table>
+<p>Remote state enables team collaboration and prevents state file loss. Versioning provides state history. Local state is supported — comment out the backend block in <code>_terraform.tf</code> for single-developer setups.</p>
+<hr />
+<h2 id="dependencies">Dependencies</h2>
+<table>
+<thead>
+<tr>
+<th>Dependency</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OCI Always Free account</td>
+<td>Cloud</td>
+<td>Infrastructure host</td>
+</tr>
+<tr>
+<td>Docker + Compose</td>
+<td>Host tooling</td>
+<td>Only host dependency — all other tools run in the <code>aio</code> container</td>
+</tr>
+<tr>
+<td>Cloudflare account</td>
+<td>DNS</td>
+<td>Free DNS management — only needed for the platform layer, not Terraform</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="configuration">Configuration</h2>
+<h3 id="block-storage-budget">Block Storage Budget</h3>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The Always Free tier provides <strong>200 GB of block storage total</strong>, shared between boot volumes and PersistentVolumeClaims. Boot volumes count against this limit.</p>
+<div class="highlight"><pre><span></span><code>2 nodes × 72 GB boot = 144 GB consumed by boot volumes
+Remaining free headroom:  56 GB for PVCs
+CNPG platform-db PVC:    ~10 GB consumed
+Safe remaining budget:   ~46 GB
+</code></pre></div>
+<p>Do not increase boot volume size without recalculating headroom. At 2 × 100 GB boot volumes (a common recommendation), the entire free allocation is consumed and every PVC incurs charges at $0.0255/GB/month with no grace period.</p>
+</div>
+<h3 id="terraform-variables">Terraform Variables</h3>
+<p>Copy the template and edit with your values:</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>terraform/infra
+cp<span class="w"> </span>terraform.tfvars_template<span class="w"> </span>terraform.tfvars
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>compartment_id</code></td>
+<td>OCI tenancy OCID — the <code>tenancy</code> value from <code>credentials/.oci/config</code></td>
+</tr>
+<tr>
+<td><code>kubernetes_version</code></td>
+<td>Target K8s version — controls both control plane and node pool image selection</td>
+</tr>
+<tr>
+<td><code>kubernetes_worker_nodes</code></td>
+<td>Number of worker nodes — set to <code>2</code> for the Always Free 2-node setup</td>
+</tr>
+<tr>
+<td><code>ssh_public_key_path</code></td>
+<td>Path to SSH public key for OKE node access</td>
+</tr>
+<tr>
+<td>See <code>terraform.tfvars_template</code></td>
+<td>All required variables documented in the template</td>
+</tr>
+</tbody>
+</table>
+<p><code>terraform.tfvars</code> contains sensitive values and is gitignored. Only the <code>_template</code> file is committed.</p>
+<h3 id="node-pool-configuration">Node Pool Configuration</h3>
+<p>The node pool is provisioned with the following key settings:</p>
+<div class="highlight"><pre><span></span><code><span class="na">node_shape</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;VM.Standard.A1.Flex&quot;</span>
+
+<span class="nb">node_shape_config</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">memory_in_gbs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">12</span>
+<span class="w">  </span><span class="na">ocpus</span><span class="w">         </span><span class="o">=</span><span class="w"> </span><span class="m">2</span>
+<span class="p">}</span>
+
+<span class="nb">node_source_details</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="na">image_id</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="err">&lt;latest</span><span class="w"> </span><span class="err">ARM</span><span class="m">64</span><span class="w"> </span><span class="err">OKE</span><span class="w"> </span><span class="err">image</span><span class="w"> </span><span class="err">for</span><span class="w"> </span><span class="err">kubernetes_version&gt;</span>
+<span class="w">  </span><span class="na">source_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s2">&quot;image&quot;</span>
+<span class="w">  </span><span class="na">boot_volume_size_in_gbs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="m">72</span><span class="c1">   # see ADR: Boot volume sized at 72 GB</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The node pool image is dynamically selected at apply time — always the latest ARM64 OKE-optimised image for the target Kubernetes version. Nodes are distributed across all available Availability Domains via a dynamic <code>placement_configs</code> block. With <code>size = 2</code>, OCI places nodes in two separate ADs.</p>
+<h3 id="credentials-structure">Credentials Structure</h3>
+<p>All credential files are created in your local project folder under <code>credentials/.oci/</code>. The <code>compose.yaml</code> mounts this directory into the <code>aio</code> container — changes on either side are reflected immediately.</p>
+<div class="highlight"><pre><span></span><code>credentials/.oci/
+├── config                      # OCI CLI + Terraform configuration
+├── oci_api_key.pem             # Private key (API authentication)
+├── oci_api_key_public.pem      # Public key (API authentication)
+└── oci_api_key_public.pub      # SSH public key (OKE node access)
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Verify that <code>credentials/</code> is listed in <code>.gitignore</code> before proceeding. These files must never be committed.</p>
+</div>
+<h3 id="oci-config-file">OCI Config File</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># credentials/.oci/config</span>
+
+<span class="c1"># --- OCI API authentication (Terraform resource creation, oci CLI) ---</span>
+<span class="k">[DEFAULT]</span>
+<span class="na">user</span><span class="o">=</span><span class="s">ocid1.user.oc1..xxx</span>
+<span class="na">fingerprint</span><span class="o">=</span><span class="s">xx:xx:xx:...</span>
+<span class="na">tenancy</span><span class="o">=</span><span class="s">ocid1.tenancy.oc1..xxx</span>
+<span class="na">region</span><span class="o">=</span><span class="s">eu-frankfurt-1</span>
+<span class="na">key_file</span><span class="o">=</span><span class="s">~/.oci/oci_api_key.pem</span>
+
+<span class="c1"># --- S3-compatible credentials (Terraform state backend only) ---</span>
+<span class="k">[default]</span>
+<span class="na">aws_access_key_id</span><span class="o">=</span><span class="s">&lt;customer-secret-key-id&gt;</span>
+<span class="na">aws_secret_access_key</span><span class="o">=</span><span class="s">&lt;customer-secret-key&gt;</span>
+</code></pre></div>
+<p>The <code>[DEFAULT]</code> section authenticates all OCI API calls. The <code>[default]</code> section with <code>aws_*</code> keys is only used by Terraform to read/write state from the <code>terraform-states</code> bucket. Only required if using the remote backend.</p>
+<h3 id="oci-always-free-constraints">OCI Always Free Constraints</h3>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Free Limit</th>
+<th>This Setup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Flexible Load Balancers</td>
+<td>1</td>
+<td>1 — auto-provisioned by Gateway controller</td>
+</tr>
+<tr>
+<td>ARM64 compute</td>
+<td>4 oCPU / 24 GB total</td>
+<td>2 nodes × 2 oCPU / 12 GB</td>
+</tr>
+<tr>
+<td>Block storage</td>
+<td>200 GB total (boot + block combined)</td>
+<td>144 GB boot volumes + ~10 GB CNPG PVC = ~154 GB used · ~46 GB remaining</td>
+</tr>
+<tr>
+<td>Object storage</td>
+<td>20 GB</td>
+<td>Terraform state only — minimal usage</td>
+</tr>
+<tr>
+<td>LB bandwidth</td>
+<td>10 Mbps</td>
+<td>Sufficient for internal tooling</td>
+</tr>
+</tbody>
+</table>
+<h3 id="terraform-provider">Terraform Provider</h3>
+<p>The OCI provider is pinned to <code>~&gt; 7.19.0</code> in <code>_terraform.tf</code>. To update:</p>
+<div class="highlight"><pre><span></span><code>terraform<span class="w"> </span>init<span class="w"> </span>-upgrade
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Terraform ≥ v1.12 is required when using the remote OCI backend. With the backend commented out, any recent version works.</p>
+</div>
+<hr />
+<h2 id="provisioning">Provisioning</h2>
+<p>All commands run inside the <code>aio</code> container:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>aio<span class="w"> </span>/bin/bash
+</code></pre></div>
+<h3 id="step-1-generate-oci-api-keys">Step 1 — Generate OCI API Keys</h3>
+<p>In the Oracle Cloud Console, navigate to <strong>Identity → My Profile → API Keys</strong>:</p>
+<ol>
+<li>Click <strong>Add API key → Generate API key pair</strong></li>
+<li>Save the private key to <code>credentials/.oci/oci_api_key.pem</code></li>
+<li>Save the public key to <code>credentials/.oci/oci_api_key_public.pem</code></li>
+<li>Click <strong>Add</strong> — copy the <strong>Configuration file preview</strong> into <code>credentials/.oci/config</code></li>
+<li>Set the <code>key_file</code> path to the container mount point: <code>key_file=~/.oci/oci_api_key.pem</code></li>
+</ol>
+<h3 id="step-2-set-file-permissions">Step 2 — Set File Permissions</h3>
+<div class="highlight"><pre><span></span><code>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.oci/config<span class="w"> </span>~/.oci/oci_api_key.pem
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The OCI CLI refuses to run if config permissions are too open. Fix the permissions — do not suppress this warning with environment variables.</p>
+</div>
+<h3 id="step-3-verify-oci-cli-access">Step 3 — Verify OCI CLI Access</h3>
+<div class="highlight"><pre><span></span><code>oci<span class="w"> </span>iam<span class="w"> </span>user<span class="w"> </span>list<span class="w"> </span>--all
+</code></pre></div>
+<p>Expected: your user information in JSON.</p>
+<h3 id="step-4-generate-ssh-key-for-oke-nodes">Step 4 — Generate SSH Key for OKE Nodes</h3>
+<div class="highlight"><pre><span></span><code>ssh-keygen<span class="w"> </span>-y<span class="w"> </span>-f<span class="w"> </span>~/.oci/oci_api_key.pem<span class="w"> </span>&gt;<span class="w"> </span>~/.oci/oci_api_key_public.pub
+</code></pre></div>
+<h3 id="step-5-optional-create-terraform-state-bucket">Step 5 — (Optional) Create Terraform State Bucket</h3>
+<p>Only required if using the remote backend:</p>
+<div class="highlight"><pre><span></span><code>oci<span class="w"> </span>os<span class="w"> </span>bucket<span class="w"> </span>create<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--name<span class="w"> </span>terraform-states<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--versioning<span class="w"> </span>Enabled<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--compartment-id<span class="w"> </span>&lt;your-tenancy-ocid&gt;
+</code></pre></div>
+<p>Create S3-compatible credentials in the Oracle Cloud Console at <strong>Identity → User → Customer Secret Keys</strong> and add them to the <code>[default]</code> section of <code>credentials/.oci/config</code>.</p>
+<h3 id="step-6-provision-the-cluster">Step 6 — Provision the Cluster</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>terraform/infra
+terraform<span class="w"> </span>init
+terraform<span class="w"> </span>plan
+terraform<span class="w"> </span>apply
+</code></pre></div>
+<p>Type <code>yes</code> when prompted. Creates the VCN, subnets, OKE cluster, and node pool. Takes 10–25 minutes.</p>
+<h3 id="step-7-verify">Step 7 — Verify</h3>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>nodes
+</code></pre></div>
+<p>Expected: two <code>Ready</code> ARM64 nodes. The kubeconfig is at <code>terraform/infra/.kube.config</code> and is used automatically inside the <code>aio</code> container.</p>
+<hr />
+<h2 id="cluster-operations">Cluster Operations</h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Oracle reclaims idle Always Free instances with CPU utilisation below 20% (95th percentile) over any 7-day period. A running cluster with active workloads (Keycloak, Django services, CNPG) stays above threshold. An empty cluster may not.</p>
+</div>
+<h3 id="kubernetes-version-upgrade">Kubernetes Version Upgrade</h3>
+<div class="admonition tip">
+<p class="admonition-title">Important</p>
+<p>Only upgrade to the version shown by <code>available-kubernetes-upgrades</code>. Incremental upgrades are safer than skipping minor versions. The Kubernetes version skew policy allows kubelets to trail by three minor versions.</p>
+</div>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>terraform/infra
+
+<span class="c1"># Check available upgrade versions</span>
+oci<span class="w"> </span>ce<span class="w"> </span>cluster<span class="w"> </span>get<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--cluster-id<span class="w"> </span><span class="k">$(</span>terraform<span class="w"> </span>output<span class="w"> </span>--raw<span class="w"> </span>k8s_cluster_id<span class="k">)</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="p">|</span><span class="w"> </span>jq<span class="w"> </span>-r<span class="w"> </span><span class="s1">&#39;.data.&quot;available-kubernetes-upgrades&quot;&#39;</span>
+
+<span class="c1"># Update the version variable in _variables.tf</span>
+<span class="c1"># Then apply</span>
+terraform<span class="w"> </span>apply
+</code></pre></div>
+<h3 id="rolling-node-replacement">Rolling Node Replacement</h3>
+<p>Terraform upgrades the control plane and node pool configuration but does not replace running nodes. Roll them one at a time:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Drain and cordon</span>
+kubectl<span class="w"> </span>drain<span class="w"> </span>&lt;node-name&gt;<span class="w"> </span>--force<span class="w"> </span>--ignore-daemonsets<span class="w"> </span>--delete-emptydir-data
+kubectl<span class="w"> </span>cordon<span class="w"> </span>&lt;node-name&gt;
+
+<span class="c1"># Terminate the instance via OCI Console → OKE → Node Pool → match by private IP</span>
+oci<span class="w"> </span>compute<span class="w"> </span>instance<span class="w"> </span>terminate<span class="w"> </span>--force<span class="w"> </span>--instance-id<span class="w"> </span>&lt;instance-ocid&gt;
+
+<span class="c1"># Wait for replacement node</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>nodes<span class="w"> </span>-w
+</code></pre></div>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p><code>--delete-emptydir-data</code> deletes emptyDir volumes on drain. Ensure Django media uploads use a PVC or object storage, not emptyDir. CNPG data is safe — it uses a persistent block volume that reattaches to the replacement node.</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>With CNPG <code>instances: 1</code>, draining the node running the PostgreSQL pod causes database downtime until the pod reschedules on the replacement node. This is the accepted tradeoff for the single-instance free tier configuration. See <a href="../41-k8s-default-resources/#database">K8s Default Resources — Database Options</a> for the HA upgrade path.</p>
+</div>
+<h3 id="cluster-access-outside-the-container">Cluster Access Outside the Container</h3>
+<div class="highlight"><pre><span></span><code><span class="nb">export</span><span class="w"> </span><span class="nv">KUBECONFIG</span><span class="o">=</span>&lt;path-to-repo&gt;/terraform/infra/.kube.config
+</code></pre></div>
+<hr />
+<h2 id="dev-vs-prod-differences">Dev vs Prod Differences</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>This Setup (Free Tier)</th>
+<th>Production Upgrade Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Compute</td>
+<td>ARM64 only</td>
+<td>Add x86 node pool (paid)</td>
+</tr>
+<tr>
+<td>Availability</td>
+<td>2 nodes across ADs</td>
+<td>Additional nodes across all ADs</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>CNPG single instance, OCI PVC</td>
+<td>CNPG <code>instances: 2</code> + PodAntiAffinity, or OCI Database with PostgreSQL (managed)</td>
+</tr>
+<tr>
+<td>Secrets</td>
+<td>Sealed Secrets</td>
+<td>Sealed Secrets or Vault</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Prometheus + Grafana (platform layer)</td>
+<td>Same + external alerting</td>
+</tr>
+<tr>
+<td>Cost</td>
+<td>$0</td>
+<td>Pay-as-you-go beyond free limits</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="kubernetes-migration-path">Kubernetes Migration Path</h2>
+<p>See the <a href="../../00-index/01-infrastructure-engineering-hub/#what-changes-between-tiers">What Changes Between Tiers</a> table for the full platform migration map. This infrastructure layer is the K8s tier target — application images, Envoy Gateway config, and Keycloak setup are identical to the VPS tier. Only the orchestration layer changes.</p>
+<h3 id="cloud-provider-portability">Cloud Provider Portability</h3>
+<p>The <strong>Kubernetes application layer is fully provider-agnostic.</strong> Django services, Keycloak, Envoy Gateway (K8s Gateway API), ArgoCD, cert-manager, Sealed Secrets, and CNPG all run identically on EKS, AKS, GKE, or any conformant managed Kubernetes service. The <code>GatewayClass</code>, <code>Gateway</code>, and <code>HTTPRoute</code> manifests are Kubernetes-standard — no vendor extensions.</p>
+<p>The <strong>Terraform layer requires provider-specific substitution.</strong> This repository provisions OKE. Deploying to AWS or Azure means replacing <code>terraform/infra/</code> with an equivalent module for the target provider. The application layer above it is unchanged.</p>
+<table>
+<thead>
+<tr>
+<th>OCI Component</th>
+<th>AWS Equivalent</th>
+<th>Azure Equivalent</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OKE</td>
+<td>EKS</td>
+<td>AKS</td>
+</tr>
+<tr>
+<td>OCI Flexible Load Balancer</td>
+<td>AWS NLB/ALB</td>
+<td>Azure Load Balancer</td>
+</tr>
+<tr>
+<td>OCI Block Volume CSI (<code>oci-bv</code>)</td>
+<td>AWS EBS CSI (<code>gp3</code>)</td>
+<td>Azure Disk CSI (<code>managed-premium</code>)</td>
+</tr>
+<tr>
+<td>OCI Object Storage (Terraform state)</td>
+<td>S3</td>
+<td>Azure Blob Storage</td>
+</tr>
+<tr>
+<td>Terraform OCI provider</td>
+<td>Terraform AWS provider</td>
+<td>Terraform AzureRM provider</td>
+</tr>
+<tr>
+<td><code>credentials/.oci/</code> + <code>oci</code> CLI</td>
+<td><code>~/.aws/credentials</code> + <code>aws</code> CLI</td>
+<td>Service principal + <code>az</code> CLI</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The CNPG <code>Cluster</code> CR references <code>storageClass: oci-bv</code> (the OCI native CSI driver).
+On AWS or Azure, update this field to the equivalent storage class (<code>gp3</code> or <code>managed-premium</code>).
+Option B (Longhorn) avoids this entirely — Longhorn's storage class name is consistent
+across providers.</p>
+</div>
+<hr />
+<h2 id="runbooks">Runbooks</h2>
+<h3 id="out-of-host-capacity-on-node-pool-creation">"Out of host capacity" on node pool creation</h3>
+<p>The most common failure. The OKE control plane creates successfully but ARM worker nodes fail because the region has no available A1 capacity.</p>
+<p><strong>Fixes, in order of effectiveness:</strong></p>
+<ol>
+<li><strong>Upgrade to Pay As You Go</strong> — PAYG accounts access a larger capacity pool. Still $0 within Always Free limits.</li>
+<li><strong>Retry <code>terraform apply</code></strong> — capacity fluctuates. Early morning UTC (02:00–08:00) and weekends have better availability.</li>
+<li><strong>Automate retries</strong> — <code>terraform apply -auto-approve</code> on a cron every 5–10 minutes until it succeeds.</li>
+</ol>
+<h3 id="terraform-destroy-fails-on-vcn"><code>terraform destroy</code> fails on VCN</h3>
+<p>OCI load balancers or resources created by Kubernetes hold references to VCN subnets. Delete load balancers manually in the OCI Console (<strong>Networking → Load Balancers</strong>), then re-run <code>terraform destroy</code>.</p>
+<h3 id="oci-cli-refuses-to-run">OCI CLI refuses to run</h3>
+<div class="highlight"><pre><span></span><code>chmod<span class="w"> </span><span class="m">600</span><span class="w"> </span>~/.oci/config<span class="w"> </span>~/.oci/oci_api_key.pem
+</code></pre></div>
+<h3 id="unexpected-block-storage-charges">Unexpected block storage charges</h3>
+<p>Check the total across all block and boot volumes in your tenancy. The 200 GB free allocation covers both. Any volume that pushes the total past 200 GB triggers billing.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># List all block volumes in tenancy</span>
+oci<span class="w"> </span>bv<span class="w"> </span>volume<span class="w"> </span>list<span class="w"> </span>--compartment-id<span class="w"> </span>&lt;tenancy-ocid&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;data[].{&quot;name&quot;:&quot;display-name&quot;,&quot;size&quot;:&quot;size-in-gbs&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>table
+
+<span class="c1"># List all boot volumes</span>
+oci<span class="w"> </span>bv<span class="w"> </span>boot-volume<span class="w"> </span>list<span class="w"> </span>--compartment-id<span class="w"> </span>&lt;tenancy-ocid&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--availability-domain<span class="w"> </span>&lt;ad-name&gt;<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--query<span class="w"> </span><span class="s1">&#39;data[].{&quot;name&quot;:&quot;display-name&quot;,&quot;size&quot;:&quot;size-in-gbs&quot;}&#39;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--output<span class="w"> </span>table
+</code></pre></div>
+<h3 id="nodes-stopped-by-oracle-idle-reclamation">Nodes stopped by Oracle idle reclamation</h3>
+<p>Oracle stopped the instances due to CPU utilisation below 20% for 7 days. Restart via OCI Console → Compute → Instances. Deploy active workloads (Keycloak, Django services) to keep utilisation above threshold.</p>
+<hr />
+<h2 id="adrs">ADRs</h2>
+<ul>
+<li><strong>ADR: aio tooling container</strong> — Single host dependency (Docker). Eliminates version conflicts and ensures reproducible tooling across team members.</li>
+<li><strong>ADR: ARM64 only</strong> — Always Free tier provides 4 oCPU / 24 GB on ARM64 at zero cost. All platform images publish ARM64 variants. x86 Always Free instances are insufficient for K8s.</li>
+<li><strong>ADR: Cloudflare DNS</strong> — OCI DNS incurs cost outside Always Free. Cloudflare free tier eliminates the last charge.</li>
+<li><strong>ADR: Boot volume sized at 72 GB</strong> — The Always Free tier provides 200 GB of block storage total, shared between boot volumes and PersistentVolumeClaims. The OKE default is 50 GB per node (leaving 100 GB for PVCs but reducing in-node container image capacity). A common recommendation of 100 GB per node exhausts the free allocation entirely with zero PVC headroom. 72 GB (144 GB total for 2 nodes) leaves ~56 GB for PVCs — enough for CNPG (10 Gi) plus Keycloak and future services, while maintaining adequate node storage for container images and system pods.</li>
+<li><strong>ADR: Terraform state in OCI Object Storage</strong> — Remote state enables collaboration and prevents loss. S3-compatible backend, versioned, within free object storage limits. Local state supported by commenting out the backend block.</li>
+<li><strong>ADR: Platform layer separation</strong> — Terraform provisions infrastructure and stops at a working kubeconfig. Everything on the cluster is the platform layer's concern. Either layer can be replaced without touching the other.</li>
+<li><strong>ADR: Dynamic node pool image selection</strong> — Node pool image is resolved at apply time via a <code>jq_query</code> data source filtering for the latest ARM64 OKE image matching the target Kubernetes version. This ensures nodes always use the correct OKE-optimised image without manual updates.</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://blogs.oracle.com/cloud-infrastructure/post/oracle-builds-out-their-portfolio-of-oracle-cloud-infrastructure-always-free-services">OCI Always Free tier details</a></li>
+<li><a href="https://github.com/oracle/oci-cloud-controller-manager/blob/master/docs/load-balancer-annotations.md">OCI Load Balancer annotations</a></li>
+<li><a href="https://kubernetes.io/releases/version-skew-policy/#kubelet">Kubernetes version skew policy</a></li>
+<li><a href="https://developer.hashicorp.com/terraform/language/backend/s3">Terraform S3 backend configuration</a></li>
+<li><a href="https://cloudnative-pg.io/documentation/">CloudNativePG Documentation</a></li>
+<li><a href="https://arnoldgalovics.com/free-kubernetes-oracle-cloud/">Arnold Galovics — Free Kubernetes on Oracle Cloud</a></li>
+<li><a href="https://github.com/piontec/free-oci-kubernetes">piontec/free-oci-kubernetes</a></li>
+<li><a href="../41-k8s-default-resources/">K8s Default Resources</a> — platform layer running on this cluster</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,2014 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://kenanlalic.github.io/engineering-infrastructure-hub/20-base-infrastructure/22-keycloak-oidc/">
+      
+      
+        <link rel="prev" href="../21-envoy-gateway/">
+      
+      
+        <link rel="next" href="../23-maildev/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Keycloak Identity Provider - Infrastructure Engineering Hub</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#keycloak-centralized-identity-access-management" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-header__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Infrastructure Engineering Hub
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Keycloak Identity Provider
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-nav__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Infrastructure Engineering Hub
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-index/01-infrastructure-engineering-hub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-workspace-config/10-workspace-config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workspace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Base Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../21-envoy-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Envoy Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keycloak
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authentication-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorization-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authorization Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-realm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single Realm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rbac-authorization-nist-core-hierarchical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Authorization (NIST Core + Hierarchical)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confidential-client-with-backchannel-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confidential Client with Backchannel Separation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smtp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SMTP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#realm-import-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Realm Import Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compose-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compose Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#realm-json-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Realm JSON Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#startup-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Startup Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#realm-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Realm Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Realm Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-import-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Import Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#realm-template-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Realm Template Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#realm-template-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Realm Template Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dev-vs-prod-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev vs Prod Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prod
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#realm-wont-import-on-restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Realm won't import on restart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-fails-to-start-address-already-in-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keycloak fails to start — "Address already in use"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#client-secret-mismatch-after-reimport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client secret mismatch after reimport
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dev-user-cant-log-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev user can't log in
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#django-allauth-oidc-sync-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Django allauth OIDC sync fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-works-but-user-has-no-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login works but user has no permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23-maildev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MailDev
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../30-django-service-template/30-django-service-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Django Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Kubernetes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../40-kubernetes/40-oci-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OCI Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../40-kubernetes/41-k8s-default-resources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    K8s Default Resources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#authentication-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authentication Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#authorization-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Authorization Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#single-realm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Single Realm
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rbac-authorization-nist-core-hierarchical" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RBAC Authorization (NIST Core + Hierarchical)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#confidential-client-with-backchannel-separation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Confidential Client with Backchannel Separation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#smtp" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        SMTP
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#realm-import-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Realm Import Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#compose-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compose Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#realm-json-environment-variables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Realm JSON Environment Variables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#startup-flags" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Startup Flags
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#realm-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Realm Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Realm Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-import-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Import Works
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#realm-template-best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Realm Template Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#realm-template-maintenance" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Realm Template Maintenance
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dev-vs-prod-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev vs Prod Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prod
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#realm-wont-import-on-restart" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Realm won't import on restart
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-fails-to-start-address-already-in-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keycloak fails to start — "Address already in use"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#client-secret-mismatch-after-reimport" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Client secret mismatch after reimport
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dev-user-cant-log-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev user can't log in
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#django-allauth-oidc-sync-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Django allauth OIDC sync fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#login-works-but-user-has-no-permissions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Login works but user has no permissions
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="keycloak-centralized-identity-access-management">Keycloak — Centralized Identity &amp; Access Management</h1>
+<p>Single source of truth for authentication, authorization, and user lifecycle management across all platform services. OIDC-based SSO with RBAC following NIST Core and Hierarchical principles (Levels 1–2), synced to Django services via django-allauth.</p>
+<blockquote>
+<p>📍 <strong>Type:</strong> Service Reference<br>
+👤 <strong>Owner:</strong> Kenan Lalic<br>
+🎯 <strong>Outcome:</strong> Understand the Keycloak OIDC Setup<br></p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="./#overview">Overview</a></li>
+<li><a href="./#architecture">Architecture</a></li>
+<li><a href="./#design-decisions">Design Decisions</a></li>
+<li><a href="./#dependencies">Dependencies</a></li>
+<li><a href="./#configuration">Configuration</a></li>
+<li><a href="./#realm-management">Realm Management</a></li>
+<li><a href="./#realm-template-maintenance">Realm Template Maintenance</a></li>
+<li><a href="./#dev-vs-prod-differences">Dev vs Prod Differences</a></li>
+<li><a href="./#monitoring">Monitoring</a></li>
+<li><a href="./#runbooks">Runbooks</a></li>
+<li><a href="./#adrs">ADRs</a></li>
+<li><a href="./#references">References</a></li>
+</ul>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>Keycloak serves as the platform's centralized identity provider. All Django services authenticate through OIDC using <strong>django-allauth</strong> with the Keycloak provider backend.</p>
+<h3 id="authentication-flow">Authentication Flow</h3>
+<p>The browser initiates the OIDC authorization code flow through Envoy Gateway to Keycloak. After the user authenticates, Keycloak redirects back with an authorization code. Django's <code>CustomSocialAccountAdapter</code> (via django-allauth) exchanges this code for tokens over the internal backchannel (<code>http://keycloak.local:8080</code>), never routing token exchange through the public gateway. On every login, <code>pre_social_login()</code> syncs the user profile and Keycloak group memberships from the OIDC claims into Django's local user model. For new users, django-allauth auto-creates the Django user and links the Keycloak social account. Existing Django users with a matching email are auto-linked on first Keycloak login.</p>
+<p>Local Django login is restricted to superusers only via <code>AdminOnlyLocalAuthMiddleware</code> — regular users must authenticate through Keycloak SSO. This preserves emergency admin access when Keycloak is unavailable.</p>
+<blockquote>
+<p><strong>Token validation:</strong> django-allauth validates ID tokens using Keycloak's JWKS endpoint
+(<code>/auth/realms/myrealm/protocol/openid-connect/certs</code>). Public keys are fetched once and
+cached locally — no per-request introspection call. Access tokens are validated server-side
+and never reach the browser.</p>
+<p>For scenarios requiring immediate token revocation (e.g., regulated FS), shorten
+<code>accessTokenLifespan</code> in the realm settings (default: 5 minutes) and enable Keycloak's
+Revocation Policy rather than adding per-request introspection overhead.</p>
+</blockquote>
+<h3 id="authorization-flow">Authorization Flow</h3>
+<p>Authorization follows a <strong>Role-Based Access Control (RBAC)</strong> model based on <a href="https://csrc.nist.gov/projects/role-based-access-control">NIST RBAC</a> Core and Hierarchical principles (Levels 1–2). This provides users, roles, permissions, user-role assignment, and role inheritance — but does not currently implement Constrained RBAC (separation of duty enforcement) or Symmetric RBAC (role-permission review/audit). Keycloak is the source of truth for user and group management. Group memberships are embedded into OIDC tokens via a custom group membership protocol mapper on the <code>myclient</code> client. On the Django side, <code>keycloak_sync_groups</code> syncs these Keycloak groups into Django groups and emits a <code>user_groups_synced</code> signal. The authorization app catches this signal and updates Django's <code>is_staff</code> and <code>is_superuser</code> flags based on the role definitions mapped via <code>KEYCLOAK_GROUP_TO_ROLE</code>. The <code>RBACPermissionBackend</code> resolves permissions (including role inheritance) from these group-to-role mappings, and <code>PermissionContextMiddleware</code> attaches <code>user_roles</code>, <code>user_permissions</code>, and <code>primary_role</code> to every authenticated request for use in views and templates.</p>
+<p>This decoupled approach keeps each service independently deployable — Keycloak manages <em>who belongs to which groups</em>, Django maps groups to roles and decides <em>what those roles can do</em>.</p>
+<p>A single realm (<code>myrealm</code>) holds all users, groups, and client configurations for the current environment. The master realm remains at defaults and is used exclusively for Keycloak admin console access.</p>
+<p>The service runs behind Envoy Gateway in both dev and prod. All auth flows (login, logout, token exchange) route through the gateway at the <code>/auth</code> path prefix.</p>
+<hr />
+<h2 id="architecture">Architecture</h2>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────────┐
+│                           INTERNET                               │
+└──────────────────────────────┬───────────────────────────────────┘
+                               │
+                               │ HTTPS (443)
+                               ▼
+                    ┌─────────────────────┐
+                    │    Ngrok Tunnel     │  (dev only)
+                    │  Public URL → Local │
+                    └──────────┬──────────┘
+                               │
+                               ▼
+                    ┌─────────────────────┐
+                    │   Envoy Gateway     │
+                    │  ─────────────────  │
+                    │  TLS Termination    │
+                    │  Path-Based Routing │
+                    │  X-Forwarded-*      │
+                    └──────────┬──────────┘
+                               │
+          ┌────────────────────┼───────────────────┐
+          │                    │                   │
+          ▼                    ▼                   ▼
+   ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+   │  Keycloak    │    │  Django      │    │  Django      │
+   │  ─────────── │    │  Service A   │    │  Service N   │
+   │  OIDC / SSO  │◄───│  allauth     │    │  allauth     │
+   │  RBAC Roles  │    │  RBAC sync   │    │  RBAC sync   │
+   │  User Mgmt   │    │  DRF + htmx  │    │  DRF + htmx  │
+   └──────┬───────┘    └──────┬───────┘    └──────┬───────┘
+          │                   │                   │
+          │         ┌─────────┴───────────────────┘
+          │         │
+          ▼         ▼
+   ┌──────────────────────┐    ┌───────────────┐
+   │  PostgreSQL          │    │  MailDev      │
+   │  ──────────────────  │    │  ──────────   │
+   │  Shared Instance     │    │  SMTP Capture │
+   │  Per-Service Schemas │    │  Web UI       │
+   └──────────────────────┘    └───────────────┘
+</code></pre></div>
+<p>The <code>◄───</code> arrow between Django and Keycloak represents the internal backchannel: Django talks to Keycloak directly over the Docker bridge network (<code>http://keycloak.local:8080</code>) for token validation, user info, and OIDC discovery — never routing through the public gateway.</p>
+<hr />
+<h2 id="design-decisions">Design Decisions</h2>
+<h3 id="single-realm">Single Realm</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Dev</th>
+<th>Prod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Single realm (<code>myrealm</code>)</td>
+<td>Single realm per environment</td>
+</tr>
+</tbody>
+</table>
+<p>One realm per environment is the right default for most applications. It provides a shared user pool across all services, straightforward token management, and a single place to configure clients and roles. Additional services register as new clients within the same realm — no restructuring needed.</p>
+<p><strong>When to use multiple realms:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Scenario</th>
+<th>Pattern</th>
+<th>Trigger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multi-environment</td>
+<td>One realm per env (<code>dev</code>, <code>staging</code>, <code>prod</code>)</td>
+<td>Always — environments must never share a realm</td>
+</tr>
+<tr>
+<td>Multi-tenant SaaS</td>
+<td>One realm per tenant</td>
+<td>Hard regulatory isolation (GDPR data residency, SOC2 tenant separation)</td>
+</tr>
+<tr>
+<td>Separate product lines</td>
+<td>One realm per product</td>
+<td>Distinct user pools with no SSO requirement between products</td>
+</tr>
+<tr>
+<td>White-label B2B</td>
+<td>One realm per client org</td>
+<td>Client requires their own branding, IdP federation, or user admin</td>
+</tr>
+</tbody>
+</table>
+<p>The current single-realm template scales to all the above. Realm name and client IDs are Copier variables — generating a service for a new tenant is <code>copier copy</code> with a different <code>keycloak_realm</code> value. The infrastructure wiring (Envoy routes, PostgreSQL schemas) follows the same pattern already documented.</p>
+<blockquote>
+<p>Multi-realm production deployments introduce operational overhead: separate admin consoles, separate token endpoints, no cross-realm SSO without identity brokering. Use only when isolation requirements justify it.</p>
+</blockquote>
+<h3 id="rbac-authorization-nist-core-hierarchical">RBAC Authorization (NIST Core + Hierarchical)</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Dev</th>
+<th>Prod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Keycloak roles → OIDC claims → Django sync</td>
+<td>Same, with stricter role definitions</td>
+</tr>
+</tbody>
+</table>
+<p>Authorization follows <a href="https://csrc.nist.gov/projects/role-based-access-control">NIST RBAC</a> at the <strong>Core and Hierarchical levels (Levels 1–2)</strong>: users are assigned to roles, roles carry permissions, and senior roles inherit permissions from junior roles. Constrained RBAC (Level 3 — static/dynamic separation of duty) and Symmetric RBAC (Level 4 — role-permission review and audit) are not currently implemented. Keycloak is the single source of truth for user and group management. Group memberships are embedded into OIDC tokens via a custom protocol mapper and synced into Django groups on every login via django-allauth. The authorization app maps these groups to internal roles via <code>KEYCLOAK_GROUP_TO_ROLE</code>, resolves permissions (including inheritance), and updates Django's <code>is_staff</code>/<code>is_superuser</code> flags accordingly. This decouples identity management from application logic — services consume group claims without needing to know how roles are defined or managed, making the architecture microservice-ready from day one.</p>
+<h3 id="confidential-client-with-backchannel-separation">Confidential Client with Backchannel Separation</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Dev</th>
+<th>Prod (single-host VPS)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Confidential client + <code>KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true</code></td>
+<td>Confidential client + explicit <code>KC_HOSTNAME</code></td>
+</tr>
+</tbody>
+</table>
+<p>Django is a server-side application, not a SPA — it can securely store a client secret, so there's no reason to use a public client. The confidential client adds defense-in-depth: even if an authorization code is intercepted, it's useless without the secret.</p>
+<p><strong>Dev environment</strong> follows industry best practice for local Docker development: Envoy Gateway terminates TLS (via ngrok's public URL), while Django communicates with Keycloak directly over the Docker bridge network at <code>http://keycloak.local:8080/auth</code>. <code>KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true</code> allows Keycloak to accept requests on the internal hostname while the browser uses the ngrok hostname — cleanly separating the public-facing path from the service-to-service backchannel. No token, secret, or credential ever leaves the host machine.</p>
+<p><strong>Production on a single-host VPS</strong> maintains the same proven architecture: Envoy Gateway terminates public TLS using Let's Encrypt certificates, and all internal communication (both Envoy → Keycloak and Django → Keycloak) runs plain HTTP over the Docker bridge network. This is the standard and correct pattern for single-host deployments — the Docker bridge is a private, host-local network with no external exposure. Production hardens this with <code>KC_HOSTNAME=https://${DOMAIN}/auth</code> for strict issuer validation, replacing dev's permissive <code>--hostname-strict=false</code>.</p>
+<p><strong>Scaling consideration (multi-node / k8s):</strong> The direct backchannel carries the client secret and returns access/refresh tokens — the most sensitive exchange in the OIDC flow. On a single host this is inherently protected. In a multi-node Kubernetes deployment where pods may reside on different nodes, this traffic would cross the cluster network unencrypted. At that point, backchannel encryption becomes a requirement — via service mesh with automatic mTLS (Istio, Linkerd) or Keycloak-native TLS on the backchannel listener.</p>
+<h3 id="smtp">SMTP</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Dev</th>
+<th>Prod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>MailDev (catches all emails locally)</td>
+<td>Real SMTP provider</td>
+</tr>
+</tbody>
+</table>
+<p>MailDev provides a local web UI to inspect verification and password reset emails without sending anything externally. Production uses a properly configured SMTP relay.</p>
+<h3 id="realm-import-strategy">Realm Import Strategy</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Dev</th>
+<th>Prod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td><code>--import-realm</code> at startup</td>
+<td><code>keycloak-config-cli</code> or Terraform</td>
+</tr>
+</tbody>
+</table>
+<p>Three approaches exist for provisioning Keycloak realms, ranked by complexity:</p>
+<ol>
+<li>
+<p><strong><code>--import-realm</code> at startup</strong> — Keycloak reads <code>.json</code> files from <code>/opt/keycloak/data/import/</code> on boot. Creates realms that don't exist, silently skips those that do. Zero update capability — changes require <code>docker compose down -v</code>. This is our dev choice for simplicity. <a href="https://www.keycloak.org/server/importExport">Official docs</a></p>
+</li>
+<li>
+<p><strong>Admin REST API sidecar</strong> — A separate container waits for Keycloak health, then hits the Admin API to create/update realms, clients, users independently. Full CRUD control but more compose complexity. <a href="https://www.keycloak.org/docs-api/latest/rest-api/index.html">Admin REST API docs</a></p>
+</li>
+<li>
+<p><strong><code>keycloak-config-cli</code> (adorsys)</strong> — Declarative, idempotent configuration-as-code via the Admin API. Tracks diffs, supports variable substitution, runs as a sidecar. The production-grade choice when incremental updates matter. <a href="https://github.com/adorsys/keycloak-config-cli">GitHub</a></p>
+</li>
+</ol>
+<p>We use option 1 for dev because it requires zero additional services and our realm template is version-controlled. For production, option 3 is the recommended path.</p>
+<hr />
+<h2 id="dependencies">Dependencies</h2>
+<table>
+<thead>
+<tr>
+<th>Dependency</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PostgreSQL</td>
+<td>Database</td>
+<td>Keycloak persistence (schema: <code>keycloak</code>)</td>
+</tr>
+<tr>
+<td>Envoy Gateway</td>
+<td>Proxy</td>
+<td>TLS termination, path routing, X-Forwarded-*</td>
+</tr>
+<tr>
+<td>MailDev</td>
+<td>Dev tool</td>
+<td>Catches email verification/reset emails</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="configuration">Configuration</h2>
+<h3 id="compose-environment-variables">Compose Environment Variables</h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>KC_BOOTSTRAP_ADMIN_USERNAME</code></td>
+<td><code>admin</code></td>
+<td>Admin console username. Replaces the deprecated <code>KEYCLOAK_ADMIN</code> — the old name still works in 26.0.x but will be removed.</td>
+</tr>
+<tr>
+<td><code>KC_BOOTSTRAP_ADMIN_PASSWORD</code></td>
+<td><code>admin</code></td>
+<td>Admin console password. Same deprecation applies. Set once on first boot; changing it later has no effect unless the database is wiped.</td>
+</tr>
+<tr>
+<td><code>KC_DB_URL</code></td>
+<td>—</td>
+<td>JDBC PostgreSQL connection string (<code>jdbc:postgresql://db:5432/keycloak</code>). Uses the internal Docker network hostname, not <code>localhost</code>.</td>
+</tr>
+<tr>
+<td><code>KC_DB_USERNAME</code></td>
+<td><code>postgres</code></td>
+<td>Database user. Shared with other services via the main <code>.env</code> to keep credentials in one place.</td>
+</tr>
+<tr>
+<td><code>KC_DB_PASSWORD</code></td>
+<td>—</td>
+<td>Database password. Pulled from the main <code>.env</code> (<code>POSTGRES_PASSWORD</code>). Never hardcoded in compose.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="realm-json-environment-variables">Realm JSON Environment Variables</h3>
+<p>These are substituted by Keycloak at import time into <code>myrealm.json</code> using <code>${VAR}</code> syntax. This allows the same realm template to work across different developer machines or CI environments without modifying the committed file.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DEV_ADMIN_PASSWORD</code></td>
+<td><code>admin</code></td>
+<td>Password for the <code>superuser</code> dev-admin user. Separated from other users so admins can use a different password if needed.</td>
+</tr>
+<tr>
+<td><code>DEV_USER_PASSWORD</code></td>
+<td><code>password</code></td>
+<td>Default password for all non-admin dev users. Keeps the template DRY.</td>
+</tr>
+<tr>
+<td><code>KEYCLOAK_CLIENT_SECRET</code></td>
+<td><code>my-client-secret</code></td>
+<td>OIDC client secret for <code>myclient</code>. Must match what Django's <code>.env</code> expects — a mismatch is the most common cause of login failures after reimport.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="startup-flags">Startup Flags</h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>--http-enabled=true</code></td>
+<td>Allows HTTP connections. Safe because TLS is terminated at Envoy Gateway, not at Keycloak. In production, Keycloak sits behind the gateway and never receives external traffic directly.</td>
+</tr>
+<tr>
+<td><code>--proxy-headers=xforwarded</code></td>
+<td>Trusts <code>X-Forwarded-*</code> headers from Envoy for correct redirect URIs and HTTPS detection. Without this, Keycloak would generate HTTP callback URLs even though the client sees HTTPS.</td>
+</tr>
+<tr>
+<td><code>--http-relative-path=/auth</code></td>
+<td>Serves Keycloak at the <code>/auth</code> prefix. Matches Envoy's path-based routing rules so all auth endpoints live under a single path.</td>
+</tr>
+<tr>
+<td><code>--hostname-strict=false</code></td>
+<td>Accepts any hostname (dev only). In production, replace with <code>KC_HOSTNAME=https://${DOMAIN}/auth</code> to lock down the issuer URL.</td>
+</tr>
+<tr>
+<td><code>--import-realm</code></td>
+<td>Auto-imports realm JSON on first start from <code>/opt/keycloak/data/import/</code>. Silently skips if the realm already exists. See <a href="./#realm-import-strategy">Design Decisions → Realm Import Strategy</a> for alternatives.</td>
+</tr>
+<tr>
+<td><code>--health-enabled=true</code></td>
+<td>Enables <code>/health/ready</code> on the management port (9000, not 8080). Required for compose health checks and monitoring.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="realm-management">Realm Management</h2>
+<h3 id="how-import-works">How Import Works</h3>
+<p>On first <code>docker compose up</code>, Keycloak reads <code>myrealm.json</code> from the mounted import directory, creates the realm with all roles, clients, and users. On every subsequent start, the realm already exists and the import is silently skipped — no updates are applied, no data is overwritten.</p>
+<p>To apply changes to the realm configuration:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>-v<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>This destroys the database volume and reimports from scratch. Any runtime changes (users created via the admin console, password resets, session data) are lost.</p>
+<h3 id="realm-template-best-practices">Realm Template Best Practices</h3>
+<p><strong>Keep the template minimal.</strong> Only include what you've customized. Keycloak auto-creates default clients (<code>account</code>, <code>admin-cli</code>, <code>broker</code>, <code>realm-management</code>, <code>security-admin-console</code>), default client scopes, default auth flows, and key providers. Including these adds thousands of lines of noise and creates merge conflicts for no benefit.</p>
+<p><strong>Use plaintext passwords.</strong> Write <code>"credentials": [{"type": "password", "value": "mypass"}]</code> — Keycloak hashes automatically on import. Exported hashed credentials are unreadable, version-fragile, and defeat the purpose of a human-maintainable template.</p>
+<p><strong>Use <code>${ENV_VAR}</code> substitution</strong> for any value that differs across environments or developer machines. Keycloak resolves these from environment variables during import. Fixed in 26.0.1 (was broken in 26.0.0, issue #33578).</p>
+<p><strong>Name the file <code>&lt;realm&gt;-realm.json</code>.</strong> A known Keycloak 26.x bug with hyphenated filenames that don't follow this convention can cause "Session not bound" errors (issue #36284).</p>
+<p><strong>One file per realm, users inline.</strong> The multi-file split (<code>&lt;realm&gt;-users-0.json</code>) exists for exports with thousands of users. For a hand-crafted dev template, keep everything in one file.</p>
+<p><strong>No master realm file.</strong> <code>--import-realm</code> cannot import the master realm — it already exists before import runs. Configure master via <code>KC_BOOTSTRAP_ADMIN_*</code> env vars.</p>
+<hr />
+<h2 id="realm-template-maintenance">Realm Template Maintenance</h2>
+<p>The realm JSON is a hand-crafted, version-controlled template — not an export artifact. Treat it like infrastructure-as-code: changes go through pull requests, and the template stays minimal.</p>
+<p><strong>When to edit the template directly:</strong> Adding or removing dev users, changing client configuration, updating role definitions, adjusting redirect URIs. These are all changes to the <em>desired state</em> of the dev environment.</p>
+<p><strong>When to export from the admin console:</strong> If you've prototyped a complex change (auth flow, protocol mapper, identity provider) in the UI and need to capture the exact JSON structure. Use <code>kc.sh export</code> (never the admin console's partial export — it masks secrets and omits users), then cherry-pick only the relevant section into your template. Don't paste the full export.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Export for reference (not for direct use as template)</span>
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>keycloak<span class="w"> </span>/opt/keycloak/bin/kc.sh<span class="w"> </span><span class="nb">export</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--dir<span class="w"> </span>/opt/keycloak/data/export<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--realm<span class="w"> </span>myrealm<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--users<span class="w"> </span>realm_file
+</code></pre></div>
+<blockquote>
+<p><strong>Note:</strong> <code>kc.sh export</code> may fail with "Address already in use" on a live server. Run it in a separate container sharing the same database, or stop the server first.</p>
+</blockquote>
+<hr />
+<h2 id="dev-vs-prod-differences">Dev vs Prod Differences</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Dev</th>
+<th>Prod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Realm provisioning</td>
+<td><code>--import-realm</code> at startup</td>
+<td><code>--import-realm</code> at startup (optional: <code>keycloak-config-cli</code> or Terraform)</td>
+</tr>
+<tr>
+<td>Client secrets</td>
+<td>Hardcoded / env var in <code>.env</code></td>
+<td>External secret manager (Vault, k8s secrets)</td>
+</tr>
+<tr>
+<td>Hostname</td>
+<td><code>--hostname-strict=false</code></td>
+<td><code>KC_HOSTNAME=https://${DOMAIN}/auth</code></td>
+</tr>
+<tr>
+<td>Backchannel</td>
+<td><code>KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true</code></td>
+<td><code>KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true</code> (revisit for multi-node k8s)</td>
+</tr>
+<tr>
+<td>User passwords</td>
+<td>Plaintext in realm JSON</td>
+<td>No users in JSON — self-registration or federated</td>
+</tr>
+<tr>
+<td>Image</td>
+<td>Stock <code>quay.io/keycloak/keycloak:26.0.4</code></td>
+<td>Custom image with <code>--optimized</code> build</td>
+</tr>
+<tr>
+<td>Admin credentials</td>
+<td><code>KC_BOOTSTRAP_ADMIN_*</code> in <code>.env</code></td>
+<td>Injected from secret manager, rotated</td>
+</tr>
+<tr>
+<td>Health endpoint</td>
+<td>Port 9000, bash TCP redirect</td>
+<td>Port 9000, wired to k8s liveness/readiness probes</td>
+</tr>
+<tr>
+<td>SMTP</td>
+<td>MailDev</td>
+<td>Real SMTP provider</td>
+</tr>
+<tr>
+<td>TLS</td>
+<td>Let's Encrypt via ngrok</td>
+<td>Let's Encrypt certs at Envoy Gateway</td>
+</tr>
+<tr>
+<td>Internal transport</td>
+<td>Plain HTTP over Docker bridge (single host)</td>
+<td>Plain HTTP over Docker bridge (single host, revisit for multi-node k8s)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Production image:</strong> the <code>--optimized</code> build flag pre-configures the Keycloak server and reduces startup time. Adjust if your prod Dockerfile differs.</p>
+</blockquote>
+<hr />
+<h2 id="monitoring">Monitoring</h2>
+<h3 id="dev">Dev</h3>
+<ul>
+<li><strong>Logs:</strong> <code>docker compose logs -f keycloak</code> — set <code>KC_LOG_LEVEL=INFO</code> (or <code>DEBUG</code> for troubleshooting auth flows)</li>
+<li><strong>Admin Console:</strong> Visual inspection of sessions, events, and login errors at <code>https://${DOMAIN}/auth/admin/</code></li>
+<li><strong>MailDev:</strong> Inspect verification and reset emails at the MailDev web UI</li>
+</ul>
+<h3 id="prod">Prod</h3>
+<ul>
+<li><strong>Healthcheck:</strong> <code>GET :9000/health/ready</code> wired to k8s liveness and readiness probes</li>
+<li><strong>Metrics:</strong> Enable with <code>KC_METRICS_ENABLED=true</code>, scrape Prometheus metrics from <code>:9000/metrics</code></li>
+<li><strong>Key metrics:</strong> Login success/failure rate, token issuance rate, active sessions, cache hit ratios</li>
+<li><strong>Dashboards:</strong> Grafana dashboard (link TBD)</li>
+<li><strong>Alerts:</strong> Alert rules for failed logins spike, health endpoint down, DB connection pool exhaustion (configuration TBD)</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Prometheus and Grafana are not yet deployed on the K8s cluster. Deployment status is tracked
+in <a href="../../40-kubernetes/41-k8s-default-resources/#what-gets-deployed">K8s Default Resources — What Gets Deployed</a>.
+Until the monitoring stack is live, use <code>docker compose logs -f keycloak</code> and the
+Keycloak Admin Console for operational visibility</p>
+</div>
+<hr />
+<h2 id="runbooks">Runbooks</h2>
+<h3 id="realm-wont-import-on-restart">Realm won't import on restart</h3>
+<p><strong>Expected behavior.</strong> <code>--import-realm</code> skips existing realms. To force reimport: <code>docker compose down -v &amp;&amp; docker compose up -d</code>. This destroys the database volume.</p>
+<h3 id="keycloak-fails-to-start-address-already-in-use">Keycloak fails to start — "Address already in use"</h3>
+<p>Another container or previous instance is holding port 8080. Check with <code>docker ps -a | grep keycloak</code> and kill orphans with <code>docker compose down --remove-orphans</code>.</p>
+<h3 id="client-secret-mismatch-after-reimport">Client secret mismatch after reimport</h3>
+<p>Verify <code>KEYCLOAK_CLIENT_SECRET</code> in <code>.env</code> matches what Django's <code>.env</code> expects. After reimport, the value from the realm JSON (with env var substitution) is what Keycloak uses.</p>
+<h3 id="dev-user-cant-log-in">Dev user can't log in</h3>
+<p>Check the user exists in Admin Console → Users. If the realm was reimported, all runtime changes (password resets, users created via UI) are lost. Only users defined in the realm JSON survive reimport.</p>
+<h3 id="django-allauth-oidc-sync-fails">Django allauth OIDC sync fails</h3>
+<p>Verify Keycloak is reachable internally at <code>http://keycloak.local:8080/auth</code>. Check that <code>KC_HOSTNAME_BACKCHANNEL_DYNAMIC=true</code> is set. Confirm the client secret matches on both sides. Check Django logs for <code>SocialLogin</code> errors — a 401 from Keycloak usually means a secret mismatch, a connection refused means the internal hostname isn't resolving.</p>
+<h3 id="login-works-but-user-has-no-permissions">Login works but user has no permissions</h3>
+<p>Keycloak groups are synced on login, but the authorization app's <code>KEYCLOAK_GROUP_TO_ROLE</code> mapping doesn't include the user's group. Check the mapping in <code>apps/authorization/constants.py</code>. Verify the user's Keycloak groups in the Admin Console match the expected group names. Log out and log back in to trigger a fresh sync.</p>
+<hr />
+<h2 id="adrs">ADRs</h2>
+<ul>
+<li><strong>ADR: Single realm per environment</strong> — Shared user pool, simplified token management, scales by adding clients within the realm. Multi-realm is a documented upgrade path for hard isolation requirements (regulatory, multi-tenant, white-label) — not a default starting point.</li>
+<li><strong>ADR: NIST RBAC (Core + Hierarchical) over flat group-based auth</strong> — Keycloak as source of truth for user-role assignments, synced to services via OIDC claims, proper decoupling for microservice architecture. Constrained and Symmetric RBAC levels remain future options.</li>
+<li><strong>ADR: Confidential client with backchannel separation</strong> — Server-side Django app stores secret securely; dynamic backchannel allows internal/external URL separation without hostname mismatch errors. Multi-node k8s requires encrypted backchannel (service mesh mTLS or Keycloak-native TLS).</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://www.keycloak.org/docs/latest/server_admin/">Keycloak Server Admin Guide</a></li>
+<li><a href="https://www.keycloak.org/server/importExport">Keycloak Import/Export Documentation</a></li>
+<li><a href="https://www.keycloak.org/docs-api/latest/rest-api/index.html">Keycloak Admin REST API</a></li>
+<li><a href="https://github.com/adorsys/keycloak-config-cli">keycloak-config-cli (adorsys)</a></li>
+<li><a href="https://csrc.nist.gov/projects/role-based-access-control">NIST RBAC Project</a></li>
+<li><a href="https://docs.allauth.org/en/latest/socialaccount/providers/keycloak.html">django-allauth Keycloak Provider</a></li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

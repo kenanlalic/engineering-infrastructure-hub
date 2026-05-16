@@ -1,0 +1,2970 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://kenanlalic.github.io/engineering-infrastructure-hub/40-kubernetes/41-k8s-default-resources/">
+      
+      
+        <link rel="prev" href="../40-oci-infrastructure/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>K8s Default Resources - Infrastructure Engineering Hub</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#k8s-default-resources-platform-layer" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-header__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Infrastructure Engineering Hub
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              K8s Default Resources
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-nav__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Infrastructure Engineering Hub
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-index/01-infrastructure-engineering-hub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-workspace-config/10-workspace-config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workspace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Base Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/20-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/21-envoy-gateway/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Envoy Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/22-keycloak-oidc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../20-base-infrastructure/23-maildev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MailDev
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../30-django-service-template/30-django-service-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Django Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Kubernetes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../40-oci-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OCI Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    K8s Default Resources
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    K8s Default Resources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-deployed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Gets Deployed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repository-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auth-current-and-planned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auth — Current and Planned
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#app-of-apps-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App-of-Apps Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#envoy-gateway-gatewayclass-and-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Envoy Gateway — GatewayClass and Gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cnpg-platform-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CNPG — Platform Database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#argocd-application-for-cnpg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ArgoCD Application for CNPG
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gitops-first-bootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitOps-First Bootstrap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sealed-secrets-over-external-secrets-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sealed Secrets over External Secrets Operator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serverinsecuretrue-for-argocd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        server.insecure=true for ArgoCD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-gateway-basic-auth-for-argocd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No Gateway Basic Auth for ArgoCD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cnpg-over-helm-managed-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CNPG over Helm-managed PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vendored-manifests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vendored Manifests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-kubernetes-network-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No Kubernetes Network Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#version-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oci-always-free-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCI Always Free Constraints
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bootstrap-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bootstrap Sequence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bootstrap Sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#primary-path-gitops-first-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary Path — GitOps-First (recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-path-gateway-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative Path — Gateway-First
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-setup-cnpg-oci-native-block-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Setup — CNPG + OCI Native Block Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-a-service-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a Service Database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-cnpg-oci-native-block-storage-current" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A — CNPG + OCI Native Block Storage (current)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-cnpg-longhorn-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B — CNPG + Longhorn (alternative)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-oci-autonomous-database-free-oracle-dialect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option C — OCI Autonomous Database (free, Oracle dialect)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-d-oci-database-with-postgresql-managed-paid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option D — OCI Database with PostgreSQL (managed, paid)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decision-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-a-django-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a Django Service
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dev-vs-prod-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev vs Prod Differences
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dev vs Prod Differences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#switching-to-a-real-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switching to a Real Domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sealed-secrets-controller-not-ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sealed Secrets controller not ready
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubeseal-fails-controller-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kubeseal fails — controller not found
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#envoy-gateway-not-programming-no-address" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Envoy Gateway not programming / no address
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#argocd-pods-not-starting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ArgoCD pods not starting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources-landed-in-default-namespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources landed in default namespace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cnpg-cluster-not-ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CNPG cluster not ready
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cnpg-database-unavailable-after-node-drain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CNPG database unavailable after node drain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-teardown-and-reinstall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full teardown and reinstall
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-gets-deployed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Gets Deployed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#repository-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Repository Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#auth-current-and-planned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Auth — Current and Planned
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#app-of-apps-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        App-of-Apps Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#envoy-gateway-gatewayclass-and-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Envoy Gateway — GatewayClass and Gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cnpg-platform-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CNPG — Platform Database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#argocd-application-for-cnpg" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ArgoCD Application for CNPG
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gitops-first-bootstrap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        GitOps-First Bootstrap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sealed-secrets-over-external-secrets-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sealed Secrets over External Secrets Operator
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#serverinsecuretrue-for-argocd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        server.insecure=true for ArgoCD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-gateway-basic-auth-for-argocd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No Gateway Basic Auth for ArgoCD
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cnpg-over-helm-managed-postgresql" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CNPG over Helm-managed PostgreSQL
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#vendored-manifests" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vendored Manifests
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-kubernetes-network-policies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No Kubernetes Network Policies
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#version-reference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Version Reference
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oci-always-free-constraints" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OCI Always Free Constraints
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bootstrap-sequence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Bootstrap Sequence
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Bootstrap Sequence">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#prerequisites" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prerequisites
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#primary-path-gitops-first-recommended" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Primary Path — GitOps-First (recommended)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative-path-gateway-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative Path — Gateway-First
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#verify" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Verify
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#current-setup-cnpg-oci-native-block-storage" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Current Setup — CNPG + OCI Native Block Storage
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#adding-a-service-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a Service Database
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#database-options" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Database Options
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Database Options">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#option-a-cnpg-oci-native-block-storage-current" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A — CNPG + OCI Native Block Storage (current)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-cnpg-longhorn-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B — CNPG + Longhorn (alternative)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-c-oci-autonomous-database-free-oracle-dialect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option C — OCI Autonomous Database (free, Oracle dialect)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-d-oci-database-with-postgresql-managed-paid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option D — OCI Database with PostgreSQL (managed, paid)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#decision-summary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Decision Summary
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adding-a-django-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Adding a Django Service
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dev-vs-prod-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev vs Prod Differences
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dev vs Prod Differences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#switching-to-a-real-domain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Switching to a Real Domain
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sealed-secrets-controller-not-ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sealed Secrets controller not ready
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#kubeseal-fails-controller-not-found" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        kubeseal fails — controller not found
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#envoy-gateway-not-programming-no-address" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Envoy Gateway not programming / no address
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#argocd-pods-not-starting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ArgoCD pods not starting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resources-landed-in-default-namespace" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resources landed in default namespace
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cnpg-cluster-not-ready" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CNPG cluster not ready
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cnpg-database-unavailable-after-node-drain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        CNPG database unavailable after node drain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#full-teardown-and-reinstall" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Full teardown and reinstall
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="k8s-default-resources-platform-layer">K8s Default Resources — Platform Layer</h1>
+<p>ArgoCD-managed platform layer for the OCI Free Tier Kubernetes cluster. Sealed Secrets, Envoy Gateway, cert-manager, CloudNativePG, Keycloak, and application workloads — all managed via GitOps using the app-of-apps pattern.</p>
+<blockquote>
+<p>📍 <strong>Type:</strong> Service Reference<br>
+👤 <strong>Owner:</strong> Kenan Lalic<br>
+🎯 <strong>Outcome:</strong> Understand the K8s platform layer, its bootstrap sequence, and how services are onboarded</p>
+</blockquote>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>ARM architecture only (<code>aarch64</code>). See <a href="../40-oci-infrastructure/#arm64-only">ARM64 constraint</a> for context.</p>
+</div>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="./#overview">Overview</a></li>
+<li><a href="./#architecture">Architecture</a></li>
+<li><a href="./#design-decisions">Design Decisions</a></li>
+<li><a href="./#dependencies">Dependencies</a></li>
+<li><a href="./#configuration">Configuration</a></li>
+<li><a href="./#bootstrap-sequence">Bootstrap Sequence</a></li>
+<li><a href="./#database">Database</a></li>
+<li><a href="./#adding-a-django-service">Adding a Django Service</a></li>
+<li><a href="./#dev-vs-prod-differences">Dev vs Prod Differences</a></li>
+<li><a href="./#runbooks">Runbooks</a></li>
+<li><a href="./#adrs">ADRs</a></li>
+<li><a href="./#references">References</a></li>
+</ul>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>The platform layer is entirely independent from the infrastructure layer. Bring your own GitOps tool, gateway, auth provider, or monitoring stack — nothing in Terraform needs to change.</p>
+<h3 id="what-gets-deployed">What Gets Deployed</h3>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Service</th>
+<th>Status</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Cluster</strong></td>
+<td>Sealed Secrets</td>
+<td>✅ Production</td>
+<td>GitOps-safe secret management</td>
+</tr>
+<tr>
+<td><strong>Cluster</strong></td>
+<td>ArgoCD</td>
+<td>✅ Production</td>
+<td>GitOps controller</td>
+</tr>
+<tr>
+<td><strong>Cluster</strong></td>
+<td>Envoy Gateway</td>
+<td>✅ Production</td>
+<td>Front door — K8s Gateway API</td>
+</tr>
+<tr>
+<td><strong>Cluster</strong></td>
+<td>cert-manager</td>
+<td>✅ Production</td>
+<td>TLS lifecycle, Let's Encrypt</td>
+</tr>
+<tr>
+<td><strong>Cluster</strong></td>
+<td>CloudNativePG (CNPG)</td>
+<td>⚠️ Production (no backup)</td>
+<td>PostgreSQL operator — <code>platform-db</code> cluster, 10 Gi PVC</td>
+</tr>
+<tr>
+<td><strong>Thirdparty</strong></td>
+<td>Keycloak</td>
+<td>🔜 On first service onboard</td>
+<td>OIDC/SSO for all services</td>
+</tr>
+<tr>
+<td><strong>Thirdparty</strong></td>
+<td>Prometheus + Grafana</td>
+<td>🚧 Not yet deployed</td>
+<td>Metrics and alerting</td>
+</tr>
+<tr>
+<td><strong>Owned</strong></td>
+<td>Django Services</td>
+<td>Add per service</td>
+<td>Generated from Copier template</td>
+</tr>
+</tbody>
+</table>
+<h3 id="repository-structure">Repository Structure</h3>
+<div class="highlight"><pre><span></span><code>k8s-default-resources/
+├── argocd-applications/
+│   ├── app-of-apps/            ← root ArgoCD Application (bootstrapped once)
+│   ├── entrypoints/
+│   │   ├── cluster.yaml        ← platform services
+│   │   ├── owned.yaml          ← your workloads (Django services)
+│   │   └── thirdparty.yaml     ← Keycloak, databases
+│   ├── cluster/
+│   │   └── cloudnative-pg.yaml ← CNPG ArgoCD Application
+│   ├── owned/
+│   └── thirdparty/
+├── cluster/
+│   ├── argocd/
+│   ├── cert-manager/
+│   ├── sealed-secrets/
+│   ├── cloudnative-pg/
+│   │   ├── kustomization.yaml           ← operator + cluster resources
+│   │   ├── install-v1.28.0-download.yaml
+│   │   └── cluster/
+│   │       ├── kustomization.yaml
+│   │       ├── cluster.yaml             ← platform-db Cluster CR
+│   │       └── keycloak-database.yaml   ← keycloak Database CR
+│   └── gateways/
+│       ├── gatewayclass.yaml
+│       ├── gateway.yaml
+│       └── envoy-gateway/
+├── credentials/
+│   └── github.ssh/
+└── runbooks/
+    ├── argocd-cleanup.md
+    └── cert-manager-bootstrap.md
+</code></pre></div>
+<h3 id="architecture">Architecture</h3>
+<div class="highlight"><pre><span></span><code>Internet
+    ↓
+OCI Flexible Load Balancer  (1 free — auto-provisioned when Gateway type=LoadBalancer)
+    ↓  HTTPS :443 (TLS terminated — cert-manager + Let&#39;s Encrypt)
+Envoy Gateway v1.7.0        (K8s Gateway API native)
+    ↓  plain HTTP internally
+ArgoCD server v3.3.2        (server.insecure=true — TLS at Gateway boundary)
+    ↓
+Kubernetes cluster          (2 × ARM64 nodes, OCI Always Free)
+    ↓
+App-of-Apps
+    ├── cluster.apps    → Sealed Secrets, ArgoCD, Envoy Gateway, cert-manager, CNPG
+    ├── thirdparty.apps → Keycloak
+    └── owned.apps      → Django services
+</code></pre></div>
+<h3 id="auth-current-and-planned">Auth — Current and Planned</h3>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Auth</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Now</td>
+<td>ArgoCD native admin login</td>
+</tr>
+<tr>
+<td>When first Django service onboards</td>
+<td>Keycloak OIDC — ArgoCD configured as OIDC client</td>
+</tr>
+</tbody>
+</table>
+<p>Keycloak is not part of the bootstrap. It is added as an ArgoCD-managed Application under <code>argocd-applications/thirdparty/</code> when the first Django service is onboarded. See <a href="../../20-base-infrastructure/22-keycloak-oidc/">Keycloak OIDC</a> for the full identity configuration.</p>
+<hr />
+<h2 id="architecture_1">Architecture</h2>
+<h3 id="app-of-apps-pattern">App-of-Apps Pattern</h3>
+<p>The three entrypoints map directly to ownership boundaries:</p>
+<div class="highlight"><pre><span></span><code>argocd-applications/
+├── app-of-apps/
+│   └── applications.yaml     ← creates the three entrypoint Applications
+├── entrypoints/
+│   ├── cluster.yaml          ← owns: cluster/ directory
+│   ├── thirdparty.yaml       ← owns: thirdparty/ directory
+│   └── owned.yaml            ← owns: owned/ directory
+</code></pre></div>
+<p>Every change to a manifest in the watched directories is picked up by ArgoCD within ~3 minutes of a git push.</p>
+<h3 id="envoy-gateway-gatewayclass-and-gateway">Envoy Gateway — GatewayClass and Gateway</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># cluster/gateways/gatewayclass.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway.networking.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">GatewayClass</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eg</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">controllerName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway.envoyproxy.io/gatewayclass-controller</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># cluster/gateways/gateway.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway.networking.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gateway</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eg</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">envoy-gateway-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gatewayClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eg</span>
+<span class="w">  </span><span class="nt">listeners</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HTTP</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">80</span>
+<span class="w">      </span><span class="nt">allowedRoutes</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">namespaces</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">All</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https</span>
+<span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HTTPS</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">443</span>
+<span class="w">      </span><span class="nt">allowedRoutes</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">namespaces</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">from</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">All</span>
+<span class="w">      </span><span class="nt">tls</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terminate</span>
+<span class="w">        </span><span class="nt">certificateRefs</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-tls-cert</span>
+<span class="w">            </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">envoy-gateway-system</span>
+</code></pre></div>
+<p>One Gateway, one OCI Load Balancer (the free allocation). All services route through HTTPRoutes — no additional LoadBalancer services.</p>
+<h3 id="cnpg-platform-database">CNPG — Platform Database</h3>
+<p>The CNPG operator manages PostgreSQL as a Kubernetes-native resource. A single <code>platform-db</code> cluster hosts all platform databases. Individual databases are provisioned as <code>Database</code> CRs without creating additional PVCs.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># cluster/cloudnative-pg/cluster/cluster.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgresql.cnpg.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Cluster</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-db</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cnpg-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">instances</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">imageName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ghcr.io/cloudnative-pg/postgresql:17</span>
+
+<span class="w">  </span><span class="nt">storage</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10Gi</span><span class="w">           </span><span class="c1"># one PVC for the shared cluster</span>
+
+<span class="w">  </span><span class="nt">resources</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">requests</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">250m</span>
+<span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">512Mi</span>
+<span class="w">    </span><span class="nt">limits</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">cpu</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;1&quot;</span>
+<span class="w">      </span><span class="nt">memory</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1Gi</span>
+
+<span class="w">  </span><span class="nt">postgresql</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">parameters</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">max_connections</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;200&quot;</span>
+<span class="w">      </span><span class="nt">shared_buffers</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;128MB&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># cluster/cloudnative-pg/cluster/keycloak-database.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgresql.cnpg.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Database</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cnpg-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak</span>
+<span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak</span>
+<span class="w">  </span><span class="nt">cluster</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-db</span>
+</code></pre></div>
+<p>Adding a new service database is a new <code>Database</code> CR — no new PVC, no new cluster. See <a href="./#adding-a-service-database">Database — Adding a Service Database</a>.</p>
+<h3 id="argocd-application-for-cnpg">ArgoCD Application for CNPG</h3>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argoproj.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Application</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cloudnative-pg</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">argocd</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">project</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">default</span>
+<span class="w">  </span><span class="nt">source</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">repoURL</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">git@github.com:kenanlalic/k8s-default-resources.git</span>
+<span class="w">    </span><span class="nt">targetRevision</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HEAD</span>
+<span class="w">    </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cluster/cloudnative-pg</span>
+<span class="w">  </span><span class="nt">destination</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">server</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://kubernetes.default.svc</span>
+<span class="w">    </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cnpg-system</span>
+<span class="w">  </span><span class="nt">syncPolicy</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">syncOptions</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ServerSideApply=true</span><span class="w">    </span><span class="c1"># required — CNPG CRDs exceed annotation limit</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CreateNamespace=true</span>
+</code></pre></div>
+<hr />
+<h2 id="design-decisions">Design Decisions</h2>
+<h3 id="gitops-first-bootstrap">GitOps-First Bootstrap</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Choice</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Bootstrap order</strong></td>
+<td>ArgoCD first, base infra via GitOps</td>
+<td>Gateway first, then ArgoCD</td>
+</tr>
+</tbody>
+</table>
+<p>ArgoCD is deployed before Envoy Gateway. Base infrastructure deploys as ArgoCD-managed Applications — under GitOps from their first apply. Eliminates the untracked window. See <a href="./#bootstrap-sequence">Bootstrap Sequence</a> for both paths.</p>
+<h3 id="sealed-secrets-over-external-secrets-operator">Sealed Secrets over External Secrets Operator</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Choice</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Secret management</strong></td>
+<td>Sealed Secrets</td>
+<td>External Secrets Operator, Vault</td>
+</tr>
+</tbody>
+</table>
+<p>Sealed Secrets encrypts secrets with the cluster's public key and stores ciphertext in git. Survives ArgoCD reinstall. No external dependency. Vault remains the upgrade path for rotation requirements.</p>
+<h3 id="serverinsecuretrue-for-argocd"><code>server.insecure=true</code> for ArgoCD</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Choice</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ArgoCD TLS</strong></td>
+<td>HTTP internally, TLS at Gateway</td>
+<td>ArgoCD manages its own TLS</td>
+</tr>
+</tbody>
+</table>
+<p>TLS terminated at Envoy Gateway. Consistent with the platform's backchannel pattern. See <a href="../../20-base-infrastructure/22-keycloak-oidc/#confidential-client-with-backchannel-separation">Backchannel Separation</a>.</p>
+<h3 id="no-gateway-basic-auth-for-argocd">No Gateway Basic Auth for ArgoCD</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Choice</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ArgoCD auth</strong></td>
+<td>ArgoCD native login form</td>
+<td>Gateway-level Basic Auth</td>
+</tr>
+</tbody>
+</table>
+<p>ArgoCD is a Single Page Application — each unauthenticated API call re-triggers the browser Basic Auth prompt in a loop. The BasicAuth files are retained as reference for future per-service patterns.</p>
+<h3 id="cnpg-over-helm-managed-postgresql">CNPG over Helm-managed PostgreSQL</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Choice</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>PostgreSQL</strong></td>
+<td>CloudNativePG operator</td>
+<td>Bitnami Helm chart, plain StatefulSet</td>
+</tr>
+</tbody>
+</table>
+<p>CNPG manages PostgreSQL lifecycle, connection health, and the <code>Database</code> CR pattern — one PVC for the shared cluster, individual databases provisioned as CRs without additional storage. Aligns with the per-service schema pattern from Docker Compose. Future upgrade path to HA is a configuration change (<code>instances: 2</code>), not a migration.</p>
+<h3 id="vendored-manifests">Vendored Manifests</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Choice</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Manifests</strong></td>
+<td>Vendored at specific version in git</td>
+<td>Pull from upstream at apply time</td>
+</tr>
+</tbody>
+</table>
+<p>No runtime GitHub dependency. Reproducible. Auditable. Version in filename makes the current version visible without reading the file.</p>
+<h3 id="no-kubernetes-network-policies">No Kubernetes Network Policies</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Choice</th>
+<th>Alternative</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Pod isolation</strong></td>
+<td>No NetworkPolicy — evaluated and not implemented</td>
+<td>Calico / Cilium NetworkPolicy per namespace</td>
+</tr>
+</tbody>
+</table>
+<p>NetworkPolicy was evaluated and rejected for this platform. The reasoning:</p>
+<p>A compromised Django pod already holds all credentials it needs — <code>DATABASE_URL</code>, <code>KEYCLOAK_CLIENT_SECRET</code>, <code>SECRET_KEY</code> — in its environment variables, and has an active connection pool to PostgreSQL. A NetworkPolicy blocking port 5432 prevents new TCP connections but does not invalidate already-open connections, does not prevent credential theft, and does not prevent replay of stolen credentials from outside the cluster. For Python/Django, arbitrary code execution implies environment variable access — the credential-free attack class that NetworkPolicy addresses is effectively theoretical here.</p>
+<p>The effective blast radius control on this platform is PostgreSQL role isolation via CNPG <code>Database</code> CRs: each service has its own database owner role and cannot access other services' data even with a direct connection. That isolation is enforced at the PostgreSQL layer, not the network layer.</p>
+<p>Additionally, OKE uses Flannel CNI by default, which does not enforce NetworkPolicy. Switching to Calico or Cilium is a cluster-level infrastructure change outside the platform layer's scope.</p>
+<p><strong>Tradeoff accepted:</strong> the marginal security improvement of NetworkPolicy on this platform does not justify the CNI change, the per-service policy maintenance burden, or the operational complexity added to a single-developer reference platform.</p>
+<hr />
+<h2 id="dependencies">Dependencies</h2>
+<table>
+<thead>
+<tr>
+<th>Dependency</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OKE cluster</td>
+<td>Infrastructure</td>
+<td><a href="../40-oci-infrastructure/">OCI Infrastructure</a> — must exist before bootstrap</td>
+</tr>
+<tr>
+<td>GitHub repository</td>
+<td>Git</td>
+<td>ArgoCD pulls manifests via SSH deploy key</td>
+</tr>
+<tr>
+<td>Sealed Secrets controller</td>
+<td>In-cluster</td>
+<td>Must be running before any SealedSecret is applied</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="configuration">Configuration</h2>
+<h3 id="version-reference">Version Reference</h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Version</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ArgoCD</td>
+<td>v3.3.2</td>
+<td>Latest stable as of March 2026</td>
+</tr>
+<tr>
+<td>Envoy Gateway</td>
+<td>v1.7.0</td>
+<td>Latest stable as of March 2026</td>
+</tr>
+<tr>
+<td>cert-manager</td>
+<td>v1.19.4</td>
+<td>Latest stable · fixes CVE-2026-24051, CVE-2025-68121</td>
+</tr>
+<tr>
+<td>CloudNativePG</td>
+<td>v1.28.0</td>
+<td>Latest stable as of March 2026</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td>17</td>
+<td>Via <code>ghcr.io/cloudnative-pg/postgresql:17</code> (ARM64 supported)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="oci-always-free-constraints">OCI Always Free Constraints</h3>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Free Limit</th>
+<th>This Setup</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Flexible Load Balancers</td>
+<td>1</td>
+<td>1 — auto-provisioned by Gateway controller</td>
+</tr>
+<tr>
+<td>ARM64 compute</td>
+<td>4 oCPU / 24 GB total</td>
+<td>2 nodes × 2 oCPU / 12 GB</td>
+</tr>
+<tr>
+<td>Block storage</td>
+<td>200 GB total (boot + block combined)</td>
+<td>144 GB boot + ~10 GB CNPG PVC = ~154 GB used</td>
+</tr>
+<tr>
+<td>LB bandwidth</td>
+<td>10 Mbps</td>
+<td>Sufficient for internal tooling</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Do not create additional <code>LoadBalancer</code> services — each provisions a new OCI LB and incurs cost outside the free tier. All services route through the single Gateway via HTTPRoutes.</p>
+</div>
+<hr />
+<h2 id="bootstrap-sequence">Bootstrap Sequence</h2>
+<p>Two paths reach the same end state. Both share the same hard constraints: Sealed Secrets must be first, SSH key must be sealed before ArgoCD can pull from git.</p>
+<p>All commands run inside the <code>aio</code> container:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>aio<span class="w"> </span>/bin/bash
+</code></pre></div>
+<h3 id="prerequisites">Prerequisites</h3>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Command</th>
+<th>Expected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cluster reachable</td>
+<td><code>kubectl get nodes</code></td>
+<td>2 nodes · <code>Ready</code> · <code>arm64</code></td>
+</tr>
+<tr>
+<td>No prior ArgoCD</td>
+<td><code>kubectl get ns argocd</code></td>
+<td><code>Error from server (NotFound)</code></td>
+</tr>
+<tr>
+<td>No prior Envoy Gateway</td>
+<td><code>kubectl get ns envoy-gateway-system</code></td>
+<td><code>Error from server (NotFound)</code></td>
+</tr>
+<tr>
+<td>Vendored manifests committed</td>
+<td><code>git log --oneline cluster/gateways/envoy-gateway/</code></td>
+<td>commit present</td>
+</tr>
+</tbody>
+</table>
+<p>If a prior installation exists, run the <a href="https://github.com/kenanlalic/k8s-default-resources/blob/main/docs/system-cleanup.md">System Cleanup Runbook</a> first.</p>
+<h3 id="primary-path-gitops-first-recommended">Primary Path — GitOps-First (recommended)</h3>
+<div class="highlight"><pre><span></span><code>Sealed Secrets → SSH Key → ArgoCD → App-of-Apps → [base infra via ArgoCD]
+</code></pre></div>
+<p><strong>Step 1 — Sealed Secrets</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/workspace/k8s-default-resources
+kubectl<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>./cluster/sealed-secrets/
+kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/sealed-secrets-controller<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-n<span class="w"> </span>kube-system<span class="w"> </span>--timeout<span class="o">=</span>120s
+</code></pre></div>
+<p><strong>Step 2 — GitHub SSH Key</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Generate</span>
+ssh-keygen<span class="w"> </span>-t<span class="w"> </span>rsa<span class="w"> </span>-b<span class="w"> </span><span class="m">4096</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-C<span class="w"> </span><span class="s2">&quot;argocd@k8s-default-resources&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-f<span class="w"> </span>/workspace/k8s-default-resources/credentials/github.ssh/id_rsa
+
+<span class="c1"># Add id_rsa.pub to GitHub → Repository → Settings → Deploy keys (read-only)</span>
+
+<span class="c1"># Rename and populate the secret template</span>
+cp<span class="w"> </span>credentials/github.ssh/github-ssh.yaml.secret_template<span class="w"> </span><span class="se">\</span>
+<span class="w">   </span>credentials/github.ssh/github-ssh.yaml.secret
+<span class="c1"># Edit github-ssh.yaml.secret with your repo URL and private key content</span>
+
+<span class="c1"># Seal</span>
+kubeseal<span class="w"> </span>--format<span class="w"> </span>yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--controller-name<span class="o">=</span>sealed-secrets-controller<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--controller-namespace<span class="o">=</span>kube-system<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--secret-file<span class="w"> </span>credentials/github.ssh/github-ssh.yaml.secret<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>&gt;<span class="w"> </span>credentials/github.ssh/github.com-k8s-default-resources.yaml
+
+<span class="c1"># Commit sealed output</span>
+git<span class="w"> </span>add<span class="w"> </span>credentials/github.ssh/github.com-k8s-default-resources.yaml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore(secrets): seal github ssh deploy key&quot;</span>
+git<span class="w"> </span>push
+
+<span class="c1"># Apply</span>
+kubectl<span class="w"> </span>create<span class="w"> </span>namespace<span class="w"> </span>argocd
+kubectl<span class="w"> </span>apply<span class="w"> </span>-f<span class="w"> </span>credentials/github.ssh/github.com-k8s-default-resources.yaml
+</code></pre></div>
+<p><strong>Step 3 — ArgoCD</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Vendor manifest (if not already committed)</span>
+curl<span class="w"> </span>-sSL<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>https://raw.githubusercontent.com/argoproj/argo-cd/v3.3.2/manifests/install.yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span>cluster/argocd/install-3.3.2-download.yaml
+git<span class="w"> </span>add<span class="w"> </span>cluster/argocd/install-3.3.2-download.yaml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore(argocd): vendor install manifest v3.3.2&quot;</span>
+git<span class="w"> </span>push
+
+<span class="c1"># Apply</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>./cluster/argocd<span class="w"> </span>--server-side<span class="w"> </span>--force-conflicts
+
+kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/argocd-server<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>--timeout<span class="o">=</span>300s
+kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/argocd-repo-server<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>--timeout<span class="o">=</span>300s
+kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/argocd-applicationset-controller<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>--timeout<span class="o">=</span>300s
+</code></pre></div>
+<p>Retrieve password and access via port-forward:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>get<span class="w"> </span>secret<span class="w"> </span>argocd-initial-admin-secret<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.data.password}&#39;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>base64<span class="w"> </span>-d<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">echo</span>
+
+kubectl<span class="w"> </span>port-forward<span class="w"> </span>--address<span class="w"> </span><span class="m">0</span>.0.0.0<span class="w"> </span>svc/argocd-server<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span><span class="m">8080</span>:443
+<span class="c1"># Access http://localhost:8080 — username: admin</span>
+</code></pre></div>
+<p>Change password immediately (<strong>User Info → Update Password</strong>), then delete the bootstrap secret:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span>delete<span class="w"> </span>secret<span class="w"> </span>argocd-initial-admin-secret
+</code></pre></div>
+<p><strong>Step 4 — App-of-Apps</strong></p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>./argocd-applications/app-of-apps
+</code></pre></div>
+<p>Base infrastructure (Envoy Gateway, GatewayClass, Gateway, cert-manager, CNPG) syncs automatically as ArgoCD-managed Applications. Monitor at <code>http://localhost:8080</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Watch certificate issuance</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>certificate<span class="w"> </span>platform-tls-cert<span class="w"> </span>-n<span class="w"> </span>envoy-gateway-system<span class="w"> </span>--watch
+<span class="c1"># Expected: READY: True</span>
+
+<span class="c1"># Watch CNPG cluster initialisation</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>platform-db<span class="w"> </span>-n<span class="w"> </span>cnpg-system<span class="w"> </span>--watch
+<span class="c1"># Expected: 1/1 instances ready</span>
+</code></pre></div>
+<p>Once the certificate is ready, ArgoCD is accessible at <code>https://&lt;ip&gt;.sslip.io</code>.</p>
+<h3 id="alternative-path-gateway-first">Alternative Path — Gateway-First</h3>
+<p>Use when multiple people need ArgoCD HTTPS access during bootstrap.</p>
+<div class="highlight"><pre><span></span><code>Sealed Secrets → SSH Key → Envoy Gateway → GatewayClass+Gateway
+    → ArgoCD → cert-manager → App-of-Apps
+</code></pre></div>
+<p>Steps 1 and 2 are identical. After the SSH key is applied:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Vendor and apply Envoy Gateway</span>
+curl<span class="w"> </span>-sSL<span class="w"> </span>https://github.com/envoyproxy/gateway/releases/download/v1.7.0/install.yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span>cluster/gateways/envoy-gateway/install-1.7.0-download.yaml
+kubectl<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>./cluster/gateways/envoy-gateway/<span class="w"> </span>--server-side
+kubectl<span class="w"> </span>rollout<span class="w"> </span>status<span class="w"> </span>deployment/envoy-gateway<span class="w"> </span>-n<span class="w"> </span>envoy-gateway-system<span class="w"> </span>--timeout<span class="o">=</span>120s
+
+<span class="c1"># GatewayClass + Gateway</span>
+kubectl<span class="w"> </span>apply<span class="w"> </span>-k<span class="w"> </span>./cluster/gateways/
+kubectl<span class="w"> </span>get<span class="w"> </span>gateway<span class="w"> </span>eg<span class="w"> </span>-n<span class="w"> </span>envoy-gateway-system<span class="w"> </span>--watch
+<span class="c1"># Expected: PROGRAMMED: True with external IP</span>
+</code></pre></div>
+<p>Then follow steps 3–4 from the primary path. See <a href="https://github.com/kenanlalic/k8s-default-resources/blob/main/docs/cert-manager-bootstrap.md">cert-manager Bootstrap</a> for the cert-manager runbook.</p>
+<h3 id="verify">Verify</h3>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>gateway<span class="w"> </span>eg<span class="w"> </span>-n<span class="w"> </span>envoy-gateway-system
+kubectl<span class="w"> </span>get<span class="w"> </span>certificate<span class="w"> </span>platform-tls-cert<span class="w"> </span>-n<span class="w"> </span>envoy-gateway-system
+kubectl<span class="w"> </span>get<span class="w"> </span>httproute<span class="w"> </span>-n<span class="w"> </span>argocd
+kubectl<span class="w"> </span>get<span class="w"> </span>applications<span class="w"> </span>-n<span class="w"> </span>argocd
+kubectl<span class="w"> </span>get<span class="w"> </span>cluster<span class="w"> </span>platform-db<span class="w"> </span>-n<span class="w"> </span>cnpg-system
+
+kubectl<span class="w"> </span>run<span class="w"> </span>curl-test<span class="w"> </span>--image<span class="o">=</span>curlimages/curl<span class="w"> </span>--restart<span class="o">=</span>Never<span class="w"> </span>--rm<span class="w"> </span>-it<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>curl<span class="w"> </span>-sk<span class="w"> </span>-o<span class="w"> </span>/dev/null<span class="w"> </span>-w<span class="w"> </span><span class="s2">&quot;%{http_code}&quot;</span><span class="w"> </span>https://&lt;your-domain&gt;
+<span class="c1"># Expected: 200</span>
+</code></pre></div>
+<hr />
+<h2 id="database">Database</h2>
+<h3 id="current-setup-cnpg-oci-native-block-storage">Current Setup — CNPG + OCI Native Block Storage</h3>
+<p>CloudNativePG manages a single <code>platform-db</code> PostgreSQL 17 cluster in the <code>cnpg-system</code> namespace. All platform services share this cluster via individual <code>Database</code> CRs. One 10 Gi PVC is created by the operator using OCI's native block storage CSI driver.</p>
+<p><strong>Storage budget:</strong></p>
+<div class="highlight"><pre><span></span><code>200 GB free allocation
+- 144 GB  boot volumes (2 × 72 GB)
+-  10 GB  platform-db PVC
+= ~46 GB  remaining for additional PVCs
+</code></pre></div>
+<p><strong>Current databases:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Database CR</th>
+<th>Database name</th>
+<th>Owner</th>
+<th>Used by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>keycloak</code></td>
+<td><code>keycloak</code></td>
+<td><code>keycloak</code></td>
+<td>Keycloak (added at first service onboard)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="adding-a-service-database">Adding a Service Database</h3>
+<p>Each Django service gets its own database within the shared <code>platform-db</code> cluster. No new PVC is created.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># cluster/cloudnative-pg/cluster/&lt;service&gt;-database.yaml</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">postgresql.cnpg.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Database</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;service-name&gt;</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cnpg-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;service-name&gt;</span>
+<span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;service-name&gt;</span>
+<span class="w">  </span><span class="nt">cluster</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-db</span>
+</code></pre></div>
+<p>Add to <code>cluster/cloudnative-pg/cluster/kustomization.yaml</code> and push. ArgoCD syncs within ~3 minutes.</p>
+<h3 id="database-options">Database Options</h3>
+<p>Four approaches to PostgreSQL on this cluster, ordered by operational complexity.</p>
+<hr />
+<h4 id="option-a-cnpg-oci-native-block-storage-current">Option A — CNPG + OCI Native Block Storage (current)</h4>
+<p><strong>How it works:</strong> CNPG operator creates a <code>StatefulSet</code> with one PVC backed by an OCI Block Volume via the native CSI driver.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅</td>
+<td>Zero manual storage management — OCI provisions and attaches the volume</td>
+</tr>
+<tr>
+<td>✅</td>
+<td><code>Database</code> CR pattern — one PVC for the shared cluster, databases provisioned as CRs</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Aligns with Docker Compose per-service schema pattern</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>CNPG handles PostgreSQL lifecycle and monitoring</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Backup via Barman Cloud Plugin to any S3-compatible store (OCI, AWS S3, Azure Blob) — optional, see note below</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td><code>instances: 1</code> — no HA. Database downtime during node drain or OCI idle reclamation</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>OCI Block Volumes are single-attach — volume follows the pod, not replicated</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>Each additional CNPG cluster creates a new PVC consuming free block storage headroom</td>
+</tr>
+</tbody>
+</table>
+<p><strong>HA upgrade path:</strong> change <code>instances: 2</code> and add a <code>PodAntiAffinity</code> rule to force primary and standby onto different nodes. Creates a second 10 Gi PVC (~20 Gi total). Provides automatic failover on node loss. Still within free headroom.</p>
+<p><strong>Backup path (optional):</strong> CNPG v1.26+ uses the <a href="https://cloudnative-pg.io/plugin-barman-cloud/">Barman Cloud Plugin</a> for backup. The plugin writes WAL files and base backups to any S3-compatible object store — OCI Object Storage, AWS S3, Azure Blob Storage, or MinIO. On OCI, the Always Free tier includes 20 GB of object storage (separate from the 200 GB block volume allocation). A near-empty reference database fits within this limit. For a database with real data, provision a paid bucket or use a different provider. The <code>endpointURL</code> field in the <code>ObjectStore</code> CR is the only provider-specific value.</p>
+<hr />
+<h4 id="option-b-cnpg-longhorn-alternative">Option B — CNPG + Longhorn (alternative)</h4>
+<p><strong>How it works:</strong> Same CNPG operator and <code>Cluster</code> CR — only the <code>storageClass</code> field changes to Longhorn's storage class. Longhorn carves space from existing boot volumes rather than creating new OCI Block Volumes.</p>
+<div class="highlight"><pre><span></span><code><span class="nt">storage</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">size</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10Gi</span>
+<span class="w">  </span><span class="nt">storageClass</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">longhorn</span><span class="w">   </span><span class="c1"># instead of default OCI CSI</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅</td>
+<td>No new OCI Block Volumes — zero impact on the 200 GB free allocation</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Longhorn replicates across both nodes — data survives a node loss even with <code>instances: 1</code></td>
+</tr>
+<tr>
+<td>✅</td>
+<td><code>instances: 2</code> on Longhorn = full CNPG HA with no storage billing risk</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Safe to create multiple CNPG clusters without tracking PVC headroom</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>Longhorn controller consumes ~200–300 MB RAM per node</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>Node drain must wait for Longhorn replica sync before proceeding to the next node</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>Longhorn volumes have lower IOPS than OCI native block volumes</td>
+</tr>
+<tr>
+<td>⚠️</td>
+<td>Additional operational surface: Longhorn health must be monitored alongside CNPG health</td>
+</tr>
+<tr>
+<td>❌</td>
+<td>~20–30 GB usable across both nodes after OS and container image overhead — less headroom than OCI native at this boot volume size</td>
+</tr>
+</tbody>
+</table>
+<p><strong>When to choose this:</strong> when you anticipate multiple CNPG clusters (multiple Django services each wanting their own cluster), or when you need CNPG HA without consuming block storage budget.</p>
+<hr />
+<h4 id="option-c-oci-autonomous-database-free-oracle-dialect">Option C — OCI Autonomous Database (free, Oracle dialect)</h4>
+<p>Two always-free instances with 1 OCPU and 20 GB storage each. Fully managed, zero ops. Not PostgreSQL — Oracle dialect. Django requires <code>cx_Oracle</code> driver and schema adjustments. Not compatible with the Docker Compose development pattern. Not recommended for this platform.</p>
+<hr />
+<h4 id="option-d-oci-database-with-postgresql-managed-paid">Option D — OCI Database with PostgreSQL (managed, paid)</h4>
+<p>Fully managed PostgreSQL-compatible service. 100% PostgreSQL compatible, near-instant failover, automated backups. Not in Always Free tier. The correct choice when free tier constraints are no longer relevant.</p>
+<hr />
+<h3 id="decision-summary">Decision Summary</h3>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Free tier safe</th>
+<th>HA available</th>
+<th>Ops complexity</th>
+<th>Recommended for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A — CNPG + OCI native (current)</td>
+<td>✅ within headroom</td>
+<td>⚠️ instances: 2 + headroom</td>
+<td>Low</td>
+<td>Reference platform, low PVC count</td>
+</tr>
+<tr>
+<td>B — CNPG + Longhorn</td>
+<td>✅ zero PVC cost</td>
+<td>✅ Longhorn replication</td>
+<td>Medium</td>
+<td>Multiple services, HA without billing risk</td>
+</tr>
+<tr>
+<td>C — OCI Autonomous DB</td>
+<td>✅</td>
+<td>✅ managed</td>
+<td>Zero</td>
+<td>Oracle-native projects only</td>
+</tr>
+<tr>
+<td>D — OCI DB with PostgreSQL</td>
+<td>❌ paid</td>
+<td>✅ managed</td>
+<td>Zero</td>
+<td>Production, budget available</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="adding-a-django-service">Adding a Django Service</h2>
+<p>Django services generated from the <a href="../../30-django-service-template/30-django-service-template/">Copier template</a> land in <code>argocd-applications/owned/</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 1. Generate the service</span>
+copier<span class="w"> </span>copy<span class="w"> </span>--trust<span class="w"> </span>gh:yourorg/django-service-template<span class="w"> </span>services/my-service
+
+<span class="c1"># 2. Add an ArgoCD Application manifest</span>
+<span class="c1"># argocd-applications/owned/my-service.yaml</span>
+
+<span class="c1"># 3. Add a Database CR</span>
+<span class="c1"># cluster/cloudnative-pg/cluster/my-service-database.yaml</span>
+
+<span class="c1"># 4. Push — ArgoCD picks up within ~3 minutes</span>
+git<span class="w"> </span>add<span class="w"> </span>argocd-applications/owned/my-service.yaml
+git<span class="w"> </span>add<span class="w"> </span>cluster/cloudnative-pg/cluster/my-service-database.yaml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;feat(argocd): add my-service&quot;</span>
+git<span class="w"> </span>push
+</code></pre></div>
+<p>Each service gets an HTTPRoute under the platform Gateway, a database in <code>platform-db</code>, and connects to Keycloak via its OIDC client. See <a href="../../30-django-service-template/30-django-service-template/#kubernetes-migration-path">Django K8s Migration Path</a> for the full service configuration.</p>
+<hr />
+<h2 id="dev-vs-prod-differences">Dev vs Prod Differences</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>This Setup</th>
+<th>Production Upgrade Path</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Domain</td>
+<td><code>&lt;ip&gt;.sslip.io</code></td>
+<td>Real domain — update ClusterIssuer + Certificate</td>
+</tr>
+<tr>
+<td>ArgoCD auth</td>
+<td>Native admin login</td>
+<td>Keycloak OIDC (added with first Django service)</td>
+</tr>
+<tr>
+<td>Secrets</td>
+<td>Sealed Secrets</td>
+<td>Sealed Secrets or Vault</td>
+</tr>
+<tr>
+<td>Database</td>
+<td>CNPG <code>instances: 1</code>, OCI PVC</td>
+<td>CNPG <code>instances: 2</code> + PodAntiAffinity, or OCI Database with PostgreSQL</td>
+</tr>
+<tr>
+<td>Backchannel encryption</td>
+<td>Plain HTTP (single host)</td>
+<td>Service mesh mTLS or Keycloak-native TLS</td>
+</tr>
+<tr>
+<td>Monitoring</td>
+<td>Prometheus + Grafana (cluster layer)</td>
+<td>Same + external alerting</td>
+</tr>
+</tbody>
+</table>
+<h3 id="switching-to-a-real-domain">Switching to a Real Domain</h3>
+<p><code>sslip.io</code> is the bootstrap default — IP-based DNS, no registration required,
+Let's Encrypt compatible. To cut over to a real domain, three files change and
+one DNS record is added. No manifests outside these files need updating.</p>
+<p><strong>Step 1 — Point your domain to the Gateway IP</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Get the current Gateway external IP</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>gateway<span class="w"> </span>eg<span class="w"> </span>-n<span class="w"> </span>envoy-gateway-system<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{.status.addresses[0].value}&#39;</span>
+</code></pre></div>
+<p>Add an <code>A</code> record in Cloudflare (or your DNS provider) pointing your domain
+to this IP. If using a wildcard (<code>*.yourdomain.com</code>), one record covers all
+service subdomains.</p>
+<p><strong>Step 2 — Update the ClusterIssuer</strong></p>
+<p><code>cluster/cert-manager/cluster-issuer.yaml</code> — no change needed. The Let's Encrypt
+production issuer is domain-agnostic. Only update this file if switching between
+staging and production ACME servers.</p>
+<p><strong>Step 3 — Update the Certificate</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># cluster/cert-manager/certificate.yaml</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">dnsNames</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">yourdomain.com</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;*.yourdomain.com&quot;</span><span class="w">   </span><span class="c1"># covers all service subdomains</span>
+<span class="w">  </span><span class="nt">secretName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform-tls-cert</span>
+<span class="w">  </span><span class="nt">issuerRef</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">letsencrypt-prod</span>
+<span class="w">    </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ClusterIssuer</span>
+</code></pre></div>
+<p><strong>Step 4 — Update the Keycloak redirect URIs</strong></p>
+<p>Keycloak's realm template contains hardcoded redirect URIs. Update
+<code>myrealm.json</code> to replace the sslip.io domain with your real domain, then
+reimport the realm:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>down<span class="w"> </span>-v<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+<p>Or, for a live cluster, update redirect URIs directly in the Keycloak Admin
+Console under <strong>Clients → myclient → Valid redirect URIs</strong>.</p>
+<p><strong>Step 5 — Push and verify</strong></p>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>add<span class="w"> </span>cluster/cert-manager/certificate.yaml
+git<span class="w"> </span>commit<span class="w"> </span>-m<span class="w"> </span><span class="s2">&quot;chore(tls): switch to yourdomain.com&quot;</span>
+git<span class="w"> </span>push
+
+<span class="c1"># Watch cert-manager issue the new certificate (~1-3 min)</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>certificate<span class="w"> </span>platform-tls-cert<span class="w"> </span>-n<span class="w"> </span>envoy-gateway-system<span class="w"> </span>--watch
+<span class="c1"># Expected: READY: True</span>
+</code></pre></div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>cert-manager rotates the TLS secret in place — the Gateway picks up the new
+certificate automatically. No Gateway restart required.</p>
+</div>
+<hr />
+<h2 id="runbooks">Runbooks</h2>
+<h3 id="sealed-secrets-controller-not-ready">Sealed Secrets controller not ready</h3>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>sealed-secrets<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span>Events
+</code></pre></div>
+<h3 id="kubeseal-fails-controller-not-found">kubeseal fails — controller not found</h3>
+<div class="highlight"><pre><span></span><code>kubeseal<span class="w"> </span>--format<span class="w"> </span>yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--controller-name<span class="o">=</span>sealed-secrets-controller<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--controller-namespace<span class="o">=</span>kube-system<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--secret-file<span class="w"> </span>github-ssh.yaml.secret<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>&gt;<span class="w"> </span>github.com-k8s-default-resources.yaml
+</code></pre></div>
+<h3 id="envoy-gateway-not-programming-no-address">Envoy Gateway not programming / no address</h3>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>gateway<span class="w"> </span>eg<span class="w"> </span>-n<span class="w"> </span>envoy-gateway-system
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>envoy-gateway-system<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>envoy-gateway<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>svc<span class="w"> </span>-n<span class="w"> </span>envoy-gateway-system
+</code></pre></div>
+<h3 id="argocd-pods-not-starting">ArgoCD pods not starting</h3>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>describe<span class="w"> </span>pod<span class="w"> </span>&lt;pod-name&gt;<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">10</span><span class="w"> </span>Events
+<span class="c1"># Verify arm64 image</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>argocd<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-o<span class="w"> </span><span class="nv">jsonpath</span><span class="o">=</span><span class="s1">&#39;{range .items[*]}{.spec.containers[*].image}{&quot;\n&quot;}{end}&#39;</span>
+</code></pre></div>
+<h3 id="resources-landed-in-default-namespace">Resources landed in default namespace</h3>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>delete<span class="w"> </span>all<span class="w"> </span>-l<span class="w"> </span>app.kubernetes.io/part-of<span class="o">=</span>argocd<span class="w"> </span>-n<span class="w"> </span>default<span class="w"> </span>--ignore-not-found
+</code></pre></div>
+<p>Re-apply with <code>--server-side --force-conflicts</code>.</p>
+<h3 id="cnpg-cluster-not-ready">CNPG cluster not ready</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Check cluster status</span>
+kubectl<span class="w"> </span>describe<span class="w"> </span>cluster<span class="w"> </span>platform-db<span class="w"> </span>-n<span class="w"> </span>cnpg-system<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>-A<span class="w"> </span><span class="m">20</span><span class="w"> </span>Status
+
+<span class="c1"># Check operator logs</span>
+kubectl<span class="w"> </span>logs<span class="w"> </span>-n<span class="w"> </span>cnpg-system<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-l<span class="w"> </span>app.kubernetes.io/name<span class="o">=</span>cloudnative-pg<span class="w"> </span>--tail<span class="o">=</span><span class="m">50</span>
+
+<span class="c1"># Check PVC provisioned</span>
+kubectl<span class="w"> </span>get<span class="w"> </span>pvc<span class="w"> </span>-n<span class="w"> </span>cnpg-system
+</code></pre></div>
+<p>Common cause: OCI block volume provisioning delay on first deploy. Allow up to 5 minutes. If the PVC is stuck in <code>Pending</code>, check that the OCI CSI driver is running:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>kube-system<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>csi
+</code></pre></div>
+<h3 id="cnpg-database-unavailable-after-node-drain">CNPG database unavailable after node drain</h3>
+<p>With <code>instances: 1</code>, draining the node running the PostgreSQL pod causes database downtime until the pod reschedules on the replacement node. This is expected behaviour for the single-instance configuration. Monitor pod rescheduling:</p>
+<div class="highlight"><pre><span></span><code>kubectl<span class="w"> </span>get<span class="w"> </span>pods<span class="w"> </span>-n<span class="w"> </span>cnpg-system<span class="w"> </span>-w
+</code></pre></div>
+<p>To avoid this in future, upgrade to <code>instances: 2</code> before performing maintenance. See <a href="./#option-a--cnpg--oci-native-block-storage-current">Database — Option A HA upgrade path</a>.</p>
+<h3 id="full-teardown-and-reinstall">Full teardown and reinstall</h3>
+<p>See <a href="https://github.com/kenanlalic/k8s-default-resources/blob/main/docs/system-cleanup.md">System Cleanup Runbook</a>.</p>
+<hr />
+<h2 id="adrs">ADRs</h2>
+<ul>
+<li><strong>ADR: GitOps-first bootstrap</strong> — Base infrastructure managed in git from first apply. No untracked window. ArgoCD accessible via port-forward during platform sync. Vendored manifests must be committed before app-of-apps runs.</li>
+<li><strong>ADR: Sealed Secrets first</strong> — Every secret is a SealedSecret. Controller must exist before any can be decrypted. Immovable regardless of bootstrap path.</li>
+<li><strong>ADR: App-of-apps pattern</strong> — Three entrypoints (<code>cluster</code>, <code>thirdparty</code>, <code>owned</code>) map to ownership boundaries. Adding a service is a git push.</li>
+<li><strong>ADR: Envoy Gateway as platform constant</strong> — Same mental model from Docker Compose dev through K8s Gateway API. No context switch for engineers familiar with the base infrastructure layer.</li>
+<li><strong>ADR: <code>server.insecure=true</code></strong> — TLS at the Gateway boundary. Plain HTTP internally. Consistent with the platform's backchannel pattern.</li>
+<li><strong>ADR: Keycloak deferred to first service onboard</strong> — No point bootstrapping identity infrastructure before there's a service to authenticate.</li>
+<li><strong>ADR: CNPG + OCI native block storage, instances: 1</strong> — CloudNativePG chosen over plain Helm chart for operator-managed lifecycle, <code>Database</code> CR pattern, and future HA upgrade path (<code>instances: 2</code>). OCI native block storage chosen over Longhorn to avoid Longhorn operational overhead at this scale. Single instance accepted as the free-tier HA tradeoff — database downtime during node drain is acceptable for a reference platform. Upgrade path: <code>instances: 2</code> + <code>PodAntiAffinity</code> when HA is required. Alternative path: switch <code>storageClass</code> to Longhorn for zero PVC billing risk with built-in replication.</li>
+<li><strong>ADR: Shared <code>platform-db</code> cluster with <code>Database</code> CRs</strong> — One CNPG cluster, multiple databases provisioned as CRs. Matches the Docker Compose per-service schema pattern. One PVC regardless of the number of service databases.</li>
+<li><strong>ADR: Vendored manifests</strong> — No runtime GitHub dependency. Reproducible. Auditable.</li>
+<li><strong>ADR: One LoadBalancer constraint</strong> — OCI Always Free allows exactly one Flexible LB. Gateway consumes it. All services route via HTTPRoutes.</li>
+<li><strong>ADR: <code>ServerSideApply=true</code> for CNPG</strong> — CNPG CRDs exceed the client-side apply annotation size limit. Same reason ArgoCD itself requires <code>--server-side --force-conflicts</code>.</li>
+<li><strong>ADR: No Kubernetes Network Policies</strong> — Evaluated and rejected. A compromised Django pod already holds all credentials in its environment — NetworkPolicy on port 5432 does not prevent credential theft or replay. Effective blast radius control is PostgreSQL role isolation via CNPG <code>Database</code> CRs. OKE's default Flannel CNI does not enforce NetworkPolicy without a cluster-level CNI change. Tradeoff: marginal security improvement does not justify infrastructure change and per-service maintenance burden on this platform.</li>
+<li><strong>ADR: CNPG backup not configured by default</strong> — Backup via Barman Cloud Plugin is the documented path but is not deployed. On OCI Always Free, object storage is capped at 20 GB — sufficient for a reference platform's near-empty database, insufficient for production data. Backup configuration is provider-agnostic: only <code>endpointURL</code> changes between OCI, AWS S3, and Azure Blob. Accepted risk for a reference platform; implement before using for production data.</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://cloudnative-pg.io/documentation/">CloudNativePG Documentation</a></li>
+<li><a href="https://argo-cd.readthedocs.io/">ArgoCD Documentation</a></li>
+<li><a href="https://gateway.envoyproxy.io/">Envoy Gateway Documentation</a></li>
+<li><a href="https://cert-manager.io/docs/">cert-manager Documentation</a></li>
+<li><a href="https://github.com/bitnami-labs/sealed-secrets">Sealed Secrets</a></li>
+<li><a href="https://gateway-api.sigs.k8s.io/">Kubernetes Gateway API</a></li>
+<li><a href="https://sslip.io/">sslip.io</a></li>
+<li><a href="../40-oci-infrastructure/">OCI Infrastructure</a> — cluster this platform layer runs on</li>
+<li><a href="../../30-django-service-template/30-django-service-template/">Django Service Template</a> — services deployed to <code>owned/</code></li>
+<li><a href="../../20-base-infrastructure/22-keycloak-oidc/">Keycloak OIDC</a> — identity provider added at first service onboard</li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>

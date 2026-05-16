@@ -1,0 +1,2456 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://kenanlalic.github.io/engineering-infrastructure-hub/20-base-infrastructure/21-envoy-gateway/">
+      
+      
+        <link rel="prev" href="../20-postgresql/">
+      
+      
+        <link rel="next" href="../22-keycloak-oidc/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.6">
+    
+    
+      
+        <title>Envoy Gateway - Infrastructure Engineering Hub</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.484c7ddc.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    <body dir="ltr">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#envoy-gateway-tls-termination-traffic-routing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-header__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Infrastructure Engineering Hub
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Envoy Gateway
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Infrastructure Engineering Hub" class="md-nav__button md-logo" aria-label="Infrastructure Engineering Hub" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54"/></svg>
+
+    </a>
+    Infrastructure Engineering Hub
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../00-index/01-infrastructure-engineering-hub/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../10-workspace-config/10-workspace-config/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Workspace
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Base Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Base Infrastructure
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../20-postgresql/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    PostgreSQL
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Envoy Gateway
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Envoy Gateway
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#routing-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Routing Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Tiers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#envoy-gateway-over-traditional-reverse-proxies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Envoy Gateway over Traditional Reverse Proxies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tls-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-plane-certificates-generate_certs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Plane Certificates (generate_certs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-https-redirect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP → HTTPS Redirect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oidc-at-gateway-level-future" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OIDC at Gateway Level (Future)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gateway-resource" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gateway Resource
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standalone-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#route-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compose-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compose Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obtaining-a-certificate-first-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Obtaining a Certificate (First Time)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-renewal-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Renewal Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-renewal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Renewal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dev-vs-prod-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev vs Prod Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-migration-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Migration Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prod
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection-refused-on-https-port-443" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection refused on HTTPS (port 443)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-verify-failed-expired" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate verify failed / expired
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#502-bad-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        502 Bad Gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-redirect-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keycloak redirect loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-service-not-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New service not routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugging-headers-and-routing-with-echo-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugging headers and routing with echo server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-renewal-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate renewal fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../22-keycloak-oidc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Keycloak
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../23-maildev/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    MailDev
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../30-django-service-template/30-django-service-template/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Django Template
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_5" >
+        
+          
+          <label class="md-nav__link" for="__nav_5" id="__nav_5_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Kubernetes
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_5_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_5">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Kubernetes
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../40-kubernetes/40-oci-infrastructure/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    OCI Infrastructure
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../40-kubernetes/41-k8s-default-resources/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    K8s Default Resources
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#table-of-contents" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Table of Contents
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#overview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Overview">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#request-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#routing-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Routing Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#deployment-tiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deployment Tiers
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#design-decisions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decisions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Design Decisions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#envoy-gateway-over-traditional-reverse-proxies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Envoy Gateway over Traditional Reverse Proxies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#tls-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TLS Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#control-plane-certificates-generate_certs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Control Plane Certificates (generate_certs)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#http-https-redirect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP → HTTPS Redirect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#oidc-at-gateway-level-future" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        OIDC at Gateway Level (Future)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependencies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependencies
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#gateway-resource" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Gateway Resource
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standalone-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#file-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        File Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#backend-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Backend Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#route-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Route Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compose-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compose Configuration
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#certificate-management" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate Management
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Certificate Management">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#overview_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Overview
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#obtaining-a-certificate-first-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Obtaining a Certificate (First Time)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#automated-renewal-setup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Automated Renewal Setup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-renewal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Renewal
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dev-vs-prod-differences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev vs Prod Differences
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#kubernetes-migration-path" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Kubernetes Migration Path
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#monitoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Monitoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Monitoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#dev" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dev
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prod" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prod
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runbooks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runbooks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runbooks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#connection-refused-on-https-port-443" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connection refused on HTTPS (port 443)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-verify-failed-expired" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate verify failed / expired
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#502-bad-gateway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        502 Bad Gateway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#keycloak-redirect-loop" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Keycloak redirect loop
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#new-service-not-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        New service not routing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#debugging-headers-and-routing-with-echo-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Debugging headers and routing with echo server
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#certificate-renewal-fails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Certificate renewal fails
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#adrs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ADRs
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#references" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        References
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+
+<h1 id="envoy-gateway-tls-termination-traffic-routing">Envoy Gateway — TLS Termination &amp; Traffic Routing</h1>
+<p>Front door for all platform traffic. Handles TLS termination, path-based and subdomain routing, HTTP→HTTPS redirect, and header manipulation. Uses Kubernetes Gateway API resources in standalone file mode — the same configs work in Docker Compose and translate to Kubernetes with minimal changes.</p>
+<blockquote>
+<p>📍 <strong>Type:</strong> Service Reference<br>
+👤 <strong>Owner:</strong> Kenan Lalic<br>
+🎯 <strong>Outcome:</strong> Understand the Envoy Gateway Setup<br></p>
+</blockquote>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ul>
+<li><a href="./#overview" title="Overview">Overview</a></li>
+<li><a href="./#deployment-tiers" title="Deployment Tiers">Deployment Tiers</a></li>
+<li><a href="./#architecture" title="Architecture">Architecture</a></li>
+<li><a href="./#design-decisions" title="Design Decisions">Design Decisions</a></li>
+<li><a href="./#dependencies" title="Dependencies">Dependencies</a></li>
+<li><a href="./#configuration" title="Configuration">Configuration</a></li>
+<li><a href="./#certificate-management" title="Certificate Management">Certificate Management</a></li>
+<li><a href="./#dev-vs-prod-differences" title="Dev vs Prod Differences">Dev vs Prod Differences</a></li>
+<li><a href="./#monitoring" title="Monitoring">Monitoring</a></li>
+<li><a href="./#runbooks" title="Runbooks">Runbooks</a></li>
+<li><a href="./#adrs" title="ADRs">ADRs</a></li>
+<li><a href="./#references" title="References">References</a></li>
+</ul>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>Envoy Gateway is the single entry point for all external traffic. No backend service is directly exposed to the internet — every request passes through Envoy first.</p>
+<h3 id="request-flow">Request Flow</h3>
+<p>All external traffic arrives at Envoy Gateway on ports 80 (HTTP) and 443 (HTTPS). HTTP requests are immediately redirected to HTTPS via a 301. Envoy terminates TLS, inspects the path, and routes to the appropriate backend service over the internal Docker bridge network using plain HTTP. <code>X-Forwarded-Proto</code>, <code>X-Forwarded-Host</code>, and <code>X-Forwarded-Port</code> headers are set on every proxied request so backend services can correctly generate URLs and detect HTTPS.</p>
+<p>In development, Ngrok provides the public HTTPS URL that reaches Envoy. In production on VPS, DNS points directly to the server and Envoy terminates TLS using Let's Encrypt certificates.</p>
+<h3 id="routing-model">Routing Model</h3>
+<p>Routes are defined as Kubernetes Gateway API resources (<code>HTTPRoute</code>, <code>Gateway</code>, <code>Backend</code>) stored as YAML files. Envoy Gateway reads these from the filesystem in standalone mode — no Kubernetes cluster required. Each Django service registers as a new <code>HTTPRoute</code> and <code>Backend</code> within the existing configuration.</p>
+<table>
+<thead>
+<tr>
+<th>Path Prefix</th>
+<th>Backend</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>/auth/realms</code>, <code>/auth/admin</code>, <code>/auth/resources</code>, <code>/auth/js</code></td>
+<td>Keycloak (<code>keycloak.local:8080</code>)</td>
+<td>Identity provider — login, admin console, static assets</td>
+</tr>
+<tr>
+<td><code>/{service}/</code></td>
+<td>Django Service (<code>{service}.local:8000</code>)</td>
+<td>Application routes — API, admin, frontend</td>
+</tr>
+</tbody>
+</table>
+<p>Additional services are added by creating a new <code>HTTPRoute</code> YAML file in the routes directory and a corresponding <code>Backend</code> definition. Envoy Gateway picks up changes on restart.</p>
+<hr />
+<h2 id="deployment-tiers">Deployment Tiers</h2>
+<p>The same Envoy Gateway container and Gateway API YAML configs run across all three tiers. Only TLS handling, cert management, and orchestration change.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>🛠️ Local Dev</th>
+<th>🚀 VPS Prod</th>
+<th>⚡ Kubernetes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Envoy runs as</strong></td>
+<td>Docker container</td>
+<td>Docker container</td>
+<td>Pod (via Helm operator)</td>
+</tr>
+<tr>
+<td><strong>Config format</strong></td>
+<td>Gateway API YAML files</td>
+<td>Same files</td>
+<td>Same files — <code>kubectl apply</code></td>
+</tr>
+<tr>
+<td><strong>TLS</strong></td>
+<td>Ngrok terminates it before Envoy</td>
+<td>Let's Encrypt, terminated at Envoy</td>
+<td>cert-manager issues certs, Envoy terminates</td>
+</tr>
+<tr>
+<td><strong>Cert management</strong></td>
+<td>None — Ngrok handles it</td>
+<td>certbot on host + deploy hook</td>
+<td>cert-manager <code>Certificate</code> resource</td>
+</tr>
+<tr>
+<td><strong>Control plane certs</strong></td>
+<td><code>generate_certs</code> sidecar (self-signed)</td>
+<td>Same</td>
+<td>Envoy Gateway operator (Helm)</td>
+</tr>
+<tr>
+<td><strong>Port 80/443</strong></td>
+<td>Mapped from container</td>
+<td>Bound directly on host</td>
+<td>Ingress / LoadBalancer Service</td>
+</tr>
+<tr>
+<td><strong>Scaling</strong></td>
+<td>Single instance</td>
+<td>Single instance</td>
+<td>HPA across pods</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why the same configs work everywhere:</strong> Envoy Gateway uses the Kubernetes Gateway API spec as its config format — even in Docker standalone mode it reads <code>HTTPRoute</code>, <code>Gateway</code>, and <code>Backend</code> YAML from the filesystem. In Kubernetes, those same files are applied via <code>kubectl apply</code>. The only things that change are <code>Backend</code> hostnames (Docker FQDN → K8s Service name) and how TLS secrets are provisioned.</p>
+<hr />
+<h2 id="architecture">Architecture</h2>
+<div class="highlight"><pre><span></span><code>┌──────────────────────────────────────────────────────────────────┐
+│                           INTERNET                               │
+└──────────────────────────────┬───────────────────────────────────┘
+                               │
+                               │ HTTPS (443) / HTTP (80 → 301)
+                               ▼
+                    ┌─────────────────────┐
+                    │   Envoy Gateway     │
+                    │  ─────────────────  │
+                    │  TLS Termination    │
+                    │  Path-Based Routing │
+                    │  Rate Limiting      │
+                    │  HTTP → HTTPS       │
+                    │  X-Forwarded-*      │
+                    └──────────┬──────────┘
+                               │ HTTP (internal)
+          ┌────────────────────┼───────────────────┐
+          │                    │                   │
+          ▼                    ▼                   ▼
+   ┌──────────────┐    ┌──────────────┐    ┌──────────────┐
+   │  Keycloak    │    │  Django      │    │  Django      │
+   │  :8080       │    │  Service A   │    │  Service N   │
+   │              │    │  :8000       │    │  :8000       │
+   └──────────────┘    └──────────────┘    └──────────────┘
+</code></pre></div>
+<p>Envoy is the only container on both the <code>internal</code> and <code>external</code> Docker networks. All backend services sit on the <code>internal</code> network only — they are unreachable from the internet. Traffic between Envoy and backends is plain HTTP over the Docker bridge, which is safe on a single host (see <a href="../service-keycloak#confidential-client-with-backchannel-separation" title="Backchannel Separation">Backchannel Separation</a> for the security rationale).</p>
+<p>For the full platform architecture, see <a href="../infrastructure-engineering-hub#architecture" title="Infrastructure Engineering Hub — Architecture">Infrastructure Engineering Hub — Architecture</a>.</p>
+<hr />
+<h2 id="design-decisions">Design Decisions</h2>
+<h3 id="envoy-gateway-over-traditional-reverse-proxies">Envoy Gateway over Traditional Reverse Proxies</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Envoy Gateway</th>
+<th>Traditional (Nginx, Traefik)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Gateway API resources in standalone file mode</td>
+<td>Configuration files with custom syntax</td>
+</tr>
+</tbody>
+</table>
+<p>Envoy Gateway was chosen for Kubernetes-native portability. It uses the Kubernetes <a href="https://gateway-api.sigs.k8s.io/">Gateway API</a> specification — <code>HTTPRoute</code>, <code>Gateway</code>, <code>GatewayClass</code>, <code>Backend</code> — as its configuration format, even when running outside Kubernetes. In Docker Compose standalone mode, these same YAML files are read from the filesystem. In Kubernetes, they're applied directly to the API server with <code>kubectl apply</code>. No rewrite, no translation.</p>
+<table>
+<thead>
+<tr>
+<th>Capability</th>
+<th>Nginx</th>
+<th>Envoy Gateway</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Config format</td>
+<td>Custom <code>nginx.conf</code> syntax</td>
+<td>Kubernetes Gateway API YAML</td>
+</tr>
+<tr>
+<td>Routing changes</td>
+<td>Requires reload</td>
+<td>Hot reload via control plane</td>
+</tr>
+<tr>
+<td>K8s migration</td>
+<td>Full config rewrite</td>
+<td>Copy configs as-is</td>
+</tr>
+<tr>
+<td>Observability</td>
+<td>Basic access logs</td>
+<td>Prometheus metrics, structured access logs</td>
+</tr>
+<tr>
+<td>Protocol support</td>
+<td>HTTP/1.1, HTTP/2</td>
+<td>HTTP/1.1, HTTP/2, gRPC, WebSocket</td>
+</tr>
+<tr>
+<td>TLS management</td>
+<td>Manual cert handling</td>
+<td>Gateway API <code>Secret</code> references</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tls-strategy">TLS Strategy</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Dev</th>
+<th>Prod (VPS)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Ngrok handles TLS</td>
+<td>Let's Encrypt certs at Envoy</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Dev:</strong> Ngrok provides the public HTTPS URL and terminates TLS before traffic reaches Envoy. Envoy still runs with TLS configured on the HTTPS listener, but in practice Ngrok handles the public certificate. No local cert management required.</p>
+<p><strong>Prod:</strong> Let's Encrypt certificates are obtained via <code>certbot</code> on the host and mounted read-only into the Envoy container. The Gateway resource references these via a <code>Secret</code> that points to the mounted PEM files. Certificate renewal is fully automated via systemd timer and a certbot deploy hook — certbot renews, the hook regenerates secrets and restarts Envoy Gateway. See <a href="./#certificate-management" title="Certificate Management">Certificate Management</a> for the full setup.</p>
+<div class="highlight"><pre><span></span><code>Host filesystem                    Docker container
+─────────────────                  ─────────────────
+/etc/letsencrypt/                  
+├── live/${DOMAIN}/                (read-only mount)
+│   ├── fullchain.pem ──symlink──→ Envoy reads here
+│   └── privkey.pem ──symlink───→ Envoy reads here
+└── archive/${DOMAIN}/             
+    ├── fullchain1.pem             (actual files)
+    └── privkey1.pem               
+</code></pre></div>
+<p>Certbot manages symlink rotation on renewal. Envoy always reads from <code>/live/</code> — no path changes needed.</p>
+<h3 id="control-plane-certificates-generate_certs">Control Plane Certificates (<code>generate_certs</code>)</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Dev</th>
+<th>Prod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>Self-signed certs via <code>generate_certs</code> sidecar</td>
+<td>Same</td>
+</tr>
+</tbody>
+</table>
+<p>Envoy Gateway's architecture consists of two processes: a <strong>controller</strong> (reads Gateway API YAML, computes routing configuration) and an <strong>Envoy proxy</strong> (handles actual traffic). These communicate via gRPC using the xDS protocol. The <code>generate_certs</code> sidecar creates self-signed TLS certificates that secure this internal control plane connection — ensuring nothing can inject malicious routing configuration. These certificates have nothing to do with public-facing TLS or backend communication.</p>
+<h3 id="http-https-redirect">HTTP → HTTPS Redirect</h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Dev</th>
+<th>Prod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Choice</strong></td>
+<td>301 redirect on HTTP listener</td>
+<td>Same</td>
+</tr>
+</tbody>
+</table>
+<p>A dedicated <code>HTTPRoute</code> on the HTTP listener (port 8080, mapped to host port 80) returns a 301 redirect to HTTPS for all requests. This is handled at the Gateway API level — no application-level redirect logic needed.</p>
+<h3 id="oidc-at-gateway-level-future">OIDC at Gateway Level (Future)</h3>
+<p>Envoy Gateway supports <code>SecurityPolicy</code> with native OIDC integration. This would allow protecting routes at the gateway level without touching application code:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Not currently enabled — noted for future reference</span>
+<span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway.envoyproxy.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">SecurityPolicy</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">targetRefs</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HTTPRoute</span>
+<span class="w">      </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">admin-routes</span>
+<span class="w">  </span><span class="nt">oidc</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">provider</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">issuer</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https://${DOMAIN}/auth/realms/myrealm</span>
+<span class="w">    </span><span class="nt">forwardAccessToken</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<p>Currently, OIDC authentication is handled at the Django level via django-allauth. Gateway-level OIDC is a future option for protecting non-Django endpoints or adding defense-in-depth.</p>
+<hr />
+<h2 id="dependencies">Dependencies</h2>
+<table>
+<thead>
+<tr>
+<th>Dependency</th>
+<th>Type</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>generate_certs</code> sidecar</td>
+<td>Internal</td>
+<td>Provisions control plane TLS certificates</td>
+</tr>
+<tr>
+<td>Let's Encrypt / certbot</td>
+<td>External (prod)</td>
+<td>Public TLS certificates</td>
+</tr>
+<tr>
+<td>Ngrok</td>
+<td>External (dev)</td>
+<td>Public HTTPS URL for local development</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="configuration">Configuration</h2>
+<h3 id="gateway-resource">Gateway Resource</h3>
+<p>The Gateway listener defines how Envoy accepts connections:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway.networking.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Gateway</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eg</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">envoy-gateway-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">gatewayClassName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eg</span>
+<span class="w">  </span><span class="nt">listeners</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">http</span>
+<span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HTTP</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https</span>
+<span class="w">      </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HTTPS</span>
+<span class="w">      </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8443</span>
+<span class="w">      </span><span class="nt">tls</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Terminate</span>
+<span class="w">        </span><span class="nt">certificateRefs</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Secret</span>
+<span class="w">            </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eih-tls-cert</span>
+</code></pre></div>
+<p>The HTTPS listener terminates TLS using the referenced Secret. The HTTP listener exists solely for the 301 redirect route.</p>
+<h3 id="standalone-configuration">Standalone Configuration</h3>
+<p>Envoy Gateway runs in standalone (non-Kubernetes) mode via a config file:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway.envoyproxy.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EnvoyGateway</span>
+<span class="nt">provider</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Custom</span>
+<span class="w">  </span><span class="nt">custom</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">resource</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">File</span>
+<span class="w">      </span><span class="nt">file</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">paths</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/etc/envoy-gateway/common&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/etc/envoy-gateway/common/backends&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/etc/envoy-gateway/common/routes&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/etc/envoy-gateway/{env}&quot;</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">&quot;/etc/envoy-gateway/{env}/routes&quot;</span>
+<span class="w">    </span><span class="nt">infrastructure</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Host</span>
+<span class="w">      </span><span class="nt">host</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">configHome</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp/envoy-gateway</span>
+<span class="w">        </span><span class="nt">dataHome</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp/envoy-gateway</span>
+<span class="nt">extensionApis</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">enableBackend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<p><code>{env}</code> is <code>dev</code> or <code>prod</code> — each has its own routes directory for environment-specific configuration. Common backends and routes shared across environments live in <code>common/</code>.</p>
+<div class="admonition tip">
+<p class="admonition-title">Upstream experimental classification</p>
+<p>Envoy Gateway's standalone mode (file provider + host infrastructure) is classified as <strong>experimental</strong> upstream — their docs say "DO NOT use it in production." This label reflects control plane maturity gaps, not data plane reliability. The Envoy Proxy binary handling traffic is the same battle-tested binary used by Docker Hub, Teleport, and Tencent Cloud in production.</p>
+<p>What standalone mode lacks compared to the Kubernetes path: no built-in process lifecycle management (crash recovery, graceful drain), no orchestrated hot restart for zero-downtime upgrades, no E2E conformance test suite, single Envoy process (no HPA scaling), and a <code>v1alpha1</code> API surface that may change between releases. Feature parity is also catching up incrementally — Secret/ConfigMap parsing, BackendTLSPolicy, and Extension Server support were added across v1.2.7–v1.4.</p>
+<p>In our Docker Compose setup, most of these gaps are mitigated: Docker handles process restart (<code>restart: unless-stopped</code>), health checks, and container lifecycle. The main accepted tradeoffs for the VPS tier are brief downtime during upgrades (<code>docker compose down &amp;&amp; up</code>) and no horizontal scaling. Both are acceptable for a single-VPS deployment. The Envoy AI Gateway project is also actively dogfooding standalone mode, accelerating its maturation toward production graduation.</p>
+</div>
+<h3 id="file-structure">File Structure</h3>
+<div class="highlight"><pre><span></span><code>services_configs/envoy_config/
+├── standalone-dev.yaml              # Dev control plane config
+├── standalone-prod.yaml             # Prod control plane config
+├── common/
+│   ├── backends/
+│   │   ├── keycloak.yaml            # Backend: keycloak.local:8080
+│   │   └── {service}.yaml           # Backend: {service}.local:8000
+│   └── routes/
+│       ├── keycloak.yaml            # HTTPRoute: /auth/* → keycloak
+│       ├── {service}.yaml           # HTTPRoute: /{service}/* → service
+│       └── https-redirect.yaml      # HTTPRoute: HTTP 301 → HTTPS
+├── dev/
+│   ├── gateway.yaml                 # Gateway with dev TLS config
+│   └── routes/                      # Dev-only routes (echo server, etc.)
+└── prod/
+    ├── gateway.yaml                 # Gateway with Let&#39;s Encrypt cert ref
+    └── routes/                      # Prod-only routes
+</code></pre></div>
+<h3 id="backend-definition">Backend Definition</h3>
+<p>Each backend service is defined as a Gateway API <code>Backend</code> resource:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway.envoyproxy.io/v1alpha1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Backend</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">envoy-gateway-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fqdn</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak.local</span>
+<span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+</code></pre></div>
+<p>To add a new service: create a <code>Backend</code> YAML and a corresponding <code>HTTPRoute</code> YAML. No changes to existing configuration required.</p>
+<h3 id="route-definition">Route Definition</h3>
+<p>Routes use <code>HTTPRoute</code> with path matching and header modification:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">apiVersion</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway.networking.k8s.io/v1</span>
+<span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HTTPRoute</span>
+<span class="nt">metadata</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak</span>
+<span class="w">  </span><span class="nt">namespace</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">envoy-gateway-system</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">parentRefs</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">eg</span>
+<span class="w">      </span><span class="nt">sectionName</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https</span>
+<span class="w">  </span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">matches</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">path</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">PathPrefix</span>
+<span class="w">            </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/auth/realms</span>
+<span class="w">      </span><span class="nt">filters</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">RequestHeaderModifier</span>
+<span class="w">          </span><span class="nt">requestHeaderModifier</span><span class="p">:</span>
+<span class="w">            </span><span class="nt">set</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-Forwarded-Proto</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">https</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-Forwarded-Host</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${DOMAIN}</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">X-Forwarded-Port</span>
+<span class="w">                </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;443&quot;</span>
+<span class="w">      </span><span class="nt">backendRefs</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">group</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gateway.envoyproxy.io</span>
+<span class="w">          </span><span class="nt">kind</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Backend</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak</span>
+</code></pre></div>
+<div class="admonition tip">
+<p class="admonition-title">X-Forwarded-Host</p>
+<p>The <code>X-Forwarded-Host</code> value must match your domain. Keycloak uses this to construct redirect URIs and validate the issuer. A mismatch causes redirect loops or token validation failures.</p>
+</div>
+<h3 id="compose-configuration">Compose Configuration</h3>
+<table>
+<thead>
+<tr>
+<th>Variable / Setting</th>
+<th>Dev</th>
+<th>Prod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Host port 80 → container 8080</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Host port 443 → container 8443</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Standalone config</td>
+<td><code>standalone-dev.yaml</code></td>
+<td><code>standalone-prod.yaml</code></td>
+</tr>
+<tr>
+<td>Let's Encrypt mount</td>
+<td>—</td>
+<td><code>/etc/letsencrypt/live/${DOMAIN}</code> (read-only)</td>
+</tr>
+<tr>
+<td>Networks</td>
+<td><code>internal</code> + <code>external</code></td>
+<td><code>internal</code> + <code>external</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="certificate-management">Certificate Management</h2>
+<h3 id="overview_1">Overview</h3>
+<p>Let's Encrypt certificates live on the host and are mounted read-only into the Envoy container. Renewal is fully automated — certbot runs twice daily via systemd timer, and a deploy hook handles the gateway reload when a cert is actually renewed.</p>
+<div class="highlight"><pre><span></span><code>certbot timer (twice daily)
+    → certbot renew
+        → cert near expiry? yes:
+            → ACME HTTP-01 challenge on port 80
+            → new cert written to /etc/letsencrypt/archive/
+            → symlinks in /live/ updated
+            → deploy hook fires
+                → gateway stop
+                → generate-secrets.sh
+                → gateway start
+                → renewal logged
+</code></pre></div>
+<p>The deploy hook only fires when certbot actually renews — not on every timer tick.</p>
+<hr />
+<h3 id="obtaining-a-certificate-first-time">Obtaining a Certificate (First Time)</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Stop the gateway to free port 80</span>
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose.prod.yaml<span class="w"> </span>stop<span class="w"> </span>gateway
+
+<span class="c1"># Source env vars</span>
+<span class="nb">source</span><span class="w"> </span>/opt/deploy/basic-infrastructure/.env
+
+<span class="c1"># Obtain certificate</span>
+sudo<span class="w"> </span>certbot<span class="w"> </span>certonly<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--standalone<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--non-interactive<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--agree-tos<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--email<span class="w"> </span><span class="si">${</span><span class="nv">CERT_EMAIL</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span><span class="si">${</span><span class="nv">DOMAIN</span><span class="si">}</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-d<span class="w"> </span>www.<span class="si">${</span><span class="nv">DOMAIN</span><span class="si">}</span>
+
+<span class="c1"># Verify</span>
+sudo<span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span>/etc/letsencrypt/live/<span class="si">${</span><span class="nv">DOMAIN</span><span class="si">}</span>/fullchain.pem<span class="w"> </span>-noout<span class="w"> </span>-enddate
+
+<span class="c1"># Regenerate secrets and start gateway</span>
+sudo<span class="w"> </span>bash<span class="w"> </span>scripts/generate-secrets.sh
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose.prod.yaml<span class="w"> </span>start<span class="w"> </span>gateway
+</code></pre></div>
+<hr />
+<h3 id="automated-renewal-setup">Automated Renewal Setup</h3>
+<p><strong>Step 1 — Create the deploy hook</strong></p>
+<p>Certbot automatically runs scripts in <code>/etc/letsencrypt/renewal-hooks/deploy/</code> after every successful renewal.</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>nano<span class="w"> </span>/etc/letsencrypt/renewal-hooks/deploy/restart-gateway.sh
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="ch">#!/bin/bash</span>
+<span class="nb">set</span><span class="w"> </span>-euo<span class="w"> </span>pipefail
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># CERTBOT DEPLOY HOOK - Certificate Renewal &amp; Gateway Reload</span>
+<span class="c1"># ==============================================================================</span>
+
+<span class="nv">ENV_FILE</span><span class="o">=</span><span class="s2">&quot;/opt/deploy/basic-infrastructure/.env&quot;</span>
+<span class="nv">COMPOSE_FILE</span><span class="o">=</span><span class="s2">&quot;/opt/deploy/basic-infrastructure/compose.prod.yaml&quot;</span>
+<span class="nv">SECRETS_SCRIPT</span><span class="o">=</span><span class="s2">&quot;/opt/deploy/basic-infrastructure/scripts/generate-secrets.sh&quot;</span>
+<span class="nv">LOG</span><span class="o">=</span><span class="s2">&quot;/var/log/certbot-renewal.log&quot;</span>
+
+<span class="c1"># Load environment variables</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ENV_FILE</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ Error: </span><span class="nv">$ENV_FILE</span><span class="s2"> not found&quot;</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="nb">source</span><span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ENV_FILE</span><span class="s2">&quot;</span>
+
+<span class="c1"># Validate required variables</span>
+:<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CERT_PATH</span><span class="p">:?❌ Error: CERT_PATH not set in .env</span><span class="si">}</span><span class="s2">&quot;</span>
+:<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">SECRETS_OUTPUT_FILE</span><span class="p">:?❌ Error: SECRETS_OUTPUT_FILE not set in .env</span><span class="si">}</span><span class="s2">&quot;</span>
+
+<span class="c1"># Validate secrets script exists</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SECRETS_SCRIPT</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ Error: Secrets script not found: </span><span class="nv">$SECRETS_SCRIPT</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="c1"># Validate Let&#39;s Encrypt certs</span>
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>!<span class="w"> </span>-d<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$CERT_PATH</span><span class="s2">&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ Error: Certificate path does not exist: </span><span class="nv">$CERT_PATH</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="k">if</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CERT_PATH</span><span class="si">}</span><span class="s2">/fullchain.pem&quot;</span><span class="w"> </span><span class="o">]]</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">[[</span><span class="w"> </span>!<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CERT_PATH</span><span class="si">}</span><span class="s2">/privkey.pem&quot;</span><span class="w"> </span><span class="o">]]</span><span class="p">;</span><span class="w"> </span><span class="k">then</span>
+<span class="w">    </span><span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;❌ Error: Certificate files not found in </span><span class="nv">$CERT_PATH</span><span class="s2">&quot;</span>
+<span class="w">    </span><span class="nb">exit</span><span class="w"> </span><span class="m">1</span>
+<span class="k">fi</span>
+
+<span class="c1"># ==============================================================================</span>
+<span class="c1"># Reload gateway with renewed certificates</span>
+<span class="c1"># ==============================================================================</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[</span><span class="k">$(</span>date<span class="k">)</span><span class="s2">] 🔄 Certificate renewed — reloading gateway...&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG</span><span class="s2">&quot;</span>
+
+<span class="nb">cd</span><span class="w"> </span>/opt/deploy/basic-infrastructure
+
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$COMPOSE_FILE</span><span class="s2">&quot;</span><span class="w"> </span>stop<span class="w"> </span>gateway<span class="w">      </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+bash<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$SECRETS_SCRIPT</span><span class="s2">&quot;</span><span class="w">                              </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$COMPOSE_FILE</span><span class="s2">&quot;</span><span class="w"> </span>start<span class="w"> </span>gateway<span class="w">     </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG</span><span class="s2">&quot;</span><span class="w"> </span><span class="m">2</span>&gt;<span class="p">&amp;</span><span class="m">1</span>
+
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[</span><span class="k">$(</span>date<span class="k">)</span><span class="s2">] ✅ Gateway reloaded successfully.&quot;</span><span class="w">                                                                </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[</span><span class="k">$(</span>date<span class="k">)</span><span class="s2">] 📋 Certificate expires: </span><span class="k">$(</span>sudo<span class="w"> </span>openssl<span class="w"> </span>x509<span class="w"> </span>-in<span class="w"> </span><span class="s2">&quot;</span><span class="si">${</span><span class="nv">CERT_PATH</span><span class="si">}</span><span class="s2">/fullchain.pem&quot;</span><span class="w"> </span>-noout<span class="w"> </span>-enddate<span class="w"> </span><span class="p">|</span><span class="w"> </span>cut<span class="w"> </span>-d<span class="o">=</span><span class="w"> </span>-f2<span class="k">)</span><span class="s2">&quot;</span><span class="w"> </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG</span><span class="s2">&quot;</span>
+<span class="nb">echo</span><span class="w"> </span><span class="s2">&quot;[</span><span class="k">$(</span>date<span class="k">)</span><span class="s2">] ⚠️  Secrets regenerated: </span><span class="nv">$SECRETS_OUTPUT_FILE</span><span class="s2">&quot;</span><span class="w">                                                   </span>&gt;&gt;<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$LOG</span><span class="s2">&quot;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>chmod<span class="w"> </span>+x<span class="w"> </span>/etc/letsencrypt/renewal-hooks/deploy/restart-gateway.sh
+</code></pre></div>
+<p><strong>Step 2 — Enable the systemd timer</strong></p>
+<p>Certbot (snap or apt) ships with a systemd timer. Verify it's active:</p>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>list-timers<span class="w"> </span><span class="p">|</span><span class="w"> </span>grep<span class="w"> </span>certbot
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>certbot.timer
+sudo<span class="w"> </span>systemctl<span class="w"> </span>start<span class="w"> </span>certbot.timer
+</code></pre></div>
+<p>If the timer doesn't exist (bare certbot install), create it:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># /etc/systemd/system/certbot-renew.timer</span>
+<span class="o">[</span>Unit<span class="o">]</span>
+<span class="nv">Description</span><span class="o">=</span>Twice<span class="w"> </span>daily<span class="w"> </span>certbot<span class="w"> </span>renewal
+
+<span class="o">[</span>Timer<span class="o">]</span>
+<span class="nv">OnCalendar</span><span class="o">=</span>*-*-*<span class="w"> </span><span class="m">00</span>,12:00:00
+<span class="nv">RandomizedDelaySec</span><span class="o">=</span>1h
+<span class="nv">Persistent</span><span class="o">=</span><span class="nb">true</span>
+
+<span class="o">[</span>Install<span class="o">]</span>
+<span class="nv">WantedBy</span><span class="o">=</span>timers.target
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># /etc/systemd/system/certbot-renew.service</span>
+<span class="o">[</span>Unit<span class="o">]</span>
+<span class="nv">Description</span><span class="o">=</span>Certbot<span class="w"> </span>renewal
+
+<span class="o">[</span>Service<span class="o">]</span>
+<span class="nv">Type</span><span class="o">=</span>oneshot
+<span class="nv">ExecStart</span><span class="o">=</span>/usr/bin/certbot<span class="w"> </span>renew<span class="w"> </span>--quiet
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>systemctl<span class="w"> </span>daemon-reload
+sudo<span class="w"> </span>systemctl<span class="w"> </span><span class="nb">enable</span><span class="w"> </span>--now<span class="w"> </span>certbot-renew.timer
+</code></pre></div>
+<p><strong>Step 3 — Test</strong></p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Dry run — simulates renewal without touching real certs</span>
+sudo<span class="w"> </span>certbot<span class="w"> </span>renew<span class="w"> </span>--dry-run
+
+<span class="c1"># Force a real renewal to exercise the full hook</span>
+sudo<span class="w"> </span>certbot<span class="w"> </span>renew<span class="w"> </span>--force-renewal
+
+<span class="c1"># Watch the log</span>
+tail<span class="w"> </span>-f<span class="w"> </span>/var/log/certbot-renewal.log
+</code></pre></div>
+<hr />
+<h3 id="manual-renewal">Manual Renewal</h3>
+<p>If automated renewal fails:</p>
+<div class="highlight"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose.prod.yaml<span class="w"> </span>stop<span class="w"> </span>gateway
+sudo<span class="w"> </span>certbot<span class="w"> </span>renew<span class="w"> </span>--force-renewal
+sudo<span class="w"> </span>bash<span class="w"> </span>scripts/generate-secrets.sh
+docker<span class="w"> </span>compose<span class="w"> </span>-f<span class="w"> </span>compose.prod.yaml<span class="w"> </span>start<span class="w"> </span>gateway
+</code></pre></div>
+<hr />
+<h2 id="dev-vs-prod-differences">Dev vs Prod Differences</h2>
+<table>
+<thead>
+<tr>
+<th>Aspect</th>
+<th>Dev</th>
+<th>Prod</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Public TLS</td>
+<td>Ngrok handles it</td>
+<td>Let's Encrypt at Envoy</td>
+</tr>
+<tr>
+<td>Certificate management</td>
+<td>None (Ngrok provides certs)</td>
+<td>certbot + systemd timer + deploy hook</td>
+</tr>
+<tr>
+<td>Standalone config</td>
+<td><code>standalone-dev.yaml</code></td>
+<td><code>standalone-prod.yaml</code></td>
+</tr>
+<tr>
+<td>Gateway resource</td>
+<td>Dev TLS Secret</td>
+<td>Let's Encrypt cert Secret ref</td>
+</tr>
+<tr>
+<td>Environment routes</td>
+<td>Echo server, dev-only routes</td>
+<td>Prod-only routes</td>
+</tr>
+<tr>
+<td><code>X-Forwarded-Host</code></td>
+<td>Ngrok domain</td>
+<td>Production domain</td>
+</tr>
+<tr>
+<td>Rate limiting</td>
+<td>Not configured</td>
+<td>Planned (local rate limiting via <code>BackendTrafficPolicy</code>)</td>
+</tr>
+<tr>
+<td>Hostname in backends</td>
+<td><code>keycloak.local</code>, <code>{service}.local</code></td>
+<td>Same (Docker bridge, single host)</td>
+</tr>
+<tr>
+<td>Resource limits</td>
+<td>None</td>
+<td>Memory: 1G limit, 512M reserved</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition tip">
+<p class="admonition-title">K8s migration</p>
+<p>When moving to Kubernetes, the Gateway API YAML files apply directly via <code>kubectl apply</code>. The main changes are: <code>Backend</code> endpoints switch from Docker FQDN (<code>keycloak.local</code>) to Kubernetes Service names (<code>keycloak.default.svc.cluster.local</code>), and TLS moves from mounted Let's Encrypt certs to cert-manager. See <a href="./#kubernetes-migration-path" title="Kubernetes Migration Path">Kubernetes Migration Path</a> for details.</p>
+</div>
+<hr />
+<h2 id="kubernetes-migration-path">Kubernetes Migration Path</h2>
+<p>The standalone file-based configs translate to Kubernetes with minimal changes:</p>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Docker Compose (current)</th>
+<th>Kubernetes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GatewayClass</code></td>
+<td>File in config directory</td>
+<td><code>kubectl apply -f gatewayclass.yaml</code></td>
+</tr>
+<tr>
+<td><code>Gateway</code></td>
+<td>File with cert file path</td>
+<td><code>kubectl apply</code> with cert-manager <code>Secret</code></td>
+</tr>
+<tr>
+<td><code>HTTPRoute</code></td>
+<td>File — <strong>identical</strong></td>
+<td><code>kubectl apply</code> — <strong>identical</strong></td>
+</tr>
+<tr>
+<td><code>Backend</code></td>
+<td>FQDN: <code>keycloak.local:8080</code></td>
+<td>Service: <code>keycloak.default.svc.cluster.local:8080</code></td>
+</tr>
+<tr>
+<td>TLS Secret</td>
+<td>Mounted PEM files from host</td>
+<td>cert-manager <code>Certificate</code> resource</td>
+</tr>
+<tr>
+<td>Control plane</td>
+<td><code>standalone.yaml</code> + <code>generate_certs</code></td>
+<td>Envoy Gateway operator (installed via Helm)</td>
+</tr>
+</tbody>
+</table>
+<p>Backend endpoint change:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Docker Compose (current)</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fqdn</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak.local</span>
+<span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+
+<span class="c1"># Kubernetes</span>
+<span class="nt">spec</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">endpoints</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">fqdn</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">hostname</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">keycloak.default.svc.cluster.local</span>
+<span class="w">        </span><span class="nt">port</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8080</span>
+</code></pre></div>
+<p>Everything else — routes, header modifications, redirect rules, path matching — copies as-is.</p>
+<hr />
+<h2 id="monitoring">Monitoring</h2>
+<h3 id="dev">Dev</h3>
+<ul>
+<li><strong>Logs:</strong> <code>docker compose logs -f gateway</code> — shows request routing, TLS handshakes, upstream errors</li>
+<li><strong>Echo server:</strong> Send test requests to echo routes to verify headers, path matching, and forwarded values</li>
+</ul>
+<h3 id="prod">Prod</h3>
+<ul>
+<li><strong>Logs:</strong> <code>docker compose logs -f gateway</code> — structured access logs</li>
+<li><strong>Renewal log:</strong> <code>tail -f /var/log/certbot-renewal.log</code> — deploy hook output on every renewal</li>
+<li><strong>Certbot log:</strong> <code>/var/log/letsencrypt/letsencrypt.log</code> — ACME challenge details and errors</li>
+<li><strong>Metrics:</strong> Envoy exposes Prometheus metrics on the admin port (19001): <code>envoy_http_downstream_rq_total</code>, <code>envoy_http_downstream_rq_xx</code> (status codes), <code>envoy_cluster_upstream_cx_connect_fail</code> (backend failures), <code>envoy_ssl_ciphers</code> (TLS usage)</li>
+<li><strong>Certificate expiry:</strong> <code>sudo openssl x509 -in /etc/letsencrypt/live/${DOMAIN}/fullchain.pem -noout -enddate</code></li>
+<li><strong>Dashboards:</strong> Grafana dashboard (link TBD)</li>
+<li><strong>Alerts:</strong> Certificate expiry approaching, backend connection failures, 5xx spike (configuration TBD)</li>
+</ul>
+<blockquote>
+<p><strong>Optional:</strong> Full observability stack (Prometheus + Grafana) is the standard recommendation. Adjust dashboard and alert links once provisioned.</p>
+</blockquote>
+<hr />
+<h2 id="runbooks">Runbooks</h2>
+<h3 id="connection-refused-on-https-port-443">Connection refused on HTTPS (port 443)</h3>
+<p>Gateway container is not running or port mapping is wrong. Check with <code>docker compose ps gateway</code>. Verify port mapping (<code>443:8443</code>) in compose. Check firewall: <code>sudo ufw status | grep 443</code>.</p>
+<h3 id="certificate-verify-failed-expired">Certificate verify failed / expired</h3>
+<p>Certificates have expired or renewal failed. Check expiry: <code>sudo openssl x509 -in /etc/letsencrypt/live/${DOMAIN}/fullchain.pem -noout -enddate</code>. Review certbot logs at <code>/var/log/letsencrypt/letsencrypt.log</code>. If automated renewal failed, follow <a href="./#manual-renewal" title="Manual Renewal">Manual Renewal</a>.</p>
+<h3 id="502-bad-gateway">502 Bad Gateway</h3>
+<p>Envoy is running but the backend service is down. Check backend health with <code>docker compose ps</code>. Inspect gateway logs for upstream connection errors: <code>docker compose logs gateway | grep upstream_cx</code>. Restart the affected backend service.</p>
+<h3 id="keycloak-redirect-loop">Keycloak redirect loop</h3>
+<p>Keycloak doesn't detect it's behind a proxy. Verify <code>X-Forwarded-Proto: https</code>, <code>X-Forwarded-Host: ${DOMAIN}</code>, and <code>X-Forwarded-Port: 443</code> are set in the Keycloak <code>HTTPRoute</code> filter. Confirm Keycloak has <code>--proxy-headers=xforwarded</code> in its startup flags. See <a href="../service-keycloak#startup-flags" title="service-keycloak">service-keycloak</a>.</p>
+<h3 id="new-service-not-routing">New service not routing</h3>
+<p>Verify the <code>Backend</code> YAML has the correct hostname and port. Verify the <code>HTTPRoute</code> YAML references the correct <code>Backend</code> name and has <code>parentRefs</code> pointing to the <code>eg</code> Gateway. Restart Envoy Gateway to pick up the new files. Check that the service container is on the <code>internal</code> Docker network.</p>
+<h3 id="debugging-headers-and-routing-with-echo-server">Debugging headers and routing with echo server</h3>
+<p>Send a request to the echo server's dev-only route (e.g., <code>curl -v https://${DOMAIN}/echo/</code>) — it mirrors back the full request including all headers Envoy injected (<code>X-Forwarded-Proto</code>, <code>X-Forwarded-Host</code>, <code>X-Forwarded-Port</code>), the matched path, and the request method. Use this to verify header manipulation filters and path matching before wiring up a real service.</p>
+<h3 id="certificate-renewal-fails">Certificate renewal fails</h3>
+<p>Check that port 80 is accessible from the internet (certbot uses HTTP-01 challenge). Check <code>sudo systemctl status certbot.timer</code>. Review deploy hook logs at <code>/var/log/certbot-renewal.log</code> and certbot logs at <code>/var/log/letsencrypt/letsencrypt.log</code>. Common cause: gateway is holding port 80 — follow <a href="./#manual-renewal" title="Manual Renewal">Manual Renewal</a> to recover.</p>
+<hr />
+<h2 id="adrs">ADRs</h2>
+<ul>
+<li><strong>ADR: Envoy Gateway over Nginx/Traefik</strong> — Gateway API resource format provides Kubernetes portability without config rewrites. Same YAML runs in Docker standalone and K8s.</li>
+<li><strong>ADR: Standalone file provider mode</strong> — Enables Gateway API resources without a Kubernetes cluster. File-based config is version-controlled and works identically in dev and prod Docker Compose. Upstream classifies standalone mode as experimental due to control plane maturity gaps (no built-in process lifecycle, no conformance test suite, incremental feature parity). Accepted for VPS tier because Docker Compose mitigates the critical gaps (restart policies, health checks), and the data plane (Envoy Proxy) is production-grade regardless of control plane mode. Revisit classification when standalone graduates upstream or when moving to Kubernetes.</li>
+<li><strong>ADR: Let's Encrypt with host-level certbot</strong> — Certificates managed on the host, mounted read-only into container. Simpler than in-container cert management, compatible with standard certbot renewal flow. Deploy hook handles gateway reload after every renewal.</li>
+<li><strong>ADR: Certbot deploy hook over cron</strong> — Deploy hook fires only on actual renewal, not on every timer tick. Keeps the gateway restart tied to the cert lifecycle without polling or external coordination.</li>
+<li><strong>ADR: HTTP 301 redirect at gateway level</strong> — All HTTP→HTTPS redirect handled by Envoy, no application-level redirect logic needed. Single point of enforcement.</li>
+<li><strong>ADR: <code>generate_certs</code> for control plane TLS</strong> — Self-signed certificates secure the xDS gRPC channel between Envoy controller and proxy. Prevents malicious route injection.</li>
+</ul>
+<hr />
+<h2 id="references">References</h2>
+<ul>
+<li><a href="https://gateway.envoyproxy.io/docs/">Envoy Gateway Documentation</a></li>
+<li><a href="https://gateway-api.sigs.k8s.io/">Kubernetes Gateway API Specification</a></li>
+<li><a href="https://letsencrypt.org/docs/">Let's Encrypt Documentation</a></li>
+<li><a href="https://www.envoyproxy.io/docs">Envoy Proxy Documentation</a></li>
+<li><a href="https://eff-certbot.readthedocs.io/en/stable/">Certbot Documentation</a></li>
+</ul>
+
+
+
+
+
+
+
+  
+  
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": [], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.79ae519e.min.js"></script>
+      
+    
+  </body>
+</html>
